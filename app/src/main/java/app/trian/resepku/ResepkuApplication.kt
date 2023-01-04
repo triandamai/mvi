@@ -7,12 +7,11 @@ import androidx.multidex.MultiDex
 import androidx.work.Configuration
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.installations.FirebaseInstallations
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
-class ResepkuApplication : Application(),Configuration.Provider {
+class ResepkuApplication : Application(), Configuration.Provider {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
