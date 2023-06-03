@@ -1,8 +1,11 @@
+@file:Suppress("UnstableApiUsage")
 pluginManagement {
     repositories {
-        gradlePluginPortal()
         google()
+        gradlePluginPortal()
         mavenCentral()
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+        maven(url = "https://jitpack.io")
     }
 }
 dependencyResolutionManagement {
@@ -10,8 +13,17 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+        maven(url = "https://jitpack.io")
+
+    }
+    versionCatalogs {
+        create("libs") {
+            from(files("libs.versions.toml"))
+        }
     }
 }
-rootProject.buildFileName = "build.gradle.kts"
+
 rootProject.name = "Resepku"
 include(":app")
+include(":data")

@@ -1,121 +1,164 @@
+@file:Suppress("UnstableApiUsage")
 plugins {
-    id("com.android.application")
-    id("com.google.dagger.hilt.android")
-    id("com.google.gms.google-services")
-    id("io.gitlab.arturbosch.detekt")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.com.android.application)
+    alias(libs.plugins.org.jetbrains.kotlin.android)
+    alias(libs.plugins.org.jetbrains.kotlin.kapt)
+    alias(libs.plugins.com.google.dagger.hilt.android)
+    alias(libs.plugins.app.cash.sqldelight)
+    alias(libs.plugins.io.gitlab.arthubosch.detekt)
+    id("kotlin-parcelize")
 }
 
+
 android {
-    namespace = AppConfig.nameSpace
+    namespace = libs.versions.namespace.get()
     compileSdk = 33
-
     defaultConfig {
-        applicationId = AppConfig.applicationId
-        minSdk = 21
+        applicationId =libs.versions.application.id.get()
+        minSdk = 29
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 49
+        versionName = "2.0.202305241408"
         multiDexEnabled = true
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = GlobalVersion.composeVersion
+        kotlinCompilerExtensionVersion = "1.4.0"
     }
     packagingOptions {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    lint {
+        baseline = file("lint-baseline.xml")
+        abortOnError = false
+    }
+
+
+    signingConfigs {
+        create("release") {
+          //  setupKeystore()
+        }
+    }
+    buildTypes {
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
+            isShrinkResources = true
+            isMinifyEnabled = true
+            isDebuggable = false
+        }
+    }
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+        freeCompilerArgs = listOf(
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
+            "-opt-in=androidx.compose.ui.ExperimentalComposeUiApi",
+            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi"
+        )
+    }
+
 }
 
 dependencies {
-    implementation(Deps.AndroidX.Core.coreKtx)
-    implementation(Deps.AndroidX.Lifecycle.runtimeLifecycleKtx)
-    implementation(Deps.AndroidX.Activity.activityCompose)
-    implementation(Deps.AndroidX.Multidex.multidex)
-    with(Deps.AndroidX.Compose) {
-        implementation(platform(composeBom))
-        androidTestImplementation(platform(composeBom))
-        implementation(material3)
-        implementation(ui)
-        implementation(uiToolingPreview)
-        debugImplementation(uiTooling)
-        androidTestImplementation(uiTestJunit4)
-        debugImplementation(uiTestManifest)
-        implementation(materialIconExtended)
-        implementation(materialWindowSizeClass)
-    }
-    with(Deps.Com.Google.Accompanist) {
+    coreLibraryDesugaring(libs.desugar.jdk.lib)
+
+    implementation(libs.android.material)
+    implementation(libs.compose.markdown)
+
+    implementation(libs.mp.android.chart)
+
+    implementation(libs.core.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.activity.compose)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.ui)
+    implementation(libs.compose.icon.extended)
+    implementation(libs.ui.graphics)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.compose.material)
+    implementation(libs.compose.calendar)
+    implementation(libs.wheel.picker.compose)
+    implementation(libs.coil.compose)
+    implementation(libs.navigation.compose)
+    implementation(libs.multidex)
+
+    implementation(libs.reorder.list)
+
+    with(libs.accompanist) {
         implementation(pager)
-        implementation(pagerIndicator)
+        implementation(pager.indicator)
+        implementation(flow.layout)
+        implementation(shimmer)
     }
-    implementation(Deps.AndroidX.Compose.composeRuntimeLiveData)
-    with(Deps.Com.Google.Dagger) {
-        implementation(hiltAndroid)
-        kapt(hiltAndroidCompiler)
-    }
-    implementation(Deps.AndroidX.Hilt.hiltNavigationCompose)
-    implementation(Deps.AndroidX.Navigation.navigationCompose)
-    implementation(Deps.AndroidX.Work.workRuntime)
-    implementation(Deps.AndroidX.Hilt.hiltWork)
-    kapt(Deps.AndroidX.Hilt.hiltCompiler)
-
-    with(Deps.Com.Google.Firebase) {
-        implementation(platform(firebaseBom))
-        implementation(firebaseAnalytics)
-        implementation(firebaseAuth)
-        implementation(firebaseFirestore)
-        implementation(firebaseStorage)
-        implementation(firebaseInstallation)
-    }
-    implementation(Deps.Org.Jetbrains.Kotlinx.kotlinxCoroutineAndroid)
-    with(Deps.AndroidX.Room) {
-        implementation(roomRuntime)
-        kapt(roomCompiler)
-        implementation(roomKtx)
-        implementation(roomPaging)
-        testImplementation(roomTesting)
+    with(libs.hilt) {
+        implementation(navigation.compose)
+        implementation(android)
+        implementation(work)
+        androidTestImplementation(android.test)
+        kapt(android.compiler)
+        kaptTest(android.compiler)
+        kapt(compiler)
     }
 
 
-    testImplementation(Deps.Junit.jUnit)
-    androidTestImplementation(Deps.AndroidX.Test.extJunit)
-    androidTestImplementation(Deps.AndroidX.Test.espressoCore)
+    implementation(libs.sqldelight.android.driver)
+
+
+    implementation(libs.kotlinx.coroutine.play.services)
+    testImplementation(libs.kotlinx.coroutine.test)
+
+
+    implementation(libs.work.runtime)
+    implementation(libs.kotlinx.serialization)
+    with(libs.kotlinx.coroutine) {
+        implementation(android)
+        implementation(core)
+        implementation(play.services)
+        testImplementation(test)
+    }
+
+    with(libs.composeIcons) {
+        implementation(feather)
+    }
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.ui.test.junit4)
+    testImplementation(libs.ui.test.junit4)
+    debugImplementation(libs.ui.tooling)
+    debugImplementation(libs.ui.test.manifest)
+    testImplementation(libs.robolectric)
+
+    debugImplementation(libs.leak.canary)
+
 }
-// Allow references to generated code
 kapt {
     correctErrorTypes = true
 }
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("${libs.versions.namespace.get()}.sqldelight")
+        }
+    }
+}
 
-//https://dev.to/akdevcraft/git-pre-hook-setup-pre-push-hook-for-gradle-project-example-1nn6
-//https://emmanuelkehinde.io/setting-up-git-pre-commit-pre-push-hook-for-ktlint-check/
 tasks.create<Copy>("installGitHook") {
     var suffix = "macos"
     if (org.apache.tools.ant.taskdefs.condition.Os.isFamily(org.apache.tools.ant.taskdefs.condition.Os.FAMILY_WINDOWS)) {
@@ -127,13 +170,10 @@ tasks.create<Copy>("installGitHook") {
         into { File(rootProject.rootDir, ".git/hooks") }
         rename("pre-push-$suffix", "pre-push")
     }
-
     copy {
         from(File(rootProject.rootDir, "scripts/pre-commit-$suffix"))
         into { File(rootProject.rootDir, ".git/hooks") }
         rename("pre-commit-$suffix", "pre-commit")
     }
-
-    //make file executable
     fileMode = "775".toInt(8)
 }

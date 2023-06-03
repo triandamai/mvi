@@ -5,8 +5,6 @@ import android.content.Context
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.multidex.MultiDex
 import androidx.work.Configuration
-import com.google.firebase.FirebaseApp
-import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -18,8 +16,6 @@ class ResepkuApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        FirebaseApp.initializeApp(this)
-        FirebaseAnalytics.getInstance(this)
 
     }
 
