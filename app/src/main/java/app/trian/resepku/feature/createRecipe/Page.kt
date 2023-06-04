@@ -96,12 +96,8 @@ internal fun ScreenCreateRecipe(
         bottomAppBar = {
             AnimatedVisibility(
                 visible = state.visibleBottomBar,
-                enter = slideInVertically(
-                    initialOffsetY = { it / 2 },
-                ),
-                exit = slideOutVertically(
-                    targetOffsetY = { it / 2 },
-                )
+                enter = slideInVertically(initialOffsetY = { it / 2 }),
+                exit = slideOutVertically(targetOffsetY = { it / 2 })
             ) {
                 Row(
                     modifier = Modifier
