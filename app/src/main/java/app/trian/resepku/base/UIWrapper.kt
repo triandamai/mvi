@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -66,6 +67,10 @@ inline fun BaseScreen(
                 bottomSheet(this@Column)
             }
         },
+        sheetShape = RoundedCornerShape(
+            topStart = 10.dp,
+            topEnd = 10.dp
+        ),
         content = {
             Scaffold(
                 topBar = topAppBar,

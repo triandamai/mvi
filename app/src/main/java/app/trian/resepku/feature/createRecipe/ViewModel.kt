@@ -28,7 +28,12 @@ class CreateRecipeViewModel @Inject constructor(
         //go to next screen
         if (isNext) {
             val gotToNextPage = if (step < 4) step + 1 else step
-            commit { copy(step = gotToNextPage) }
+            commit {
+                copy(
+                    step = gotToNextPage,
+                    visibleBottomBar = gotToNextPage != 3
+                )
+            }
             return@asyncWithState
         }
 
@@ -46,7 +51,12 @@ class CreateRecipeViewModel @Inject constructor(
 
         //onBackPressed
         val goToPreviousPage = step - 1
-        commit { copy(step = goToPreviousPage) }
+        commit {
+            copy(
+                step = goToPreviousPage,
+                visibleBottomBar = goToPreviousPage != 3
+            )
+        }
     }
 
 //cooking step

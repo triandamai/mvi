@@ -79,6 +79,7 @@ internal fun ScreenCreateRecipe(
     }
 
     BaseScreen(
+        appState=appState,
         bottomSheet = {
             BottomSheetConfirmation(
                 title = "Are you sure, want to quit?",
@@ -162,21 +163,23 @@ internal fun ScreenCreateRecipe(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
         ) {
-            HeaderStepWithProgress(
-                progress = (state.step + 1),
-                total = 3,
-                onClose = {
-                    showBottomSheet()
-                },
-                onBackPress = {
-                    dispatch(
-                        CreateRecipeEvent.ChangeStep(
-                            isNext = false
+            if(state.step != 3) {
+                HeaderStepWithProgress(
+                    progress = (state.step + 1),
+                    total = 3,
+                    onClose = {
+                        showBottomSheet()
+                    },
+                    onBackPress = {
+                        dispatch(
+                            CreateRecipeEvent.ChangeStep(
+                                isNext = false
+                            )
                         )
-                    )
-                }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+                    }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
             AnimatedContent(
                 targetState = state.step,
                 transitionSpec = {
