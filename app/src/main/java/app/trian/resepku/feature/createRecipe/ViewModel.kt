@@ -25,31 +25,31 @@ class CreateRecipeViewModel @Inject constructor(
     private fun calculatePage(
         isNext: Boolean
     ) = asyncWithState {
+        //go to next screen
         if (isNext) {
-            val step = if (step < 4) step + 1 else step
-            commit {
-                copy(
-                    step = step
-                )
-            }
+            val gotToNextPage = if (step < 4) step + 1 else step
+            commit { copy(step = gotToNextPage) }
             return@asyncWithState
         }
 
-        //back
-        if (step == 0) {
-            showBottomSheet()
-        } else {
-            val step = step - 1
-            commit {
-                copy(
-                    step = step
-                )
-            }
+        //close when success screen
+        if (step == 3) {
+            navigateUp()
+            return@asyncWithState
         }
 
+        //confirmation when at the beginning screen
+        if (step == 0) {
+            showBottomSheet()
+            return@asyncWithState
+        }
+
+        //onBackPressed
+        val goToPreviousPage = step - 1
+        commit { copy(step = goToPreviousPage) }
     }
 
-    //cooking step
+//cooking step
 
 
     private fun reorderCookingStep(from: Int, to: Int) = asyncWithState {
@@ -110,7 +110,7 @@ class CreateRecipeViewModel @Inject constructor(
         }
     }
 
-    //end
+//end
 
     //ingredient
     private fun reorderIngredient(from: Int, to: Int) = asyncWithState {
@@ -171,7 +171,7 @@ class CreateRecipeViewModel @Inject constructor(
         }
     }
 
-    //end
+//end
 
 
     override fun handleActions() = onEvent { event ->
