@@ -1,4 +1,6 @@
 @file:Suppress("UnstableApiUsage")
+
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
@@ -74,6 +76,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core-ui"))
+    implementation(project(":feature-authentication"))
     coreLibraryDesugaring(libs.desugar.jdk.lib)
 
     implementation(libs.android.material)

@@ -6,18 +6,23 @@ package app.trian.resepku
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
-import app.trian.resepku.base.ApplicationState
+import app.trian.core.ui.UIController
+import app.trian.resepku.feature.authentication.authenticationRoute
 import app.trian.resepku.feature.createRecipe.CreateRecipe
 import app.trian.resepku.feature.createRecipe.routeCreateRecipe
+import app.trian.resepku.feature.dashboard.routeDashboard
 
 @Composable
 fun AppNavigation(
-    applicationState: ApplicationState
+    uiController: UIController
 ) {
     NavHost(
-        navController = applicationState.router,
+        navController = uiController.router,
         startDestination = CreateRecipe.routeName
     ) {
-        routeCreateRecipe(applicationState)
+        authenticationRoute(uiController=uiController)
+//        routeCreateRecipe(applicationState)
+//
+//        routeDashboard(applicationState)
     }
 }
