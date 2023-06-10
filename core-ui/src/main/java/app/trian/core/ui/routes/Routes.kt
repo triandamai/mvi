@@ -9,6 +9,9 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
 object Routes {
+    object CreateRecipe {
+        const val routeName = "CreateRecipe"
+    }
     object ChangePassword {
         const val routeName = "ChangePassword"
     }

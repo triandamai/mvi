@@ -51,9 +51,9 @@ class UIController internal constructor(
         SnackbarHostState()
     )
 
-    internal var snackbar by mutableStateOf(CreateSnackbarContent {
-        Snackbar(snackbarData = it)
-    })
+    internal var snackbar by mutableStateOf(
+        CreateSnackbarContent{ Snackbar(snackbarData = it) }
+    )
 
     fun showSnackbar(message: String) {
         runSuspend {

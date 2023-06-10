@@ -1,0 +1,27 @@
+/*
+ * Copyright (c) 2023 trian.app.
+ */
+
+package app.trian.resepku.feature.dashboard.dashboard
+
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import javax.annotation.concurrent.Immutable
+
+@Immutable
+@Parcelize
+data class DashboardState(
+    val percentage:Float=01f
+) : Parcelable
+
+@Immutable
+@Parcelize
+data class DashboardDataState(
+    val percentage:Float=01f
+) : Parcelable
+
+
+sealed interface OnboardEvent{
+    data class PagerChanges(val page:Int=0): OnboardEvent
+
+}

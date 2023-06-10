@@ -82,18 +82,15 @@ abstract class BaseViewModel<State : Parcelable, Action>(
         this.catch { error(it.message.orEmpty()) }
             .collect {
                 when (it) {
-                    is Response.Error ->
-                        error(
-                            it.message.ifEmpty {
-                                controller.context.getString(it.stringId.toInt())
-                            }
-                        )
-
+                    is Response.Error -> error(
+                        it.message.ifEmpty {
+                            controller.context.getString(it.stringId.toInt())
+                        }
+                    )
                     Response.Loading -> loading()
                     is Response.Result -> success(it.data)
                 }
             }
-
     }
 
     fun resetState() {

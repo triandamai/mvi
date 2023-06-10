@@ -1,30 +1,37 @@
+/*
+ * Copyright (c) 2023 trian.app.
+ */
+
 package app.trian.core.ui.component
 
-import android.content.res.Configuration.UI_MODE_NIGHT_NO
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -128,7 +135,7 @@ fun ButtonSocial(
         shape = MaterialTheme.shapes.medium,
         border = BorderStroke(
             width = 1.dp,
-            color = if (enabled) MaterialTheme.colorScheme.primary else Companion.LightGray
+            color = if (enabled) MaterialTheme.colorScheme.primary else Color.LightGray
         ),
     ) {
         Box(
@@ -137,7 +144,7 @@ fun ButtonSocial(
                 .padding(horizontal = 6.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_google_normal),
+                painter = painterResource(id = R.drawable.ic_launcher_background),
                 contentDescription = "Continue With Google",
                 modifier = modifier.align(Alignment.CenterStart)
             )
@@ -162,15 +169,12 @@ fun ButtonIcon(
     onClick: () -> Unit = {}
 ) {
     val m = if (fullWidth) modifier.fillMaxWidth() else modifier
-    OutlinedButton(
+    OutlinedIconButton(
         modifier = m
             .height(50.dp),
         enabled = enabled,
-        contentPadding = PaddingValues(
-            vertical = 6.dp
-        ),
         onClick = onClick,
-        colors = ButtonDefaults.outlinedButtonColors(
+        colors = IconButtonDefaults.iconButtonColors(
             containerColor = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.onBackground,
             disabledContentColor = Color.LightGray
@@ -178,44 +182,47 @@ fun ButtonIcon(
         shape = MaterialTheme.shapes.medium,
         border = BorderStroke(
             width = 1.dp,
-            color = if (enabled) MaterialTheme.colorScheme.onSurface else Companion.LightGray
+            color = if (enabled) MaterialTheme.colorScheme.onSurface
+            else Color.LightGray
         ),
     ) {
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(horizontal = 6.dp)
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(imageVector = icon, contentDescription = "")
-            Spacer(modifier = modifier.width(6.dp))
+            Icon(
+                imageVector = icon,
+                contentDescription = "",
+                modifier = Modifier.padding(
+                    end = 8.dp
+                )
+            )
             Text(
                 text = text,
                 style = MaterialTheme.typography.labelLarge,
-                modifier = modifier.align(Alignment.Center)
             )
         }
     }
 }
 
 
-@Preview(
-    uiMode = UI_MODE_NIGHT_YES,
-    widthDp = 450
-)
-@Preview(
-    uiMode = UI_MODE_NIGHT_NO,
-    widthDp = 450
-)
+@Preview
 @Composable
 fun PreviewButton() {
     BaseMainApp {
-        Column {
-            ButtonPrimary(text = "Sign In")
-            Spacer(modifier = Modifier.height(10.dp))
-            ButtonSecondary(text = "Create New Account")
-            Spacer(modifier = Modifier.height(10.dp))
-            ButtonSocial(text = "Continue With Google")
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
+            ButtonIcon(
+                text = "Add Ingredient",
+                icon = Icons.Outlined.Add,
+                onClick = {},
+                modifier = Modifier.fillMaxWidth(
+                    fraction = 0.6f
+                )
+            )
         }
-
     }
 }
