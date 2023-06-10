@@ -3,15 +3,11 @@ package app.trian.resepku
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import app.trian.resepku.base.BaseMainApp
-import app.trian.resepku.ui.theme.ResepkuTheme
+import androidx.navigation.compose.NavHost
+import app.trian.core.ui.BaseMainApp
+import app.trian.core.ui.routes.Routes
+import app.trian.resepku.feature.dashboard.authenticationRoute
+import app.trian.resepku.feature.dashboard.dashboardRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,7 +16,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             BaseMainApp {
-                AppNavigation(it)
+                NavHost(
+                    navController = it.router,
+                    startDestination = Routes.CreateRecipe.routeName
+                ) {
+                    authenticationRoute(uiController = it)
+                    dashboardRoute(uiController = it)
+                }
             }
         }
     }
