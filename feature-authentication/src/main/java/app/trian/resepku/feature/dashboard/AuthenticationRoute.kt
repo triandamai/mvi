@@ -59,7 +59,6 @@ fun NavGraphBuilder.authenticationRoute(
         ) {
             val state by uiState.collectAsState()
             ScreenOnboard(
-                state=state,
                 invoker = UIListener(
                     controller = uiController,
                     state = state,
@@ -74,7 +73,6 @@ fun NavGraphBuilder.authenticationRoute(
         ) {
             val state by uiState.collectAsState()
             ScreenSignIn(
-                state=state,
                 invoker = UIListener(
                     controller = uiController,
                     state =state,
@@ -89,7 +87,6 @@ fun NavGraphBuilder.authenticationRoute(
         ) {
             val state by uiState.collectAsState()
             ScreenSignUp(
-                state=state,
                 invoker = UIListener(
                     controller = uiController,
                     state = state,
@@ -105,7 +102,6 @@ fun NavGraphBuilder.authenticationRoute(
         ) {
             val state by uiState.collectAsState()
             ScreenChangePassword(
-                state=state,
                 invoker = UIListener(
                     controller = uiController,
                     state = state,
@@ -121,7 +117,6 @@ fun NavGraphBuilder.authenticationRoute(
         ) {
             val state by uiState.collectAsState()
             ScreenResetPassword(
-                state=state,
                 invoker = UIListener(
                     controller = uiController,
                     state = state,

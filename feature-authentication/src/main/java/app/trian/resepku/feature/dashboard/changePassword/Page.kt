@@ -32,7 +32,6 @@ import app.trian.core.ui.component.FormInput
 
 @Composable
 fun ScreenChangePassword(
-    state: ChangePasswordState = ChangePasswordState(),
     invoker: UIListener<ChangePasswordState, ChangePasswordEvent>
 ) = UIWrapper(
     invoker
@@ -65,12 +64,10 @@ fun ScreenChangePassword(
                     Text(text = stringResource(R.string.label_input_new_password))
                 },
                 placeholder = stringResource(R.string.placeholder_input_new_password),
-                showPasswordObsecure = true,
                 initialValue = state.newPassword,
                 onChange = {
                     commit { copy(newPassword = it) }
                 },
-                maxLines = 1,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next
                 )
@@ -81,12 +78,10 @@ fun ScreenChangePassword(
                     Text(text = stringResource(R.string.label_input_confirm_new_password))
                 },
                 placeholder = stringResource(R.string.placeholder_input_confirm_new_password),
-                showPasswordObsecure = true,
                 initialValue = state.confirmPassword,
                 onChange = {
                     commit { copy(confirmPassword = it) }
                 },
-                maxLines = 1,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Send
                 ),

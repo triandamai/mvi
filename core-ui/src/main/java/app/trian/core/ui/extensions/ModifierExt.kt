@@ -320,7 +320,7 @@ fun Dp.from(
     val b = screenWidth.value.toDouble().pow(2.0)
     val currentDiagonal = sqrt(a + b).dp
     //now design using size with w = 375 h = 812
-    val displayMetrics = DisplayMetrics()
+//    val displayMetrics = DisplayMetrics()
     val defWidth = defaultScreenWidth.pow(2)
     val defHeight = defaultScreenHeight.pow(2)
     val defScreenDiagonal = sqrt(defWidth + defHeight)

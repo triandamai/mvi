@@ -57,6 +57,7 @@ android {
 
 dependencies {
     api(project(":core-ui"))
+    api(project(":core-component"))
 
 
     implementation(libs.android.material)

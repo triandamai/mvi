@@ -15,7 +15,7 @@ plugins {
 }
 
 android {
-    namespace = "${libs.versions.namespace.get()}.feature.authentication"
+    namespace = "${libs.versions.namespace.get()}.feature.dashboard"
     compileSdk = 33
 
     defaultConfig {
@@ -57,6 +57,7 @@ android {
 
 dependencies {
     api(project(":core-ui"))
+    api(project(":core-component"))
 
 
     implementation(libs.android.material)

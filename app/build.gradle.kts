@@ -76,9 +76,11 @@ android {
 }
 
 dependencies {
-    implementation(project(":core-ui"))
-    implementation(project(":feature-authentication"))
-    implementation(project(":feature-dashboard"))
+    api(project(":core-ui"))
+    api(project(":core-component"))
+    api(project(":feature-authentication"))
+    api(project(":feature-dashboard"))
+    api(project(":feature-recipe"))
     coreLibraryDesugaring(libs.desugar.jdk.lib)
 
     implementation(libs.android.material)

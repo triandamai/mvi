@@ -26,6 +26,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,8 +51,6 @@ import app.trian.resepku.feature.recipe.createRecipe.components.ScreenSuccessCre
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun ScreenCreateRecipe(
-    state: CreateRecipeState = CreateRecipeState(),
-    data: CreateRecipeDataState = CreateRecipeDataState(),
     invoker: UIListenerData<CreateRecipeState, CreateRecipeDataState, CreateRecipeEvent>
 ) = UIWrapper(invoker) {
 
@@ -223,12 +225,45 @@ internal fun ScreenCreateRecipe(
 @Preview
 @Composable
 fun PreviewScreenCreateRecipe() {
+
+    var state by remember {
+        mutableStateOf(CreateRecipeState())
+    }
+
+    var data by remember {
+        mutableStateOf(CreateRecipeDataState())
+    }
     BaseMainApp {
         ScreenCreateRecipe(
             invoker = UIListenerData(
                 controller = it,
-                state = CreateRecipeState(),
-                data = CreateRecipeDataState()
+                state = state,
+                data = data,
+                commit = {
+                    state = it
+                },
+                commitData = {
+                    data = it
+                },
+                dispatcher = {
+                    when (it) {
+                        CreateRecipeEvent.AddNewCookingStep -> TODO()
+                        CreateRecipeEvent.AddNewIngredient -> TODO()
+                        is CreateRecipeEvent.ChangeCookingStep -> TODO()
+                        is CreateRecipeEvent.ChangeIngredient -> TODO()
+                        is CreateRecipeEvent.ChangeStep -> {
+                            val step = if (it.isNext) state.step + 1
+                            else state.step - 1
+
+                            state = state.copy(step = step)
+                        }
+
+                        is CreateRecipeEvent.RemoveCookingStep -> TODO()
+                        is CreateRecipeEvent.RemoveIngredient -> TODO()
+                        is CreateRecipeEvent.ReorderCookingStep -> TODO()
+                        is CreateRecipeEvent.ReorderIngredient -> TODO()
+                    }
+                }
             )
         )
     }

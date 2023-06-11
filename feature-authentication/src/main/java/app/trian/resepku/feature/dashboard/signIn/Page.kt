@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,7 +44,6 @@ import app.trian.core.ui.routes.Routes
 
 @Composable
 fun ScreenSignIn(
-    state: SignInState = SignInState(),
     invoker: UIListener<SignInState, SignInEvent>
 ) = UIWrapper(
     invoker = invoker
@@ -85,27 +85,27 @@ fun ScreenSignIn(
             ) {
                 Text(
                     text = stringResource(string.title_sign_in),
-                    style = androidx.compose.material3.MaterialTheme.typography.bodyLarge.copy(
+                    style = MaterialTheme.typography.bodyLarge.copy(
                         fontSize = 22.sp,
                         fontWeight = FontWeight.SemiBold,
                     ),
-                    color = androidx.compose.material3.MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     text = stringResource(string.subtitle_signin),
-                    style = androidx.compose.material3.MaterialTheme.typography.displayMedium.copy(
+                    style = MaterialTheme.typography.displayMedium.copy(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Light,
                     ),
-                    color = androidx.compose.material3.MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(modifier = Modifier.height(36.dp))
                 FormInput(
                     label = {
                         Text(
                             text = stringResource(string.label_input_email),
-                            style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
-                            color = androidx.compose.material3.MaterialTheme.colorScheme.onBackground
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     },
                     initialValue = state.email,
@@ -122,8 +122,8 @@ fun ScreenSignIn(
                     label = {
                         Text(
                             text = stringResource(string.label_input_password),
-                            style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
-                            color = androidx.compose.material3.MaterialTheme.colorScheme.onBackground
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     },
                     initialValue = state.password,
@@ -131,7 +131,6 @@ fun ScreenSignIn(
                     onChange = {
                         commit { copy(password = it) }
                     },
-                    showPasswordObsecure = true,
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Send
                     ),

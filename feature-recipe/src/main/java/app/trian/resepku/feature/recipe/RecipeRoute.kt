@@ -28,8 +28,6 @@ fun NavGraphBuilder.dashboardRoute(
         val state by uiState.collectAsState()
         val data by uiDataState.collectAsState()
         ScreenCreateRecipe(
-            state=state,
-            data=data,
             invoker = UIListenerData(
                 controller = uiController,
                 state = CreateRecipeState(),

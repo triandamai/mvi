@@ -26,7 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.trian.core.ui.BaseMainApp
-import app.trian.core.ui.R
+import app.trian.core.ui.component.R
 import app.trian.core.ui.component.FormInput
 import app.trian.core.ui.component.FormInputMultiline
 import app.trian.core.ui.extensions.dashedBorder

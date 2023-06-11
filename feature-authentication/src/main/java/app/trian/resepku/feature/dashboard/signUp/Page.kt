@@ -19,6 +19,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -44,7 +46,6 @@ import app.trian.core.ui.routes.Routes
 
 @Composable
 fun ScreenSignUp(
-    state: SignUpState = SignUpState(),
     invoker: UIListener<SignUpState, SignUpEvent>
 ) = UIWrapper(
     invoker = invoker
@@ -81,9 +82,9 @@ fun ScreenSignUp(
                 )
                 .verticalScroll(rememberScrollState())
         ) {
-            androidx.compose.material3.Text(
+            Text(
                 text = stringResource(string.title_register),
-                style = androidx.compose.material3.MaterialTheme.typography.bodyLarge.copy(
+                style = MaterialTheme.typography.bodyLarge.copy(
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -107,9 +108,9 @@ fun ScreenSignUp(
                 FormInput(
                     initialValue = state.displayName,
                     label = {
-                        androidx.compose.material3.Text(
+                        Text(
                             text = stringResource(string.label_input_display_nama),
-                            style = androidx.compose.material3.MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     },
                     placeholder = stringResource(string.placeholder_input_display_name),
@@ -124,9 +125,9 @@ fun ScreenSignUp(
                 FormInput(
                     initialValue = state.email,
                     label = {
-                        androidx.compose.material3.Text(
+                        Text(
                             text = stringResource(id = string.label_input_email),
-                            style = androidx.compose.material3.MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     },
                     placeholder = stringResource(id = string.placeholder_input_email),
@@ -141,12 +142,11 @@ fun ScreenSignUp(
                 FormInput(
                     initialValue = state.password,
                     label = {
-                        androidx.compose.material3.Text(
+                        Text(
                             text = stringResource(id = string.label_input_password),
-                            style = androidx.compose.material3.MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     },
-                    showPasswordObsecure = true,
                     placeholder = stringResource(id = string.placeholder_input_password),
                     onChange = {
                         commit { copy(password = it) }
@@ -164,12 +164,11 @@ fun ScreenSignUp(
                 FormInput(
                     initialValue = state.confirmPassword,
                     label = {
-                        androidx.compose.material3.Text(
+                        Text(
                             text = stringResource(id = string.label_input_confirm_new_password),
-                            style = androidx.compose.material3.MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     },
-                    showPasswordObsecure = true,
                     placeholder = stringResource(id = string.placeholder_input_confirm_new_password),
                     onChange = {
                         commit { copy(confirmPassword = it) }

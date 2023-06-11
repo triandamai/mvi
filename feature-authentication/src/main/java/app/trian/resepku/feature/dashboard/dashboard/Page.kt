@@ -31,7 +31,7 @@ import app.trian.core.ui.BaseMainApp
 import app.trian.core.ui.UIListener
 import app.trian.core.ui.UIWrapper
 import com.google.accompanist.pager.rememberPagerState
-import app.trian.core.ui.R
+import app.trian.core.ui.component.R
 import app.trian.core.ui.component.AnnotationTextItem
 import app.trian.core.ui.component.ButtonPrimary
 import app.trian.core.ui.component.ButtonSecondary
@@ -41,7 +41,6 @@ import app.trian.core.ui.routes.Routes
 
 @Composable
 fun ScreenOnboard(
-    state: OnboardState = OnboardState(),
     invoker: UIListener<OnboardState, OnboardEvent>
 ) = UIWrapper(invoker = invoker) {
     val privacyPolicyText = listOf(
@@ -52,10 +51,6 @@ fun ScreenOnboard(
         initialPage = 0
     )
     val totalPage= 4
-
-    val percentage by remember {
-        derivedStateOf { (((pagerState.currentPage+1).toFloat() / totalPage) * 100) / 100 }
-    }
 
     Column(
         modifier = Modifier

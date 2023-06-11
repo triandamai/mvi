@@ -2,7 +2,7 @@
  * Copyright (c) 2023 trian.app.
  */
 
-package app.trian.resepku.feature.dashboard.dashboard
+package app.trian.resepku.feature.dashboard.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -15,9 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -28,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.trian.core.ui.BaseMainApp
-import app.trian.core.ui.R
+import app.trian.core.ui.component.R
 import app.trian.core.ui.UIListenerData
 import app.trian.core.ui.UiWrapperData
 import app.trian.core.ui.component.AnnotationTextItem
@@ -36,14 +33,11 @@ import app.trian.core.ui.component.ButtonPrimary
 import app.trian.core.ui.component.ButtonSecondary
 import app.trian.core.ui.component.TextWithAction
 import app.trian.core.ui.routes.Routes
-import com.google.accompanist.pager.rememberPagerState
 
 
 @Composable
-fun ScreenDashboard(
-    state: DashboardState = DashboardState(),
-    data:DashboardDataState=DashboardDataState(),
-    invoker: UIListenerData<DashboardState, DashboardDataState, OnboardEvent>
+fun ScreenHome(
+    invoker: UIListenerData<HomeState, HomeDataState, HomeEvent>
 ) = UiWrapperData(invoker = invoker) {
     val privacyPolicyText = listOf(
         AnnotationTextItem.Text(stringResource(id = R.string.text_license_agreement)),
@@ -140,11 +134,11 @@ fun ScreenDashboard(
 @Composable
 fun PreviewScreenOnboard() {
     BaseMainApp {
-        ScreenDashboard(
+        ScreenHome(
             invoker = UIListenerData(
                 controller = it,
-                state = DashboardState(),
-                data = DashboardDataState()
+                state = HomeState(),
+                data = HomeDataState()
             )
         )
     }

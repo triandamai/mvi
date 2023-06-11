@@ -11,29 +11,27 @@ import app.trian.core.ui.UIController
 import app.trian.core.ui.UIListenerData
 import app.trian.core.ui.pageWrapper
 import app.trian.core.ui.routes.Routes.Splash
-import app.trian.resepku.feature.dashboard.dashboard.DashboardDataState
-import app.trian.resepku.feature.dashboard.dashboard.DashboardState
-import app.trian.resepku.feature.dashboard.dashboard.DashboardViewModel
-import app.trian.resepku.feature.dashboard.dashboard.ScreenDashboard
+import app.trian.resepku.feature.dashboard.home.HomeDataState
+import app.trian.resepku.feature.dashboard.home.HomeState
+import app.trian.resepku.feature.dashboard.home.HomeViewModel
+import app.trian.resepku.feature.dashboard.home.ScreenHome
 
 
 fun NavGraphBuilder.dashboardRoute(
     uiController: UIController
 ) {
 
-    pageWrapper<DashboardViewModel>(
+    pageWrapper<HomeViewModel>(
         route = Splash.routeName,
         controller = uiController
     ) {
         val state by uiState.collectAsState()
         val data by uiDataState.collectAsState()
-        ScreenDashboard(
-            state=state,
-            data=data,
+        ScreenHome(
             invoker = UIListenerData(
                 controller = uiController,
-                state = DashboardState(),
-                data = DashboardDataState(),
+                state = state,
+                data = data,
                 commit = ::commit,
                 commitData = ::commitData,
                 dispatcher = ::dispatch

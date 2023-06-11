@@ -28,6 +28,7 @@ rootProject.name = "Resepku"
 include(":app")
 include(":data")
 include(":core-ui")
+include(":core-component")
 include(":feature-authentication")
 include(":feature-dashboard")
 include(":feature-recipe")

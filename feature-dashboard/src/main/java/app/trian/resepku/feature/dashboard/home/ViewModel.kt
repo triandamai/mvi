@@ -2,17 +2,17 @@
  * Copyright (c) 2023 trian.app.
  */
 
-package app.trian.resepku.feature.dashboard.dashboard
+package app.trian.resepku.feature.dashboard.home
 
 import app.trian.core.ui.viewModel.BaseViewModelData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class DashboardViewModel @Inject constructor(
-) : BaseViewModelData<DashboardState, DashboardDataState, OnboardEvent>(
-    DashboardState(),
-    DashboardDataState()
+class HomeViewModel @Inject constructor(
+) : BaseViewModelData<HomeState, HomeDataState, HomeEvent>(
+    HomeState(),
+    HomeDataState()
 ) {
     init {
         handleActions()
@@ -32,7 +32,7 @@ class DashboardViewModel @Inject constructor(
 
     override fun handleActions() = onEvent {
         when (it) {
-            is OnboardEvent.PagerChanges -> calculatePager(it.page)
+            is HomeEvent.PagerChanges -> calculatePager(it.page)
         }
     }
 

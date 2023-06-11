@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.trian.resepku.base.BaseMainApp
+import app.trian.core.ui.BaseMainApp
 
 @Composable
 fun HeaderStepWithProgress(

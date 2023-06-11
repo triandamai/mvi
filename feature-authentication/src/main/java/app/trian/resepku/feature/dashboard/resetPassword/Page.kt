@@ -14,6 +14,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,7 +34,6 @@ import app.trian.core.ui.component.FormInput
 
 @Composable
 fun ScreenResetPassword(
-    state: ResetPasswordState = ResetPasswordState(),
     invoker: UIListener<ResetPasswordState, ResetPasswordEvent>
 ) = UIWrapper(
     invoker = invoker
@@ -55,9 +56,9 @@ fun ScreenResetPassword(
         ) {
             FormInput(
                 label = {
-                    androidx.compose.material3.Text(
+                    Text(
                         text = stringResource(id = R.string.label_input_email),
-                        style = androidx.compose.material3.MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 },
                 placeholder = stringResource(R.string.placeholder_email_reset_password),

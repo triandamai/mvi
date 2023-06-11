@@ -18,7 +18,7 @@ import app.trian.core.ui.listener.BottomSheetChangeListener
 
 open class UIListener<State, Event>(
     val controller: UIController,
-    private val state: State,
+    val state: State,
     private val commit: (State) -> Unit = {},
     private val dispatcher: (Event) -> Unit = {},
 ) {
@@ -90,7 +90,7 @@ open class UIListener<State, Event>(
 class UIListenerData<State, Data, Event>(
     controller: UIController,
     state: State,
-    private val data: Data,
+    val data: Data,
     commit: (State) -> Unit = {},
     private val commitData: (Data) -> Unit = {},
     dispatcher: (Event) -> Unit = {},
