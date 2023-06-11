@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -26,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import app.trian.core.ui.BaseMainApp
 import app.trian.core.ui.component.ButtonIcon
 import app.trian.core.ui.component.ItemCookingStep
-import app.trian.resepku.feature.recipe.createRecipe.CookingStep
+import com.bluehabit.budgetku.data.model.CookingStep
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
@@ -69,7 +70,7 @@ fun ScreenInputStep(
                     }
                 }
             }
-            itemsIndexed(dataCookingStep, key = { _, item -> item.id }) { index, item ->
+            itemsIndexed(dataCookingStep, key = { _,item->item.id }) {index,item->
                 ReorderableItem(
                     reorderableState = reorder,
                     key = item.id

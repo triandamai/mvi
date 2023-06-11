@@ -5,6 +5,8 @@
 package app.trian.resepku.feature.recipe.createRecipe
 
 import android.os.Parcelable
+import com.bluehabit.budgetku.data.model.CookingStep
+import com.bluehabit.budgetku.data.model.Ingredient
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 import javax.annotation.concurrent.Immutable
@@ -27,7 +29,7 @@ data class CreateRecipeDataState(
 
 sealed interface CreateRecipeEvent {
     //page
-    data class ChangeStep(val isNext: Boolean) : CreateRecipeEvent
+    data class ChangeStep(val isNextStep: Boolean) : CreateRecipeEvent
 
     //cooking step
     object AddNewCookingStep: CreateRecipeEvent

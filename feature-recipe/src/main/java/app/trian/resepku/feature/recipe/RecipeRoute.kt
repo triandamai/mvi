@@ -17,7 +17,7 @@ import app.trian.resepku.feature.recipe.createRecipe.CreateRecipeViewModel
 import app.trian.resepku.feature.recipe.createRecipe.ScreenCreateRecipe
 
 
-fun NavGraphBuilder.dashboardRoute(
+fun NavGraphBuilder.recipeRoute(
     uiController: UIController
 ) {
 
@@ -30,8 +30,8 @@ fun NavGraphBuilder.dashboardRoute(
         ScreenCreateRecipe(
             invoker = UIListenerData(
                 controller = uiController,
-                state = CreateRecipeState(),
-                data = CreateRecipeDataState(),
+                state = state,
+                data = data,
                 commit = ::commit,
                 commitData = ::commitData,
                 dispatcher = ::dispatch

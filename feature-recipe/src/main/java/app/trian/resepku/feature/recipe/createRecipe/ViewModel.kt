@@ -4,9 +4,15 @@
 
 package app.trian.resepku.feature.recipe.createRecipe
 
+import app.trian.core.ui.extensions.Empty
+import app.trian.core.ui.extensions.add
+import app.trian.core.ui.extensions.createUUID
+import app.trian.core.ui.extensions.findIndex
 import app.trian.core.ui.extensions.navigateUp
 import app.trian.core.ui.extensions.showBottomSheet
 import app.trian.core.ui.viewModel.BaseViewModelData
+import com.bluehabit.budgetku.data.model.CookingStep
+import com.bluehabit.budgetku.data.model.Ingredient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.UUID
 import javax.inject.Inject
@@ -17,6 +23,7 @@ class CreateRecipeViewModel @Inject constructor(
     CreateRecipeState(),
     CreateRecipeDataState()
 ) {
+    val totalStep = 4
     init {
         handleActions()
     }
@@ -27,12 +34,9 @@ class CreateRecipeViewModel @Inject constructor(
     ) = asyncWithState {
         //go to next screen
         if (isNext) {
-            val gotToNextPage = if (step < 4) step + 1 else step
+            val gotToNextPage = if (step < totalStep) step.plus(1) else step
             commit {
-                copy(
-                    step = gotToNextPage,
-                    visibleBottomBar = gotToNextPage != 3
-                )
+                copy(step = gotToNextPage, visibleBottomBar = gotToNextPage != 3)
             }
             return@asyncWithState
         }
@@ -52,35 +56,24 @@ class CreateRecipeViewModel @Inject constructor(
         //onBackPressed
         val goToPreviousPage = step - 1
         commit {
-            copy(
-                step = goToPreviousPage,
-                visibleBottomBar = goToPreviousPage != 3
-            )
+            copy(step = goToPreviousPage, visibleBottomBar = goToPreviousPage != 3)
         }
     }
 
-//cooking step
-
-
+    //cooking step
     private fun reorderCookingStep(from: Int, to: Int) = asyncWithState {
         if (from >= dataCookingStep.size || to >= dataCookingStep.size) return@asyncWithState
-        val data = dataCookingStep.toMutableList().apply {
-            add(to, removeAt(from))
-        }
-        commit {
-            copy(
-                dataCookingStep = data
-            )
-        }
+        val data = dataCookingStep.toMutableList().apply { add(to, removeAt(from)) }
+        commit { copy(dataCookingStep = data) }
     }
 
     private fun addNewCookingStep() = asyncWithState {
         commit {
             copy(
-                dataCookingStep = dataCookingStep.toMutableList().plus(
+                dataCookingStep = dataCookingStep.add(
                     CookingStep(
-                        id = UUID.randomUUID().toString(),
-                        value = ""
+                        id = createUUID(),
+                        value = String.Empty
                     )
                 )
             )
@@ -90,58 +83,42 @@ class CreateRecipeViewModel @Inject constructor(
     private fun changeCookingStep(
         data: CookingStep
     ) = asyncWithState {
-
-        val findIndex = dataCookingStep
-            .withIndex()
-            .first { (_, value) -> value.id == data.id }
-            .index
+        val findIndex = dataCookingStep.findIndex { (_, value) -> value.id == data.id }
 
         if (findIndex != -1) {
             val cookingSteps = dataCookingStep.toMutableList()
             cookingSteps[findIndex] = data
-            commit {
-                copy(
-                    dataCookingStep = cookingSteps
-                )
-            }
-        }
-    }
-
-    private fun removeCookingStep(ingredientId: String) = asyncWithState {
-        val findIndex = dataCookingStep
-            .withIndex()
-            .first { (_, value) -> value.id == ingredientId }
-            .index
-
-        if (findIndex != -1) {
-            val cookingSteps = dataCookingStep.toMutableList()
-            cookingSteps.removeAt(findIndex)
             commit { copy(dataCookingStep = cookingSteps) }
         }
     }
 
-//end
+    private fun removeCookingStep(ingredientId: String) = asyncWithState {
+        val findIndex = dataCookingStep.findIndex { (_, value) -> value.id == ingredientId }
+
+        if (findIndex != -1) {
+            val cookingSteps = dataCookingStep.toMutableList().apply {
+                removeAt(findIndex)
+            }
+            commit { copy(dataCookingStep = cookingSteps) }
+        }
+    }
+
+    //end
 
     //ingredient
     private fun reorderIngredient(from: Int, to: Int) = asyncWithState {
         if (from >= dataIngredient.size || to >= dataIngredient.size) return@asyncWithState
-        val data = dataIngredient.toMutableList().apply {
-            add(to, removeAt(from))
-        }
-        commit {
-            copy(
-                dataIngredient = data
-            )
-        }
+        val data = dataIngredient.toMutableList().apply { add(to, removeAt(from)) }
+        commit { copy(dataIngredient = data) }
     }
 
     private fun addNewPlainIngredient() = asyncWithState {
         commit {
             copy(
-                dataIngredient = dataIngredient.toMutableList().plus(
+                dataIngredient = dataIngredient.add(
                     Ingredient(
-                        id = UUID.randomUUID().toString(),
-                        value = ""
+                        id = createUUID(),
+                        value = String.Empty
                     )
                 )
             )
@@ -151,48 +128,35 @@ class CreateRecipeViewModel @Inject constructor(
     private fun changeIngredient(
         data: Ingredient
     ) = asyncWithState {
-
-        val findIndex = dataIngredient
-            .withIndex()
-            .first { (_, value) -> value.id == data.id }
-            .index
+        val findIndex = dataIngredient.findIndex { (_, value) -> value.id == data.id }
 
         if (findIndex != -1) {
             val ingredients = dataIngredient.toMutableList()
             ingredients[findIndex] = data
-            commit {
-                copy(
-                    dataIngredient = ingredients
-                )
-            }
-        }
-    }
-
-    private fun removeIngredient(ingredientId: String) = asyncWithState {
-        val findIndex = dataIngredient
-            .withIndex()
-            .first { (_, value) -> value.id == ingredientId }
-            .index
-
-        if (findIndex != -1) {
-            val ingredients = dataIngredient.toMutableList()
-            ingredients.removeAt(findIndex)
             commit { copy(dataIngredient = ingredients) }
         }
     }
 
-//end
+    private fun removeIngredient(ingredientId: String) = asyncWithState {
+        val findIndex = dataIngredient.findIndex { (_, value) -> value.id == ingredientId }
+
+        if (findIndex != -1) {
+            val ingredients = dataIngredient.toMutableList().apply {
+                removeAt(findIndex)
+            }
+            commit { copy(dataIngredient = ingredients) }
+        }
+    }
+    //end
 
 
     override fun handleActions() = onEvent { event ->
         when (event) {
-            is CreateRecipeEvent.ChangeStep -> calculatePage(event.isNext)
-
+            is CreateRecipeEvent.ChangeStep -> calculatePage(event.isNextStep)
             CreateRecipeEvent.AddNewCookingStep -> addNewCookingStep()
             is CreateRecipeEvent.ReorderCookingStep -> reorderCookingStep(event.from, event.to)
             is CreateRecipeEvent.ChangeCookingStep -> changeCookingStep(event.data)
             is CreateRecipeEvent.RemoveCookingStep -> removeCookingStep(event.id)
-
             CreateRecipeEvent.AddNewIngredient -> addNewPlainIngredient()
             is CreateRecipeEvent.ReorderIngredient -> reorderIngredient(event.from, event.to)
             is CreateRecipeEvent.ChangeIngredient -> changeIngredient(event.data)

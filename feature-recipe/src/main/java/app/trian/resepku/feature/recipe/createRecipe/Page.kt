@@ -55,11 +55,7 @@ internal fun ScreenCreateRecipe(
 ) = UIWrapper(invoker) {
 
     BackHandler {
-        dispatch(
-            CreateRecipeEvent.ChangeStep(
-                isNext = false
-            )
-        )
+        dispatch(CreateRecipeEvent.ChangeStep(isNextStep = false))
     }
 
     BaseScreen(
@@ -102,11 +98,7 @@ internal fun ScreenCreateRecipe(
                             ),
                         fullWidth = false,
                         onClick = {
-                            dispatch(
-                                CreateRecipeEvent.ChangeStep(
-                                    isNext = false
-                                )
-                            )
+                            dispatch(CreateRecipeEvent.ChangeStep(isNextStep = false))
                         }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -119,11 +111,7 @@ internal fun ScreenCreateRecipe(
                         fullWidth = false,
                         enabled = true,
                         onClick = {
-                            dispatch(
-                                CreateRecipeEvent.ChangeStep(
-                                    isNext = true
-                                )
-                            )
+                            dispatch(CreateRecipeEvent.ChangeStep(isNextStep = true))
                         }
                     )
 
@@ -144,11 +132,7 @@ internal fun ScreenCreateRecipe(
                         showBottomSheet()
                     },
                     onBackPress = {
-                        dispatch(
-                            CreateRecipeEvent.ChangeStep(
-                                isNext = false
-                            )
-                        )
+                        dispatch(CreateRecipeEvent.ChangeStep(isNextStep = false))
                     }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -162,17 +146,10 @@ internal fun ScreenCreateRecipe(
             ) {
                 when (state.step) {
                     0 -> ScreenMain()
-
-
                     1 -> ScreenInputIngredient(
                         dataIngredient = state.dataIngredient,
                         onMove = { from, to ->
-                            dispatch(
-                                CreateRecipeEvent.ReorderIngredient(
-                                    from = from,
-                                    to = to
-                                )
-                            )
+                            dispatch(CreateRecipeEvent.ReorderIngredient(from = from, to = to))
                         },
                         onChangeIngredient = {
                             dispatch(CreateRecipeEvent.ChangeIngredient(it))
@@ -188,12 +165,7 @@ internal fun ScreenCreateRecipe(
                     2 -> ScreenInputStep(
                         dataCookingStep = state.dataCookingStep,
                         onMove = { from, to ->
-                            dispatch(
-                                CreateRecipeEvent.ReorderCookingStep(
-                                    from = from,
-                                    to = to
-                                )
-                            )
+                            dispatch(CreateRecipeEvent.ReorderCookingStep(from = from, to = to))
                         },
                         onChangeCookingStep = {
                             dispatch(CreateRecipeEvent.ChangeCookingStep(it))
@@ -207,14 +179,9 @@ internal fun ScreenCreateRecipe(
                     )
 
                     3 -> ScreenSuccessCreateRecipe(
-                        onClose = {
-                            navigateUp()
-                        },
-                        onEdit = {
-
-                        }
+                        onClose = { navigateUp() },
+                        onEdit = {}
                     )
-
                     else -> Unit
                 }
             }
@@ -252,7 +219,7 @@ fun PreviewScreenCreateRecipe() {
                         is CreateRecipeEvent.ChangeCookingStep -> TODO()
                         is CreateRecipeEvent.ChangeIngredient -> TODO()
                         is CreateRecipeEvent.ChangeStep -> {
-                            val step = if (it.isNext) state.step + 1
+                            val step = if (it.isNextStep) state.step + 1
                             else state.step - 1
 
                             state = state.copy(step = step)

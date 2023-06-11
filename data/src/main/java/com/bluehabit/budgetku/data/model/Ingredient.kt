@@ -2,7 +2,7 @@
  * Copyright (c) 2023 trian.app.
  */
 
-package app.trian.resepku.feature.recipe.createRecipe
+package com.bluehabit.budgetku.data.model
 
 data class Ingredient(
     val id:String="",

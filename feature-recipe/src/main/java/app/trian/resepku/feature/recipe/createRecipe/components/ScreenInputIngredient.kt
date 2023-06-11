@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import app.trian.core.ui.BaseMainApp
 import app.trian.core.ui.component.ButtonIcon
 import app.trian.core.ui.component.ItemIngredient
-import app.trian.resepku.feature.recipe.createRecipe.Ingredient
+import com.bluehabit.budgetku.data.model.Ingredient
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState

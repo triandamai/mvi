@@ -76,6 +76,7 @@ android {
 }
 
 dependencies {
+    api(project(":data"))
     api(project(":core-ui"))
     api(project(":core-component"))
     api(project(":feature-authentication"))
@@ -158,14 +159,6 @@ dependencies {
 kapt {
     correctErrorTypes = true
 }
-sqldelight {
-    databases {
-        create("Database") {
-            packageName.set("${libs.versions.namespace.get()}.sqldelight")
-        }
-    }
-}
-
 tasks.create<Copy>("installGitHook") {
     var suffix = "macos"
     if (org.apache.tools.ant.taskdefs.condition.Os.isFamily(org.apache.tools.ant.taskdefs.condition.Os.FAMILY_WINDOWS)) {

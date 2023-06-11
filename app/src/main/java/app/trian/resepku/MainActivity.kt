@@ -5,9 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import app.trian.core.ui.BaseMainApp
+import app.trian.core.ui.routes.AuthenticationConstants
 import app.trian.core.ui.routes.Routes
 import app.trian.resepku.feature.dashboard.authenticationRoute
 import app.trian.resepku.feature.dashboard.dashboardRoute
+import app.trian.resepku.feature.recipe.recipeRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,10 +20,11 @@ class MainActivity : ComponentActivity() {
             BaseMainApp {
                 NavHost(
                     navController = it.router,
-                    startDestination = Routes.CreateRecipe.routeName
+                    startDestination = AuthenticationConstants.parentRoute
                 ) {
                     authenticationRoute(uiController = it)
                     dashboardRoute(uiController = it)
+                    recipeRoute(uiController = it)
                 }
             }
         }
