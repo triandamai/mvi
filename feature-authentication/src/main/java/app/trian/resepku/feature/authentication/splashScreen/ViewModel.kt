@@ -19,6 +19,7 @@ class SplashViewModel @Inject constructor(
 
     init {
         handleActions()
+        checkIfUserLoggedIn()
     }
 
     private fun checkIfUserLoggedIn() = async {
@@ -29,8 +30,6 @@ class SplashViewModel @Inject constructor(
 
 
     override fun handleActions() = onEvent {
-        when (it) {
-            SplashEvent.CheckSession -> checkIfUserLoggedIn()
-        }
+
     }
 }

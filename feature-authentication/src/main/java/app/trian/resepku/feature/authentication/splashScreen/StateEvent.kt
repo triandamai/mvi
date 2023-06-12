@@ -15,5 +15,5 @@ data class SplashState(
 ) : Parcelable
 
 sealed class SplashEvent{
-    object CheckSession: SplashEvent()
+
 }

@@ -21,9 +21,7 @@ import app.trian.core.ui.UIWrapper
 fun ScreenSplash(
     uiEvent: UIListener<SplashState, SplashEvent>
 ) = UIWrapper(uiEvent = uiEvent) {
-    LaunchedEffect(key1 = this, block = {
-        dispatch(SplashEvent.CheckSession)
-    })
+    
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
