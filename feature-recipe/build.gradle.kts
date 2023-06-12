@@ -80,6 +80,7 @@ dependencies {
     with(libs.hilt) {
         implementation(navigation.compose)
         implementation(android)
+        implementation(lifecycle.viewmodel)
         androidTestImplementation(android.test)
         kapt(android.compiler)
         kaptTest(android.compiler)

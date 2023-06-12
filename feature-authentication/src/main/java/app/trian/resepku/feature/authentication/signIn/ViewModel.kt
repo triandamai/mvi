@@ -4,16 +4,18 @@
 
 package app.trian.resepku.feature.authentication.signIn
 
+import android.content.Context
 import android.util.Patterns
 import app.trian.core.ui.extensions.hideKeyboard
 import app.trian.core.ui.viewModel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
-
-) : BaseViewModel<SignInState, SignInEvent>(SignInState()) {
+    @ApplicationContext context: Context
+) : BaseViewModel<SignInState, SignInEvent>(context,SignInState()) {
 
     init {
         handleActions()
@@ -22,7 +24,7 @@ class SignInViewModel @Inject constructor(
     private fun validateData(
         valid: suspend (String, String) -> Unit
     ) = asyncWithState {
-        controller.context.hideKeyboard()
+        context.hideKeyboard()
         when {
             email.isEmpty() || password.isEmpty() -> {
                 commit {

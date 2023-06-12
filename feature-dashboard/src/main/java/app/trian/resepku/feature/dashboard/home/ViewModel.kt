@@ -4,13 +4,17 @@
 
 package app.trian.resepku.feature.dashboard.home
 
+import android.content.Context
 import app.trian.core.ui.viewModel.BaseViewModelData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    @ApplicationContext context: Context
 ) : BaseViewModelData<HomeState, HomeDataState, HomeEvent>(
+    context,
     HomeState(),
     HomeDataState()
 ) {

@@ -20,8 +20,8 @@ import app.trian.core.ui.routes.Routes.SignUp
 import app.trian.core.ui.routes.Routes.Splash
 import app.trian.resepku.feature.authentication.changePassword.ChangePasswordViewModel
 import app.trian.resepku.feature.authentication.changePassword.ScreenChangePassword
-import app.trian.resepku.feature.authentication.dashboard.OnboardViewModel
-import app.trian.resepku.feature.authentication.dashboard.ScreenOnboard
+import app.trian.resepku.feature.authentication.onboard.OnboardViewModel
+import app.trian.resepku.feature.authentication.onboard.ScreenOnboard
 import app.trian.resepku.feature.authentication.resetPassword.ResetPasswordViewModel
 import app.trian.resepku.feature.authentication.resetPassword.ScreenResetPassword
 import app.trian.resepku.feature.authentication.signIn.ScreenSignIn

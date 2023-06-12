@@ -4,6 +4,7 @@
 
 package app.trian.resepku.feature.recipe.createRecipe
 
+import android.content.Context
 import app.trian.core.ui.extensions.Empty
 import app.trian.core.ui.extensions.add
 import app.trian.core.ui.extensions.createUUID
@@ -14,15 +15,19 @@ import app.trian.core.ui.viewModel.BaseViewModelData
 import app.trian.resepku.data.model.CookingStep
 import app.trian.resepku.data.model.Ingredient
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateRecipeViewModel @Inject constructor(
+    @ApplicationContext context: Context
 ) : BaseViewModelData<CreateRecipeState, CreateRecipeDataState, CreateRecipeEvent>(
+    context,
     CreateRecipeState(),
     CreateRecipeDataState()
 ) {
-    val totalStep = 4
+    private val totalStep = 4
+
     init {
         handleActions()
     }
@@ -42,13 +47,13 @@ class CreateRecipeViewModel @Inject constructor(
 
         //close when success screen
         if (step == 3) {
-            controller.navigateUp()
+            navigation.navigateUp()
             return@asyncWithState
         }
 
         //confirmation when at the beginning screen
         if (step == 0) {
-            controller.showBottomSheet()
+            bottomSheet.showBottomSheet(true)
             return@asyncWithState
         }
 

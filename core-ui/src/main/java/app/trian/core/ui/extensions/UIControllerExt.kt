@@ -16,7 +16,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 
 
 //region route
-fun UIController.backPressedAndClose() {
+fun UIController.navigateBackAndClose() {
     router.popBackStack(
         currentRoute,
         inclusive = true

@@ -5,7 +5,7 @@
 package app.trian.core.ui
 
 import app.trian.core.ui.extensions.addOnBottomSheetStateChangeListener
-import app.trian.core.ui.extensions.backPressedAndClose
+import app.trian.core.ui.extensions.navigateBackAndClose
 import app.trian.core.ui.extensions.hideBottomSheet
 import app.trian.core.ui.extensions.hideKeyboard
 import app.trian.core.ui.extensions.navigate
@@ -33,7 +33,7 @@ open class UIListener<State, Event>(
     //application state nav
     //region navigation
     fun backAndClose() =
-        controller.backPressedAndClose()
+        controller.navigateBackAndClose()
 
     fun navigateUp() =
         controller.navigateUp()

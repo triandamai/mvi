@@ -2,15 +2,18 @@
  * Copyright (c) 2023 trian.app.
  */
 
-package app.trian.resepku.feature.authentication.dashboard
+package app.trian.resepku.feature.authentication.onboard
 
+import android.content.Context
 import app.trian.core.ui.viewModel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @HiltViewModel
 class OnboardViewModel @Inject constructor(
-) : BaseViewModel<OnboardState, OnboardEvent>(OnboardState()) {
+    @ApplicationContext context: Context
+) : BaseViewModel<OnboardState, OnboardEvent>(context, OnboardState()) {
     init {
         handleActions()
     }

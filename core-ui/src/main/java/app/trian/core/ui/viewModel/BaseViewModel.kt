@@ -4,11 +4,15 @@
 
 package app.trian.core.ui.viewModel
 
+import android.content.Context
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.trian.core.ui.Response
 import app.trian.core.ui.UIController
+import app.trian.core.ui.listener.BottomSheetListener
+import app.trian.core.ui.listener.NavigationListener
+import app.trian.core.ui.listener.ToastListener
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -23,6 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 abstract class BaseViewModel<State : Parcelable, Action>(
+    val context: Context,
     private val initialState: State,
 ) : ViewModel() {
     companion object {
@@ -34,8 +39,28 @@ abstract class BaseViewModel<State : Parcelable, Action>(
 
     private val action = Channel<Action>(Channel.UNLIMITED)
 
-    private lateinit var _controller: UIController
-    val controller get() = _controller
+    private lateinit var _toastListener: ToastListener
+    protected val toast get() = _toastListener
+    private lateinit var _navigationListener: NavigationListener
+    protected val navigation get() = _navigationListener
+
+    private lateinit var _bottomSheetListener: BottomSheetListener
+    protected val bottomSheet get() = _bottomSheetListener
+
+
+    //listener
+    fun addToastListener(listener: ToastListener) {
+        _toastListener = listener
+    }
+
+    fun addNavigationListener(listener: NavigationListener) {
+        _navigationListener = listener
+    }
+    fun addBottomSheetListener(listener: BottomSheetListener){
+        _bottomSheetListener = listener
+    }
+
+    //end
     protected fun onEvent(
         block: suspend (Action) -> Unit
     ) {
@@ -83,10 +108,9 @@ abstract class BaseViewModel<State : Parcelable, Action>(
             .collect {
                 when (it) {
                     is Response.Error -> error(
-                        it.message.ifEmpty {
-                            controller.context.getString(it.stringId.toInt())
-                        }
+                        it.message.ifEmpty {}
                     )
+
                     Response.Loading -> loading()
                     is Response.Result -> success(it.data)
                 }
@@ -99,10 +123,6 @@ abstract class BaseViewModel<State : Parcelable, Action>(
 
     fun dispatch(e: Action) = async { action.send(e) }
 
-    fun setController(appState: UIController) {
-        _controller = appState
-    }
-
 
     override fun onCleared() {
         super.onCleared()
@@ -114,9 +134,10 @@ abstract class BaseViewModel<State : Parcelable, Action>(
 }
 
 abstract class BaseViewModelData<State : Parcelable, DataState : Parcelable, Action>(
+    context: Context,
     initialState: State,
     private val initialData: DataState
-) : BaseViewModel<State, Action>(initialState) {
+) : BaseViewModel<State, Action>(context, initialState) {
     private val _uiDataState: MutableStateFlow<DataState> = MutableStateFlow(initialData)
     val uiDataState get() = _uiDataState.asStateFlow()
 

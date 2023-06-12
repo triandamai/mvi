@@ -4,14 +4,16 @@
 
 package app.trian.resepku.feature.authentication.changePassword
 
+import android.content.Context
 import app.trian.core.ui.viewModel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @HiltViewModel
 class ChangePasswordViewModel @Inject constructor(
-
-) : BaseViewModel<ChangePasswordState, ChangePasswordEvent>(ChangePasswordState()) {
+    @ApplicationContext context: Context
+) : BaseViewModel<ChangePasswordState, ChangePasswordEvent>(context,ChangePasswordState()) {
 
     init {
         handleActions()

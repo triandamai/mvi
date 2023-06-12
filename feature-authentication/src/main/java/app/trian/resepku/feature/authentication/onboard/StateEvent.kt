@@ -2,7 +2,7 @@
  * Copyright (c) 2023 trian.app.
  */
 
-package app.trian.resepku.feature.authentication.dashboard
+package app.trian.resepku.feature.authentication.onboard
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

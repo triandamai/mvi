@@ -5,7 +5,7 @@
  * Proprietary and confidential
  */
 
-package app.bluehabit.budgetku.data
+package app.trian.resepku.data
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
