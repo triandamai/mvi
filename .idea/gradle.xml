@@ -13,8 +13,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core-component" />
+            <option value="$PROJECT_DIR$/core-data" />
             <option value="$PROJECT_DIR$/core-ui" />
-            <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/feature-authentication" />
             <option value="$PROJECT_DIR$/feature-dashboard" />
             <option value="$PROJECT_DIR$/feature-recipe" />
