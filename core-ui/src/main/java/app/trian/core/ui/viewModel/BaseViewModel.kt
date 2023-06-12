@@ -4,6 +4,7 @@
 
 package app.trian.core.ui.viewModel
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
@@ -26,6 +27,7 @@ import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@SuppressLint("StaticFieldLeak")
 abstract class BaseViewModel<State : Parcelable, Action>(
     val context: Context,
     private val initialState: State,
