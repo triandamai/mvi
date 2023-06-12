@@ -7,6 +7,6 @@
 
 package com.bluehabit.core.ui.routes
 
-object AuthenticationConstants {
-    const val parentRoute="AUTHENTICATION"
+object TransactionConstants {
+    const val parentRoute="TRANSACTION"
 }

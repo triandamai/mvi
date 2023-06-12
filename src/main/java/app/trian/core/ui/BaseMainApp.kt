@@ -9,14 +9,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import app.trian.core.ui.theme.ApplicationTheme
+import com.bluehabit.core.ui.theme.BudgetKuTheme
 
 @Composable
 fun BaseMainApp(
     controller: UIController = rememberUIController(),
     content: @Composable (appState: UIController) -> Unit = { }
 ) {
-    ApplicationTheme {
+    BudgetKuTheme {
         // A surface container using the 'background' color from the theme
         Surface(
             modifier = Modifier.fillMaxSize(),

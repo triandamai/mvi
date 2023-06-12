@@ -1,17 +1,20 @@
 /*
- * Copyright (c) 2023 trian.app.
+ * Copyright © 2023 Blue Habit.
+ *
+ * Unauthorized copying, publishing of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
  */
 
-package app.trian.core.ui.routes
+package com.bluehabit.core.ui.routes
 
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.bluehabit.core.ui.R
+import com.bluehabit.core.ui.components.ChildMenu
+import com.bluehabit.core.ui.components.ParentMenu
 
 object Routes {
-    object CreateRecipe {
-        const val routeName = "CreateRecipe"
-    }
     object ChangePassword {
         const val routeName = "ChangePassword"
     }
@@ -37,6 +40,24 @@ object Routes {
     object Onboard {
         const val routeName = "Onboard"
 
+        val images: List<Int> = listOf(
+            R.drawable.onboard_1,
+            R.drawable.onboard_2,
+            R.drawable.onboard_3,
+            R.drawable.onboard_4,
+        )
+        val title: List<Int> = listOf(
+            R.string.onboard_title_1,
+            R.string.onboard_title_2,
+            R.string.onboard_title_3,
+            R.string.onboard_title_4,
+        )
+        val subtitle: List<Int> = listOf(
+            R.string.onboard_subtitle_1,
+            R.string.onboard_subtitle_2,
+            R.string.onboard_subtitle_3,
+            R.string.onboard_subtitle_4,
+        )
     }
     object ResetPassword {
         const val routeName = "ResetPassword"
@@ -112,7 +133,71 @@ object Routes {
 
     object Profile {
         const val routeName = "Profile"
-
+        val menus: List<ParentMenu> = listOf(
+            ParentMenu(
+                title = "Pengaturan Aplikasi",
+                children = listOf(
+                    ChildMenu(
+                        title = "Atur Pin",
+                        icon = R.drawable.ic_menu_profile_atur_pin
+                    ),
+                    ChildMenu(
+                        title = "Ubah Password",
+                        icon = R.drawable.ic_menu_profile_ubah_password
+                    ),
+                    ChildMenu(
+                        title = "Atur Pengingat",
+                        icon = R.drawable.ic_menu_profile_atur_pengingat
+                    ),
+                    ChildMenu(
+                        title = "Hapus Akun",
+                        icon = R.drawable.ic_menu_profile_hapus_akun
+                    )
+                )
+            ),
+            ParentMenu(
+                title = "Kontak Kami",
+                children = listOf(
+                    ChildMenu(
+                        title = "Kirim Saran",
+                        icon = R.drawable.ic_menu_profile_kirim_saran
+                    ),
+                    ChildMenu(
+                        title = "Whatsapp",
+                        icon = R.drawable.ic_menu_profile_ubah_password
+                    ),
+                    ChildMenu(
+                        title = "Ikuti Sosial Media",
+                        icon = R.drawable.ic_menu_profile_atur_pengingat
+                    ),
+                    ChildMenu(
+                        title = "Berikan Rating Aplikasi",
+                        icon = R.drawable.ic_menu_profile_rating
+                    )
+                )
+            ),
+            ParentMenu(
+                title = "Lainnya",
+                children = listOf(
+                    ChildMenu(
+                        title = "Tentang Aplikasi",
+                        icon = R.drawable.ic_menu_profile_tentang_aplikasi
+                    ),
+                    ChildMenu(
+                        title = "Syarat & Ketentuan",
+                        icon = R.drawable.ic_menu_profile_syarat_ketentuan
+                    ),
+                    ChildMenu(
+                        title = "Kebijakan Privasi",
+                        icon = R.drawable.ic_menu_profile_atur_pengingat
+                    ),
+                    ChildMenu(
+                        title = "FAQ",
+                        icon = R.drawable.ic_menu_profile_faq
+                    )
+                )
+            )
+        )
     }
     object CreateTransaction {
         const val routeName = "CreateTransaction"
