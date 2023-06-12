@@ -19,8 +19,8 @@ import app.trian.core.ui.UIWrapper
 
 @Composable
 fun ScreenSplash(
-    invoker: UIListener<SplashState, SplashEvent>
-) = UIWrapper(invoker = invoker) {
+    uiEvent: UIListener<SplashState, SplashEvent>
+) = UIWrapper(uiEvent = uiEvent) {
     LaunchedEffect(key1 = this, block = {
         dispatch(SplashEvent.CheckSession)
     })
@@ -37,7 +37,7 @@ fun ScreenSplash(
 fun PreviewScreenSplash() {
     BaseScreen {
         ScreenSplash(
-            invoker = UIListener(
+            uiEvent = UIListener(
                 controller = it,
                 state = SplashState()
             )

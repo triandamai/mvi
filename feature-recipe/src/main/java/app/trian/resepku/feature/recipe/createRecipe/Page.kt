@@ -51,15 +51,15 @@ import app.trian.resepku.feature.recipe.createRecipe.components.ScreenSuccessCre
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun ScreenCreateRecipe(
-    invoker: UIListenerData<CreateRecipeState, CreateRecipeDataState, CreateRecipeEvent>
-) = UIWrapper(invoker) {
+    uiEvent: UIListenerData<CreateRecipeState, CreateRecipeDataState, CreateRecipeEvent>
+) = UIWrapper(uiEvent) {
 
     BackHandler {
         dispatch(CreateRecipeEvent.ChangeStep(isNextStep = false))
     }
 
     BaseScreen(
-        controller = invoker.controller,
+        controller = uiEvent.controller,
         bottomSheet = {
 
         },
@@ -202,7 +202,7 @@ fun PreviewScreenCreateRecipe() {
     }
     BaseMainApp {
         ScreenCreateRecipe(
-            invoker = UIListenerData(
+            uiEvent = UIListenerData(
                 controller = it,
                 state = state,
                 data = data,

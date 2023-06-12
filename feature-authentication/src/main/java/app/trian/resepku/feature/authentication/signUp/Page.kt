@@ -46,9 +46,9 @@ import app.trian.core.ui.routes.Routes
 
 @Composable
 fun ScreenSignUp(
-    invoker: UIListener<SignUpState, SignUpEvent>
+    uiEvent: UIListener<SignUpState, SignUpEvent>
 ) = UIWrapper(
-    invoker = invoker
+    uiEvent = uiEvent
 ) {
     val privacyPolicy = listOf(
         AnnotationTextItem.Text(stringResource(id = string.text_license_agreement)),
@@ -59,7 +59,7 @@ fun ScreenSignUp(
         AnnotationTextItem.Button(stringResource(id = string.text_signin))
     )
     BaseScreen(
-        controller = invoker.controller,
+        controller = uiEvent.controller,
         topAppBar = {
             TopAppBar(
                 title = { /*TODO*/ },
@@ -221,7 +221,7 @@ fun ScreenSignUp(
 fun PreviewScreenSignUp() {
     BaseMainApp {
         ScreenSignUp(
-            invoker = UIListener(
+            uiEvent = UIListener(
                 controller = it,
                 state = SignUpState()
             )

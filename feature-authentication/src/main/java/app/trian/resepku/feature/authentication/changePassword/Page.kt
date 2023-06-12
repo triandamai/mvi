@@ -32,9 +32,9 @@ import app.trian.core.ui.component.FormInput
 
 @Composable
 fun ScreenChangePassword(
-    invoker: UIListener<ChangePasswordState, ChangePasswordEvent>
+    uiEvent: UIListener<ChangePasswordState, ChangePasswordEvent>
 ) = UIWrapper(
-    invoker
+    uiEvent
 ) {
 
     BaseScreen(
@@ -111,7 +111,7 @@ fun ScreenChangePassword(
 fun PreviewScreenSignIn() {
     BaseMainApp {
         ScreenChangePassword(
-            invoker = UIListener(
+            uiEvent = UIListener(
                 controller = it,
                 state = ChangePasswordState()
             )

@@ -38,8 +38,8 @@ import app.trian.core.ui.routes.Routes
 
 @Composable
 fun ScreenOnboard(
-    invoker: UIListener<OnboardState, OnboardEvent>
-) = UIWrapper(invoker = invoker) {
+    uiEvent: UIListener<OnboardState, OnboardEvent>
+) = UIWrapper(uiEvent = uiEvent) {
     val privacyPolicyText = listOf(
         AnnotationTextItem.Text(stringResource(id = R.string.text_license_agreement)),
         AnnotationTextItem.Button(stringResource(id = R.string.text_privacy_policy)),
@@ -140,7 +140,7 @@ fun ScreenOnboard(
 fun PreviewScreenOnboard() {
     BaseMainApp {
         ScreenOnboard(
-            invoker = UIListener(
+            uiEvent = UIListener(
                 controller = it,
                 state = OnboardState()
             )

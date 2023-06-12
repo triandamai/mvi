@@ -34,9 +34,9 @@ import app.trian.core.ui.component.FormInput
 
 @Composable
 fun ScreenResetPassword(
-    invoker: UIListener<ResetPasswordState, ResetPasswordEvent>
+    uiEvent: UIListener<ResetPasswordState, ResetPasswordEvent>
 ) = UIWrapper(
-    invoker = invoker
+    uiEvent = uiEvent
 ) {
     BaseScreen(
         topAppBar = {
@@ -95,7 +95,7 @@ fun ScreenResetPassword(
 fun PreviewScreenSignIn() {
     BaseMainApp {
         ScreenResetPassword(
-            invoker = UIListener(
+            uiEvent = UIListener(
                 controller = it,
                 state = ResetPasswordState()
             )

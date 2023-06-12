@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 
 @Composable
 inline fun <State, Event> UIWrapper(
-    invoker: UIListener<State, Event>,
+    uiEvent: UIListener<State, Event>,
     content: @Composable UIListener<State, Event>.() -> Unit
-) { content(invoker) }
+) { content(uiEvent) }
 
 @Composable
 inline fun <State, Data, Event> UiWrapperData(
-    invoker: UIListenerData<State, Data, Event>,
+    uiEvent: UIListenerData<State, Data, Event>,
     content: @Composable UIListenerData<State, Data, Event>.() -> Unit
-) { content(invoker) }
+) { content(uiEvent) }

@@ -45,7 +45,7 @@ fun NavGraphBuilder.authenticationRoute(
             controller = uiController
         ) {
             ScreenSplash(
-                invoker = UIListener(
+                uiEvent = UIListener(
                     controller = uiController,
                     state = SplashState(),
                     commit = ::commit,
@@ -59,7 +59,7 @@ fun NavGraphBuilder.authenticationRoute(
         ) {
             val state by uiState.collectAsState()
             ScreenOnboard(
-                invoker = UIListener(
+                uiEvent = UIListener(
                     controller = uiController,
                     state = state,
                     commit = ::commit,
@@ -73,7 +73,7 @@ fun NavGraphBuilder.authenticationRoute(
         ) {
             val state by uiState.collectAsState()
             ScreenSignIn(
-                invoker = UIListener(
+                uiEvent = UIListener(
                     controller = uiController,
                     state =state,
                     commit = ::commit,
@@ -87,7 +87,7 @@ fun NavGraphBuilder.authenticationRoute(
         ) {
             val state by uiState.collectAsState()
             ScreenSignUp(
-                invoker = UIListener(
+                uiEvent = UIListener(
                     controller = uiController,
                     state = state,
                     commit = ::commit,
@@ -102,7 +102,7 @@ fun NavGraphBuilder.authenticationRoute(
         ) {
             val state by uiState.collectAsState()
             ScreenChangePassword(
-                invoker = UIListener(
+                uiEvent = UIListener(
                     controller = uiController,
                     state = state,
                     commit = ::commit,
@@ -117,7 +117,7 @@ fun NavGraphBuilder.authenticationRoute(
         ) {
             val state by uiState.collectAsState()
             ScreenResetPassword(
-                invoker = UIListener(
+                uiEvent = UIListener(
                     controller = uiController,
                     state = state,
                     commit = ::commit,

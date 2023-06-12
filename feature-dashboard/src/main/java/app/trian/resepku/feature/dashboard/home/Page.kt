@@ -37,8 +37,8 @@ import app.trian.core.ui.routes.Routes
 
 @Composable
 fun ScreenHome(
-    invoker: UIListenerData<HomeState, HomeDataState, HomeEvent>
-) = UiWrapperData(invoker = invoker) {
+    uiEvent: UIListenerData<HomeState, HomeDataState, HomeEvent>
+) = UiWrapperData(uiEvent = uiEvent) {
     val privacyPolicyText = listOf(
         AnnotationTextItem.Text(stringResource(id = R.string.text_license_agreement)),
         AnnotationTextItem.Button(stringResource(id = R.string.text_privacy_policy)),
@@ -135,7 +135,7 @@ fun ScreenHome(
 fun PreviewScreenOnboard() {
     BaseMainApp {
         ScreenHome(
-            invoker = UIListenerData(
+            uiEvent = UIListenerData(
                 controller = it,
                 state = HomeState(),
                 data = HomeDataState()

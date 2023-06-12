@@ -11,8 +11,6 @@ import app.trian.core.ui.UIController
 import app.trian.core.ui.UIListenerData
 import app.trian.core.ui.pageWrapper
 import app.trian.core.ui.routes.Routes.CreateRecipe
-import app.trian.resepku.feature.recipe.createRecipe.CreateRecipeDataState
-import app.trian.resepku.feature.recipe.createRecipe.CreateRecipeState
 import app.trian.resepku.feature.recipe.createRecipe.CreateRecipeViewModel
 import app.trian.resepku.feature.recipe.createRecipe.ScreenCreateRecipe
 
@@ -28,7 +26,7 @@ fun NavGraphBuilder.recipeRoute(
         val state by uiState.collectAsState()
         val data by uiDataState.collectAsState()
         ScreenCreateRecipe(
-            invoker = UIListenerData(
+            uiEvent = UIListenerData(
                 controller = uiController,
                 state = state,
                 data = data,

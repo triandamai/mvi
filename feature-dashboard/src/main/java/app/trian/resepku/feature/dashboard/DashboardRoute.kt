@@ -11,8 +11,6 @@ import app.trian.core.ui.UIController
 import app.trian.core.ui.UIListenerData
 import app.trian.core.ui.pageWrapper
 import app.trian.core.ui.routes.Routes.Splash
-import app.trian.resepku.feature.dashboard.home.HomeDataState
-import app.trian.resepku.feature.dashboard.home.HomeState
 import app.trian.resepku.feature.dashboard.home.HomeViewModel
 import app.trian.resepku.feature.dashboard.home.ScreenHome
 
@@ -28,7 +26,7 @@ fun NavGraphBuilder.dashboardRoute(
         val state by uiState.collectAsState()
         val data by uiDataState.collectAsState()
         ScreenHome(
-            invoker = UIListenerData(
+            uiEvent = UIListenerData(
                 controller = uiController,
                 state = state,
                 data = data,

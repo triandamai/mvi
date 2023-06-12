@@ -44,9 +44,9 @@ import app.trian.core.ui.routes.Routes
 
 @Composable
 fun ScreenSignIn(
-    invoker: UIListener<SignInState, SignInEvent>
+    uiEvent: UIListener<SignInState, SignInEvent>
 ) = UIWrapper(
-    invoker = invoker
+    uiEvent = uiEvent
 ) {
     val forgetPasswordText = listOf(
         AnnotationTextItem.Text(stringResource(id = string.label_forgot_password)),
@@ -194,7 +194,7 @@ fun ScreenSignIn(
 fun PreviewScreenSignIn() {
     BaseMainApp {
         ScreenSignIn(
-            invoker = UIListener(
+            uiEvent = UIListener(
                 controller = rememberUIController(),
                 state = SignInState()
             )
