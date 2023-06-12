@@ -26,7 +26,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "Resepku"
 include(":app")
-include(":data")
+include(":core-data")
 include(":core-ui")
 include(":core-component")
 include(":feature-authentication")

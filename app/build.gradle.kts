@@ -76,7 +76,7 @@ android {
 }
 
 dependencies {
-    api(project(":data"))
+    api(project(":core-data"))
     api(project(":core-ui"))
     api(project(":core-component"))
     api(project(":feature-authentication"))

@@ -57,7 +57,7 @@ android {
 
 dependencies {
     api(project(":core-ui"))
-    api(project(":data"))
+    api(project(":core-data"))
     api(project(":core-component"))
 
 
