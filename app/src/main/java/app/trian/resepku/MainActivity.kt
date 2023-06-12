@@ -8,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import app.trian.core.ui.BaseMainApp
 import app.trian.core.ui.UIController
 import app.trian.core.ui.extensions.addOnEventListener
-import app.trian.core.ui.listener.AppStateEventListener
 import app.trian.core.ui.listener.ScreenToAppEvent
 import app.trian.core.ui.rememberUIController
 import app.trian.core.ui.routes.AuthenticationConstants
