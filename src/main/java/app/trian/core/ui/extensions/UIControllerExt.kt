@@ -36,7 +36,7 @@ fun UIController.navigateUp() {
  *
  * @throws IllegalArgumentException from navHostController
  */
-fun UIController.navigate(routeName: String, vararg args:String) {
+fun UIController.navigate(routeName: String, vararg args: String) {
     var buildRoute = routeName
     if (args.isNotEmpty()) {
         args.forEach {
@@ -59,21 +59,22 @@ fun UIController.navigate(routeName: String, vararg args:String) {
  *
  * @throws IllegalArgumentException from navHostController
  */
-fun UIController.navigateSingleTop(routeName: String, vararg args:String) {
+fun UIController.navigateSingleTop(routeName: String, vararg args: String) {
     var buildRoute = routeName
     if (args.isNotEmpty()) {
         args.forEach {
-           buildRoute = buildString {
-               append(routeName)
-               append("/")
-               append(it)
-           }
+            buildRoute = buildString {
+                append(routeName)
+                append("/")
+                append(it)
+            }
         }
     }
     this.router.navigate(buildRoute) {
         launchSingleTop = true
     }
 }
+
 fun UIController.navigateSingleTop(routeName: String) {
     this.router.navigate(routeName) {
         launchSingleTop = true
@@ -89,7 +90,7 @@ fun UIController.navigateSingleTop(routeName: String) {
  *
  * @throws IllegalArgumentException from navHostController
  */
-fun UIController.navigateAndReplace(routeName: String, vararg args:String) {
+fun UIController.navigateAndReplace(routeName: String, vararg args: String) {
     var buildRoute = routeName
     if (args.isNotEmpty()) {
         args.forEach {
@@ -101,7 +102,7 @@ fun UIController.navigateAndReplace(routeName: String, vararg args:String) {
         }
     }
     this.router.navigate(buildRoute) {
-        popUpTo(currentRoute)
+        popUpTo(router.graph.startDestinationId)
         launchSingleTop = true
     }
 }
@@ -116,7 +117,7 @@ fun UIController.navigateAndReplace(routeName: String, vararg args:String) {
  *
  * @throws IllegalArgumentException from navHostController
  */
-fun UIController.navigateAndReplaceAll(routeName: String, vararg args:String) {
+fun UIController.navigateAndReplaceAll(routeName: String, vararg args: String) {
     var buildRoute = routeName
     if (args.isNotEmpty()) {
         args.forEach {
@@ -128,20 +129,11 @@ fun UIController.navigateAndReplaceAll(routeName: String, vararg args:String) {
         }
     }
     this.router.navigate(buildRoute) {
-        popUpTo(currentRoute) {
+        popUpTo(router.graph.startDestinationId) {
             inclusive = true
         }
     }
 }
-fun UIController.navigateAndReplaceAll(routeName: String) {
-    this.router.navigate(routeName) {
-        popUpTo(currentRoute) {
-            inclusive = true
-        }
-    }
-}
-
-
 //end region
 
 //region coroutine
@@ -171,24 +163,26 @@ fun UIController.exit() =
     event.sendEvent(ScreenToAppEvent.EXIT_APP)
 //end region
 
-fun UIController.listenChanges() = this.router.addOnDestinationChangedListener { _, destination, _ ->
-    currentRoute = destination.route.orEmpty()
+fun UIController.listenChanges() =
+    this.router.addOnDestinationChangedListener { _, destination, _ ->
+        currentRoute = destination.route.orEmpty()
 
-}
+    }
 
-fun UIController.showBottomSheet(){
+fun UIController.showBottomSheet() {
     runSuspend {
         bottomSheetState.show()
     }
 }
 
-fun UIController.hideBottomSheet(){
+fun UIController.hideBottomSheet() {
     runSuspend {
         bottomSheetState.hide()
     }
 }
 
 //region string
-fun UIController.getString(res:Int):String = context.getString(res)
-fun UIController.getString(res:Int, vararg params:String):String = context.getString(res,*params)
+fun UIController.getString(res: Int): String = context.getString(res)
+fun UIController.getString(res: Int, vararg params: String): String =
+    context.getString(res, *params)
 //end region

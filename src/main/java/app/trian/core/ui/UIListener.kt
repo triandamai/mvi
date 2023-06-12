@@ -22,6 +22,7 @@ open class UIListener<State, Event>(
     private val commit: (State) -> Unit = {},
     private val dispatcher: (Event) -> Unit = {},
 ) {
+    val router get() = controller
     fun commit(s: State.() -> State) {
         this.commit(s(state))
     }
@@ -29,33 +30,6 @@ open class UIListener<State, Event>(
     fun dispatch(e: Event) {
         this.dispatcher(e)
     }
-
-    //application state nav
-    //region navigation
-    fun backAndClose() =
-        controller.navigateBackAndClose()
-
-    fun navigateUp() =
-        controller.navigateUp()
-
-    fun navigate(routeName: String, vararg args: String) =
-        controller.navigate(routeName, *args)
-
-    fun navigateSingleTop(routeName: String, vararg args: String) =
-        controller.navigateSingleTop(routeName, *args)
-
-    fun navigateSingleTop(routeName: String) =
-        controller.navigateSingleTop(routeName)
-
-    fun navigateAndReplace(routeName: String, vararg args: String) =
-        controller.navigateAndReplace(routeName, *args)
-
-    fun navigateAndReplaceAll(routeName: String, vararg args: String) =
-        controller.navigateAndReplaceAll(routeName, *args)
-
-    fun navigateAndReplaceAll(routeName: String) =
-        controller.navigateAndReplaceAll(routeName)
-
     //end region
     //region bottomsheet
     fun hideBottomSheet() =
