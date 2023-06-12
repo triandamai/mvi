@@ -5,8 +5,8 @@
 package app.trian.resepku.feature.recipe.createRecipe
 
 import android.os.Parcelable
-import com.bluehabit.budgetku.data.model.CookingStep
-import com.bluehabit.budgetku.data.model.Ingredient
+import app.trian.resepku.data.model.CookingStep
+import app.trian.resepku.data.model.Ingredient
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 import javax.annotation.concurrent.Immutable

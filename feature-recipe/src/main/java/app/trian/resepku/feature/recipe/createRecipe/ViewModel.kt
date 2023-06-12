@@ -11,10 +11,9 @@ import app.trian.core.ui.extensions.findIndex
 import app.trian.core.ui.extensions.navigateUp
 import app.trian.core.ui.extensions.showBottomSheet
 import app.trian.core.ui.viewModel.BaseViewModelData
-import com.bluehabit.budgetku.data.model.CookingStep
-import com.bluehabit.budgetku.data.model.Ingredient
+import app.trian.resepku.data.model.CookingStep
+import app.trian.resepku.data.model.Ingredient
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel

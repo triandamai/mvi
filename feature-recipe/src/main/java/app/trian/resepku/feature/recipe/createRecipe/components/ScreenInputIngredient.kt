@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import app.trian.core.ui.BaseMainApp
 import app.trian.core.ui.component.ButtonIcon
 import app.trian.core.ui.component.ItemIngredient
-import com.bluehabit.budgetku.data.model.Ingredient
+import app.trian.resepku.data.model.Ingredient
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
