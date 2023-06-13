@@ -12,8 +12,11 @@ import androidx.lifecycle.viewModelScope
 import app.trian.core.ui.Response
 import app.trian.core.ui.UIController
 import app.trian.core.ui.listener.BottomSheetListener
+import app.trian.core.ui.listener.BottomSheetListenerImpl
 import app.trian.core.ui.listener.NavigationListener
+import app.trian.core.ui.listener.NavigationListenerImpl
 import app.trian.core.ui.listener.ToastListener
+import app.trian.core.ui.listener.ToastListenerImpl
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -41,12 +44,12 @@ abstract class BaseViewModel<State : Parcelable, Action>(
 
     private val action = Channel<Action>(Channel.UNLIMITED)
 
-    private lateinit var _toastListener: ToastListener
+    private var _toastListener: ToastListener = ToastListenerImpl()
     protected val toast get() = _toastListener
-    private lateinit var _navigationListener: NavigationListener
+    private var _navigationListener: NavigationListener = NavigationListenerImpl()
     protected val navigation get() = _navigationListener
 
-    private lateinit var _bottomSheetListener: BottomSheetListener
+    private var _bottomSheetListener: BottomSheetListener = BottomSheetListenerImpl()
     protected val bottomSheet get() = _bottomSheetListener
 
 
@@ -58,7 +61,8 @@ abstract class BaseViewModel<State : Parcelable, Action>(
     fun addNavigationListener(listener: NavigationListener) {
         _navigationListener = listener
     }
-    fun addBottomSheetListener(listener: BottomSheetListener){
+
+    fun addBottomSheetListener(listener: BottomSheetListener) {
         _bottomSheetListener = listener
     }
 

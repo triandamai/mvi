@@ -12,6 +12,17 @@ object Routes {
     object CreateRecipe {
         const val routeName = "CreateRecipe"
     }
+    object DetailRecipe {
+        const val routeName = "DetailRecipe"
+        const val argKey = "RecipeId"
+        fun routeName() = "$routeName/{$argKey}"
+
+        val navArg = listOf(
+            navArgument(argKey) {
+                type = NavType.StringType
+            }
+        )
+    }
     object ChangePassword {
         const val routeName = "ChangePassword"
     }

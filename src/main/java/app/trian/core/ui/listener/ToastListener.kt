@@ -11,3 +11,13 @@ interface ToastListener {
     fun showToast(message:String,length:Int = Toast.LENGTH_SHORT)
     fun showToast(@RawRes message:Int,vararg params:String,length:Int = Toast.LENGTH_SHORT)
 }
+
+class ToastListenerImpl():ToastListener {
+    override fun showToast(message: String, length: Int) {
+
+    }
+
+    override fun showToast(message: Int, vararg params: String, length: Int) {
+
+    }
+}

@@ -47,6 +47,9 @@ ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 
+#constraint
+compose-constraint={group="androidx.constraintlayout",name="constraintlayout-compose",version="1.0.1"}
+
 #Robolectric
 robolectric = { group = "org.robolectric", name = "robolectric", version = "4.7.3" }
 

@@ -11,3 +11,25 @@ interface NavigationListener {
     fun navigateAndReplace(route: String, vararg params: String)
     fun navigateBackAndClose(route: String, vararg params: String)
 }
+
+class NavigationListenerImpl() : NavigationListener {
+    override fun navigateUp() {
+
+    }
+
+    override fun navigate(route: String, vararg params: String) {
+
+    }
+
+    override fun navigateSingleTop(route: String, vararg params: String) {
+
+    }
+
+    override fun navigateAndReplace(route: String, vararg params: String) {
+
+    }
+
+    override fun navigateBackAndClose(route: String, vararg params: String) {
+
+    }
+}
