@@ -10,6 +10,9 @@ import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
 fun Context.findActivity(): ComponentActivity? = when (this) {
     is ComponentActivity -> this
@@ -57,9 +60,23 @@ fun Context.gotoApp() {
             this.startActivity(it)
         }
     } catch (e: ActivityNotFoundException) {
-        Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")).also {
+        Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+        ).also {
             this.startActivity(it)
         }
 
     }
 }
+
+
+fun Context.getScreenWidth(): Dp = this
+    .resources
+    .displayMetrics.widthPixels.dp /
+        this.resources.displayMetrics.density
+
+fun Context.getScreenHeight(): Dp = this
+    .resources
+    .displayMetrics.heightPixels.dp /
+        this.resources.displayMetrics.density
