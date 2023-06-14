@@ -7,6 +7,7 @@ package app.trian.core.ui
 import app.trian.core.ui.extensions.hideKeyboard
 import app.trian.core.ui.listener.BaseEventListener
 import app.trian.core.ui.listener.BottomSheetChangeListener
+import app.trian.core.ui.listener.EventListener
 
 open class UIListener<State, Event, T : BaseEventListener>(
     val controller: UIController<T>,
