@@ -5,6 +5,7 @@
 package app.trian.core.ui
 
 import android.widget.Toast
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -13,31 +14,30 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import app.trian.core.ui.extensions.hideBottomSheet
-import app.trian.core.ui.extensions.navigateBackAndClose
-import app.trian.core.ui.extensions.navigate
-import app.trian.core.ui.extensions.navigateAndReplace
-import app.trian.core.ui.extensions.navigateSingleTop
-import app.trian.core.ui.extensions.navigateUp
-import app.trian.core.ui.extensions.showBottomSheet
+import app.trian.core.ui.extensions.hideKeyboard
+import app.trian.core.ui.listener.BaseEventListener
+import app.trian.core.ui.listener.EventListener
+import app.trian.core.ui.listener.KeyboardListener
 import app.trian.core.ui.listener.NavigationListener
+import app.trian.core.ui.listener.SnacbarListener
 import app.trian.core.ui.listener.ToastListener
 import app.trian.core.ui.viewModel.BaseViewModel
 
-inline fun <reified VM : BaseViewModel<*, *>> NavGraphBuilder.pageWrapper(
+@JvmName("PageWrapperEvent")
+inline fun <reified ViewModel : BaseViewModel<*, *>, E : BaseEventListener> NavGraphBuilder.pageWrapper(
     route: String,
-    controller: UIController,
+    controller: UIController<E>,
     parent: String? = null,
     arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),
-    crossinline content: @Composable VM.() -> Unit = {}
+    crossinline content: @Composable ViewModel.() -> Unit = {}
 ) {
     composable(
         route = route,
         arguments = arguments,
         deepLinks = deepLinks
     ) {
-        val viewModel = (if (parent.isNullOrEmpty()) {
+        val viewModel: ViewModel = (if (parent.isNullOrEmpty()) {
             hiltViewModel()
         } else {
             val parentEntry = remember(controller.router.currentBackStackEntry) {
@@ -45,7 +45,7 @@ inline fun <reified VM : BaseViewModel<*, *>> NavGraphBuilder.pageWrapper(
                     .router
                     .getBackStackEntry(parent)
             }
-            hiltViewModel<VM>(parentEntry)
+            hiltViewModel(parentEntry)
         })
         LaunchedEffect(key1 = viewModel, block = {
             viewModel.addNavigationListener(
@@ -73,45 +73,82 @@ inline fun <reified VM : BaseViewModel<*, *>> NavGraphBuilder.pageWrapper(
             )
             viewModel.addToastListener(
                 object : ToastListener {
-                override fun showToast(message: String, length: Int) {
-                    Toast.makeText(controller.context, message, length).show()
-                }
+                    override fun showToast(message: String, length: Int) {
+                        Toast.makeText(controller.context, message, length).show()
+                    }
 
-                override fun showToast(message: Int, vararg params: String, length: Int) {
-                    Toast.makeText(
-                        controller.context,
-                        controller.context.getString(message.toInt(), *params),
-                        length
-                    ).show()
-                }
+                    override fun showToast(message: Int, vararg params: String, length: Int) {
+                        Toast.makeText(
+                            controller.context,
+                            controller.context.getString(message.toInt(), *params),
+                            length
+                        ).show()
+                    }
 
-            }
+                }
             )
 
             viewModel.addBottomSheetListener { isShow ->
                 if (isShow) controller.showBottomSheet()
                 else controller.hideBottomSheet()
             }
+
+            viewModel.addSnackbarListener(object : SnacbarListener {
+                override fun showSnackbar(message: String) {
+                    controller.showSnackbar(message)
+                }
+
+                override fun showSnackbar(message: String, duration: SnackbarDuration) {
+                    controller.showSnackbar(message, duration)
+                }
+
+                override fun showSnackbar(id: Int, vararg params: String) {
+                    controller.showSnackbar(id, *params)
+                }
+
+                override fun showSnackbar(
+                    id: Int,
+                    vararg params: String,
+                    snackbarDuration: SnackbarDuration
+                ) {
+                    controller.showSnackbar(
+                        controller.context.getString(id, *params),
+                        snackbarDuration
+                    )
+                }
+
+            })
+
+            viewModel.addOnKeyboardListener(object : KeyboardListener {
+                override fun onShowKeyboard() {
+
+                }
+
+                override fun onHideKeyboard() {
+                    controller.context.hideKeyboard()
+                }
+
+            })
         })
         content(viewModel)
     }
 }
 
-@Composable
-inline fun <reified VM : BaseViewModel<*, *>> PageWrapper(
-    appState: UIController,
+@JvmName("PageWrapper")
+inline fun <reified ViewModel : BaseViewModel<*, *>> NavGraphBuilder.pageWrapper(
+    route: String,
+    controller: UIController<EventListener>,
     parent: String? = null,
-    content: @Composable VM.() -> Unit = {}
+    arguments: List<NamedNavArgument> = emptyList(),
+    deepLinks: List<NavDeepLink> = emptyList(),
+    crossinline content: @Composable ViewModel.() -> Unit = {}
 ) {
-    val vm = (if (parent.isNullOrEmpty()) {
-        hiltViewModel()
-    } else {
-        val parentEntry = remember(appState.router.currentBackStackEntry) {
-            appState
-                .router
-                .getBackStackEntry(parent)
-        }
-        hiltViewModel<VM>(parentEntry)
-    })
-    content(vm)
+    pageWrapper<ViewModel, EventListener>(
+        route = route,
+        controller = controller,
+        parent = parent,
+        arguments = arguments,
+        deepLinks = deepLinks,
+        content = content
+    )
 }

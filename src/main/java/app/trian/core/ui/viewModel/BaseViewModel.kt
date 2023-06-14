@@ -13,8 +13,12 @@ import app.trian.core.ui.Response
 import app.trian.core.ui.UIController
 import app.trian.core.ui.listener.BottomSheetListener
 import app.trian.core.ui.listener.BottomSheetListenerImpl
+import app.trian.core.ui.listener.KeyboardListener
+import app.trian.core.ui.listener.KeyboardListenerImpl
 import app.trian.core.ui.listener.NavigationListener
 import app.trian.core.ui.listener.NavigationListenerImpl
+import app.trian.core.ui.listener.SnacbarListener
+import app.trian.core.ui.listener.SnackbarListenerImpl
 import app.trian.core.ui.listener.ToastListener
 import app.trian.core.ui.listener.ToastListenerImpl
 import kotlinx.coroutines.CoroutineDispatcher
@@ -52,6 +56,12 @@ abstract class BaseViewModel<State : Parcelable, Action>(
     private var _bottomSheetListener: BottomSheetListener = BottomSheetListenerImpl()
     protected val bottomSheet get() = _bottomSheetListener
 
+    private var _snackbarListener: SnacbarListener = SnackbarListenerImpl()
+    protected val snackbar get() = _snackbarListener
+
+    private var _keyboardListener: KeyboardListener = KeyboardListenerImpl()
+    protected val keyboard get() = _keyboardListener
+
 
     //listener
     fun addToastListener(listener: ToastListener) {
@@ -64,6 +74,22 @@ abstract class BaseViewModel<State : Parcelable, Action>(
 
     fun addBottomSheetListener(listener: BottomSheetListener) {
         _bottomSheetListener = listener
+    }
+
+    fun addSnackbarListener(listener: SnacbarListener) {
+        _snackbarListener = listener
+    }
+
+    fun addOnKeyboardListener(listener: KeyboardListener) {
+        _keyboardListener = listener
+    }
+
+    fun showKeyboard() {
+        _keyboardListener.onShowKeyboard()
+    }
+
+    fun hideKeyboard() {
+        _keyboardListener.onHideKeyboard()
     }
 
     //end
