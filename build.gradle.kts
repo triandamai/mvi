@@ -9,6 +9,7 @@
 plugins {
     alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
+    //should place at the bottom plugins to avoid warning dagger not recognized by any processor
     alias(libs.plugins.org.jetbrains.kotlin.kapt)
 }
 

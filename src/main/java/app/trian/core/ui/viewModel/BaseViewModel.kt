@@ -9,12 +9,15 @@ import android.content.Context
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.trian.core.ui.Response
-import app.trian.core.ui.UIController
+import app.trian.core.ui.ResultState
 import app.trian.core.ui.listener.BottomSheetListener
 import app.trian.core.ui.listener.BottomSheetListenerImpl
+import app.trian.core.ui.listener.KeyboardListener
+import app.trian.core.ui.listener.KeyboardListenerImpl
 import app.trian.core.ui.listener.NavigationListener
 import app.trian.core.ui.listener.NavigationListenerImpl
+import app.trian.core.ui.listener.SnacbarListener
+import app.trian.core.ui.listener.SnackbarListenerImpl
 import app.trian.core.ui.listener.ToastListener
 import app.trian.core.ui.listener.ToastListenerImpl
 import kotlinx.coroutines.CoroutineDispatcher
@@ -52,6 +55,12 @@ abstract class BaseViewModel<State : Parcelable, Action>(
     private var _bottomSheetListener: BottomSheetListener = BottomSheetListenerImpl()
     protected val bottomSheet get() = _bottomSheetListener
 
+    private var _snackbarListener: SnacbarListener = SnackbarListenerImpl()
+    protected val snackbar get() = _snackbarListener
+
+    private var _keyboardListener: KeyboardListener = KeyboardListenerImpl()
+    protected val keyboard get() = _keyboardListener
+
 
     //listener
     fun addToastListener(listener: ToastListener) {
@@ -64,6 +73,22 @@ abstract class BaseViewModel<State : Parcelable, Action>(
 
     fun addBottomSheetListener(listener: BottomSheetListener) {
         _bottomSheetListener = listener
+    }
+
+    fun addSnackbarListener(listener: SnacbarListener) {
+        _snackbarListener = listener
+    }
+
+    fun addOnKeyboardListener(listener: KeyboardListener) {
+        _keyboardListener = listener
+    }
+
+    fun showKeyboard() {
+        _keyboardListener.onShowKeyboard()
+    }
+
+    fun hideKeyboard() {
+        _keyboardListener.onHideKeyboard()
     }
 
     //end
@@ -105,20 +130,21 @@ abstract class BaseViewModel<State : Parcelable, Action>(
         commit(s(uiState.value))
     }
 
-    fun <T> Flow<Response<T>>.onEach(
-        success: (T) -> Unit = {},
-        loading: () -> Unit = {},
-        error: (String) -> Unit = {}
+    protected inline fun <reified T> Flow<ResultState<T>>.onEach(
+        crossinline success: (T) -> Unit = {},
+        crossinline loading: () -> Unit = {},
+        crossinline error: (String) -> Unit = {}
     ) = async {
         this.catch { error(it.message.orEmpty()) }
             .collect {
                 when (it) {
-                    is Response.Error -> error(
-                        it.message.ifEmpty {}
+                    is ResultState.Error -> error(
+                        it.message.ifEmpty {
+                            context.getString(it.stringId)
+                        }
                     )
-
-                    Response.Loading -> loading()
-                    is Response.Result -> success(it.data)
+                    ResultState.Loading -> loading()
+                    is ResultState.Result -> success(it.data)
                 }
             }
     }

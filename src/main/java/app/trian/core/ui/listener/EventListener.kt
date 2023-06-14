@@ -5,9 +5,9 @@
 package app.trian.core.ui.listener
 
 import androidx.compose.material.ModalBottomSheetValue
+class EventListener : BaseEventListener()
 
-
-class EventListener {
+abstract class BaseEventListener {
     private var appEvent: AppStateEventListener? = null
     private var bottomSheetChangeListener: BottomSheetChangeListener? = null
 
