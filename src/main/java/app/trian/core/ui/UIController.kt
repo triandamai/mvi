@@ -300,7 +300,7 @@ inline fun <reified T : BaseEventListener> rememberUIController(
 }
 
 @Composable
-inline fun rememberUIController(
+fun rememberUIController(
     event: EventListener = EventListener(),
     router: NavHostController = rememberNavController(),
     scope: CoroutineScope = rememberCoroutineScope(),
