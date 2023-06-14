@@ -9,8 +9,7 @@ import android.content.Context
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.trian.core.ui.Response
-import app.trian.core.ui.UIController
+import app.trian.core.ui.ResultState
 import app.trian.core.ui.listener.BottomSheetListener
 import app.trian.core.ui.listener.BottomSheetListenerImpl
 import app.trian.core.ui.listener.KeyboardListener
@@ -131,20 +130,21 @@ abstract class BaseViewModel<State : Parcelable, Action>(
         commit(s(uiState.value))
     }
 
-    fun <T> Flow<Response<T>>.onEach(
-        success: (T) -> Unit = {},
-        loading: () -> Unit = {},
-        error: (String) -> Unit = {}
+    protected inline fun <reified T> Flow<ResultState<T>>.onEach(
+        crossinline success: (T) -> Unit = {},
+        crossinline loading: () -> Unit = {},
+        crossinline error: (String) -> Unit = {}
     ) = async {
         this.catch { error(it.message.orEmpty()) }
             .collect {
                 when (it) {
-                    is Response.Error -> error(
-                        it.message.ifEmpty {}
+                    is ResultState.Error -> error(
+                        it.message.ifEmpty {
+                            context.getString(it.stringId)
+                        }
                     )
-
-                    Response.Loading -> loading()
-                    is Response.Result -> success(it.data)
+                    ResultState.Loading -> loading()
+                    is ResultState.Result -> success(it.data)
                 }
             }
     }
