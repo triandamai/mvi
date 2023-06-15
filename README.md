@@ -63,3 +63,9 @@ class MainActivity : ComponentActivity() {
     
 }
 ```
+
+Project ini akan men-cover beberapa permasalahan:
+1. Mengurangi boilerplate code
+2. Mengurangi painfull konfigurasi
+3. Pengujian yang lebih baik dan terisolasi antara UI dan Unit Test
+4. membuat sebuah rule yang memusahkan proses development dengan tim yang scalable
