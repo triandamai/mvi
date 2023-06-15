@@ -4,6 +4,9 @@ Repository ini bertujuan untuk membuat annotation processor yang dapat meng gene
 *Asumsikan kita memiliki Design Pattern MVI
 
 Untuk membuat fitur/halaman cukup dengan mendeklasaikan sebuah fungsi `@Composable` dengan anotasi `@Page` seperti berikut:
+
+## Halaman Pertama:
+
 ```kotlin
 @Page(
     route="halaman-pertama",
@@ -32,6 +35,7 @@ internal fun ScreenDetailQuiz(
     }
 }
 ```
+## Halaman Kedua:
 
 ```kotlin
 @Page(
