@@ -64,10 +64,9 @@ class MainActivity : ComponentActivity() {
 }
 ```
 
-Project ini akan men-cover beberapa permasalahan:
-1. Project ini tidak akan mereplace arsitektur yang sudah ada seperti hilt,navigation component dll, 
-   project ini dibuat diatas arsitektur yang sudah ada
-2. Mengurangi boilerplate code
+Project ini tidak akan mereplace arsitektur yang sudah ada seperti hilt,navigation component dll,
+project ini dibuat diatas arsitektur yang sudah ada dan akan men-cover beberapa permasalahan:
+1. Mengurangi boilerplate code
 2. Mengurangi painfull konfigurasi
 3. Pengujian yang lebih baik dan terisolasi antara UI dan Unit Test
 4. membuat sebuah rule yang memudahkan proses development dengan tim yang scalable
