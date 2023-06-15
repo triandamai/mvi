@@ -40,7 +40,9 @@ internal fun ScreenDetailQuiz(
 ```kotlin
 @Page(
     route="halaman-kedua/{id}",
-    arguments=navArgument("id"){type=NavType.StringType},
+    arguments=[
+        navArgument("id"){type=NavType.StringType}
+    ],
     viewModel=DetailQuizViewModel::class
 )
 @Composable
@@ -85,9 +87,10 @@ class MainActivity : ComponentActivity() {
 }
 ```
 
-Project ini tidak akan mereplace arsitektur yang sudah ada seperti hilt,navigation component dll,
-project ini dibuat diatas arsitektur yang sudah ada dan akan men-cover beberapa permasalahan:
+Project ini tidak untuk menggantikan arsitektur yang sudah ada seperti hilt,navigation component dll,
+tetapi ini dibuat diatas arsitektur yang sudah ada dan akan men-cover beberapa permasalahan:
 1. Mengurangi boilerplate code
 2. Mengurangi painfull konfigurasi
-3. Pengujian yang lebih baik dan terisolasi antara UI dan Unit Test
-4. membuat sebuah rule yang memudahkan proses development dengan tim yang scalable
+3. Pengujian yang lebih baik
+4. Memudahkan proses `Preview` dan LiveEdit
+5. membuat sebuah rule yang memudahkan proses development dengan tim yang scalable
