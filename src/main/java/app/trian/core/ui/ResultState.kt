@@ -28,10 +28,10 @@ sealed class ResultStateData<out R> {
     ) : ResultStateData<Nothing>()
 }
 
-sealed class ResponseWithProgress<out R> {
-    object Loading : ResponseWithProgress<Nothing>()
-    data class Finish<out Result>(val data: Result) : ResponseWithProgress<Result>()
-    data class Progress(val progress: Int) : ResponseWithProgress<Nothing>()
-    data class Error(val message: String = "", val code: Int = 0) : ResponseWithProgress<Nothing>()
+sealed class ResultStateWithProgress<out R> {
+    object Loading : ResultStateWithProgress<Nothing>()
+    data class Finish<out Result>(val data: Result) : ResultStateWithProgress<Result>()
+    data class Progress(val progress: Int) : ResultStateWithProgress<Nothing>()
+    data class Error(val message: String = "",  @StringRes val stringId: Int = 0) : ResultStateWithProgress<Nothing>()
 }
 

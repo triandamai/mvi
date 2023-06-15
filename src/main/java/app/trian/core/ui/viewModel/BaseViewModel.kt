@@ -10,6 +10,8 @@ import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.trian.core.ui.ResultState
+import app.trian.core.ui.ResultStateData
+import app.trian.core.ui.ResultStateWithProgress
 import app.trian.core.ui.listener.BottomSheetListener
 import app.trian.core.ui.listener.BottomSheetListenerImpl
 import app.trian.core.ui.listener.KeyboardListener
@@ -126,14 +128,10 @@ abstract class BaseViewModel<State : Parcelable, Action>(
         _uiState.tryEmit(state(uiState.value))
     }
 
-    protected infix fun BaseViewModel<State, Action>.commit(s: State.() -> State) {
-        commit(s(uiState.value))
-    }
-
     protected inline fun <reified T> Flow<ResultState<T>>.onEach(
-        crossinline success: (T) -> Unit = {},
         crossinline loading: () -> Unit = {},
-        crossinline error: (String) -> Unit = {}
+        crossinline error: (String) -> Unit = {},
+        crossinline success: (T) -> Unit = {}
     ) = async {
         this.catch { error(it.message.orEmpty()) }
             .collect {
@@ -143,8 +141,52 @@ abstract class BaseViewModel<State : Parcelable, Action>(
                             context.getString(it.stringId)
                         }
                     )
+
                     ResultState.Loading -> loading()
                     is ResultState.Result -> success(it.data)
+                }
+            }
+    }
+
+    protected inline fun <reified T> Flow<ResultStateData<T>>.onEach(
+        crossinline loading: () -> Unit = {},
+        crossinline error: (String) -> Unit = {},
+        crossinline success: (T) -> Unit = {},
+        crossinline empty: () -> Unit = {}
+    ) = async {
+        this.catch { error(it.message.orEmpty()) }
+            .collect {
+                when (it) {
+                    is ResultStateData.Error -> error(
+                        it.message.ifEmpty {
+                            context.getString(it.stringId)
+                        }
+                    )
+
+                    ResultStateData.Loading -> loading()
+                    is ResultStateData.Result -> success(it.data)
+                    ResultStateData.Empty -> empty()
+                }
+            }
+    }
+
+    protected inline fun <reified T> Flow<ResultStateWithProgress<T>>.onEach(
+        crossinline loading: () -> Unit = {},
+        crossinline error: (String) -> Unit = {},
+        crossinline onFinish: (T) -> Unit = {},
+        crossinline onProgress: (progress: Int) -> Unit = {}
+    ) = async {
+        this.catch { error(it.message.orEmpty()) }
+            .collect {
+                when (it) {
+                    is ResultStateWithProgress.Error -> error(
+                        it.message.ifEmpty {
+                            context.getString(it.stringId)
+                        }
+                    )
+                    ResultStateWithProgress.Loading -> loading()
+                    is ResultStateWithProgress.Finish -> onFinish(it.data)
+                    is ResultStateWithProgress.Progress -> onProgress(it.progress)
                 }
             }
     }
