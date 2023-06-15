@@ -12,8 +12,8 @@ Untuk membuat fitur/halaman cukup dengan mendeklasaikan sebuah fungsi `@Composab
 )
 @Composable
 internal fun ScreenDetailQuiz(
-    uiEvent: UIListenerData<DetailQuizState, DetailQuizDataState, DetailQuizEvent, AREventListener>
-) = UiWrapperData(uiEvent) {
+    uiEvent: UIListener<DetailQuizState, DetailQuizEvent>
+) = UiWrapper(uiEvent) {
     
     BaseScreen(
         controller = controller,
