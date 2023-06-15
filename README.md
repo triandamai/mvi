@@ -6,7 +6,36 @@ Repository ini bertujuan untuk membuat annotation processor yang dapat meng gene
 Untuk membuat fitur/halaman cukup dengan mendeklasaikan sebuah fungsi `@Composable` dengan anotasi `@Page` seperti berikut:
 ```kotlin
 @Page(
-    route="Routing",
+    route="halaman-pertama",
+    viewModel=DetailQuizViewModel::class
+)
+@Composable
+internal fun ScreenDetailQuiz(
+    uiEvent: UIListener<DetailQuizState, DetailQuizEvent>
+) = UiWrapper(uiEvent) {
+    //content
+    Button(
+        onClick={
+            //mutasi state
+            commit { copy(count = state.count+1) } 
+        }
+    ){
+        Text("${state.count}")
+    }
+
+    Button(
+        onClick={
+            router.navigate("halaman-kedua",state.count)
+        }
+    ){
+        Text("Ke halaman Kedua")
+    }
+}
+```
+
+```kotlin
+@Page(
+    route="halaman-kedua/{id}",
     arguments=navArgument("id"){type=NavType.StringType},
     viewModel=DetailQuizViewModel::class
 )
@@ -14,30 +43,18 @@ Untuk membuat fitur/halaman cukup dengan mendeklasaikan sebuah fungsi `@Composab
 internal fun ScreenDetailQuiz(
     uiEvent: UIListener<DetailQuizState, DetailQuizEvent>
 ) = UiWrapper(uiEvent) {
-    
-    BaseScreen(
-        controller = controller,
-        bottomSheet = {
-           
+    LaunchedEffect(this){
+        val arg = router.arguments.get<String>("id")
+        commit{copy(message=arg)}
+    }
+
+    Button(
+        onClick={
+            //action
+            dispatch(DetailQuizEvent.ChangeMessage("World"))
         }
-    ) {
-        //content
-        Button(
-            onClick={
-                //mutasi state
-                commit { copy(count = state.count+1) }
-            }
-        ){
-            Text("${state.count}")
-        }
-        Button(
-            onClick={
-                //action
-                dispatch(DetailQuizEvent.ChangeMessage("World"))
-            }
-        ){
-            Text("Hello ${state.message}")
-        }
+    ){
+        Text("Hello ${state.message}")
     }
 }
 ```
