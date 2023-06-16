@@ -197,7 +197,9 @@ class UIController<T : BaseEventListener>(
             }
         }
         this.router.navigate(buildRoute) {
-            popUpTo(router.graph.startDestinationId)
+            popUpTo(router.graph.startDestinationId){
+                inclusive=true
+            }
             launchSingleTop = true
         }
     }

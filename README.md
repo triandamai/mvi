@@ -15,7 +15,7 @@ Untuk membuat fitur/halaman cukup dengan mendeklasaikan sebuah fungsi `@Composab
 @Composable
 internal fun ScreenDetailQuiz(
     uiEvent: UIListener<DetailQuizState, DetailQuizEvent>
-) = UiWrapper(uiEvent) {
+) = UiWrapper(uiEvent) { //utility untuk men-dsl uiEvent
     //content
     Button(
         onClick={
@@ -38,7 +38,7 @@ internal fun ScreenDetailQuiz(
 ## Halaman Kedua:
 
 ```kotlin
-@Page(
+@Navigation(
     route="halaman-kedua/{id}",
     arguments=[
         navArgument("id"){type=NavType.StringType}
@@ -48,7 +48,7 @@ internal fun ScreenDetailQuiz(
 @Composable
 internal fun ScreenDetailQuiz(
     uiEvent: UIListener<DetailQuizState, DetailQuizEvent>
-) = UiWrapper(uiEvent) {
+) = UiWrapper(uiEvent) { //utility untuk men-dsl uiEvent
     LaunchedEffect(this){
         val arg = router.arguments.get<String>("id")
         commit{copy(message=arg)}

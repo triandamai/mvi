@@ -6,10 +6,11 @@ package app.trian.core.ui.listener
 
 import android.widget.Toast
 import androidx.annotation.RawRes
+import androidx.annotation.StringRes
 
 interface ToastListener {
     fun showToast(message:String,length:Int = Toast.LENGTH_SHORT)
-    fun showToast(@RawRes message:Int,vararg params:String,length:Int = Toast.LENGTH_SHORT)
+    fun showToast(@StringRes message:Int,vararg params:String,length:Int = Toast.LENGTH_SHORT)
 }
 
 class ToastListenerImpl():ToastListener {

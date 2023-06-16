@@ -5,10 +5,12 @@
 package app.trian.core.ui
 
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDeepLink
@@ -77,10 +79,10 @@ inline fun <reified ViewModel : BaseViewModel<*, *>, E : BaseEventListener> NavG
                         Toast.makeText(controller.context, message, length).show()
                     }
 
-                    override fun showToast(message: Int, vararg params: String, length: Int) {
+                    override fun showToast(@StringRes message: Int, vararg params: String, length: Int) {
                         Toast.makeText(
                             controller.context,
-                            controller.context.getString(message.toInt(), *params),
+                            controller.context.getString(message, *params),
                             length
                         ).show()
                     }
