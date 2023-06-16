@@ -9,17 +9,28 @@ import androidx.compose.material.ModalBottomSheetValue
 class EventListener : BaseEventListener()
 
 abstract class BaseEventListener {
-    private var appEvent: AppStateEventListener? = null
+    private var appEvent: AppToScreenListener? = null
     private var bottomSheetChangeListener: BottomSheetChangeListener? = null
+    private var screenToAppListener: ScreenToAppListener? = null
 
 
     //region app event
-    fun addOnEventListener(listener: AppStateEventListener) {
+    fun addOnAppEventListener(listener: AppToScreenListener) {
         appEvent = listener
     }
 
-    fun sendEvent(eventName: String) {
-        appEvent?.onEvent(eventName)
+    fun sendEventToApp(eventName: String, vararg params: String) {
+        appEvent?.onEvent(eventName, *params)
+    }
+
+    //end region
+    //region app event
+    fun addOnScreenEventListener(listener: ScreenToAppListener) {
+        screenToAppListener = listener
+    }
+
+    fun sendEventToScreen(eventName: String, vararg param: String) {
+        screenToAppListener?.onEvent(eventName,*param)
     }
     //end region
 

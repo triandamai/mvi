@@ -30,9 +30,6 @@ open class UIListener<State, Event>(
 
     fun showBottomSheet() =
         controller.showBottomSheet()
-
-    fun addOnBottomSheetStateChangeListener(listener: BottomSheetChangeListener) =
-        controller.addOnBottomSheetStateChangeListener(listener)
     //end region
 
     //keyboard

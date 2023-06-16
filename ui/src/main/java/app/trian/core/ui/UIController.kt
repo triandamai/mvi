@@ -21,9 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import app.trian.core.ui.listener.AppStateEventListener
 import app.trian.core.ui.listener.BaseEventListener
-import app.trian.core.ui.listener.BottomSheetChangeListener
 import app.trian.core.ui.listener.EventListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -184,8 +182,8 @@ class UIController(
             }
         }
         this.router.navigate(buildRoute) {
-            popUpTo(router.graph.startDestinationId){
-                inclusive=true
+            popUpTo(router.graph.startDestinationId) {
+                inclusive = true
             }
             launchSingleTop = true
         }
@@ -221,18 +219,8 @@ class UIController(
     //end region
 
     //region event
-    fun addOnEventListener(listener: AppStateEventListener) =
-        event.addOnEventListener(listener)
-
-    fun addOnBottomSheetStateChangeListener(listener: BottomSheetChangeListener) =
-        event.addOnBottomSheetChangeListener(listener)
-
-
-    fun sendEvent(eventName: String) =
-        event.sendEvent(eventName)
-
     fun exit() =
-        event.sendEvent("EXIT")
+        event.sendEventToApp("EXIT")
 //end region
 
     fun listenChanges() = this
