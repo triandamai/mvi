@@ -5,12 +5,6 @@
 package app.trian.core.ui.listener
 
 
-sealed interface  ScreenToAppEvent {
-    object EXIT_APP:ScreenToAppEvent
-
-}
-
-
 fun interface AppStateEventListener {
-    fun onEvent(event:ScreenToAppEvent)
+    fun onEvent(eventName: String, vararg params: String)
 }

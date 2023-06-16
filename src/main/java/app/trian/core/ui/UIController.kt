@@ -9,8 +9,6 @@ import android.content.Context
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue.Hidden
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -27,30 +25,17 @@ import app.trian.core.ui.listener.AppStateEventListener
 import app.trian.core.ui.listener.BaseEventListener
 import app.trian.core.ui.listener.BottomSheetChangeListener
 import app.trian.core.ui.listener.EventListener
-import app.trian.core.ui.listener.ScreenToAppEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-
-class CreateSnackbarContent(
-    private val content: @Composable (SnackbarData) -> Unit
-) {
-    @Composable
-    fun invoke(snackbarData: SnackbarData) {
-        content.invoke(snackbarData)
-    }
-}
-
-class UIController<T : BaseEventListener>(
+class UIController(
     val router: NavHostController,
     val bottomSheetState: ModalBottomSheetState,
     val scope: CoroutineScope,
-    val event: T,
+    val event: BaseEventListener = EventListener(),
     val context: Context
 ) {
-
     var currentRoute by mutableStateOf("")
-
     var snackbarHostState by mutableStateOf(
         SnackbarHostState()
     )
@@ -134,9 +119,10 @@ class UIController<T : BaseEventListener>(
     fun navigate(routeName: String, vararg args: String) {
         var buildRoute = routeName
         if (args.isNotEmpty()) {
-            args.forEach {
-                buildRoute = buildString {
-                    append(routeName)
+
+            buildRoute = buildString {
+                append(routeName)
+                args.forEach {
                     append("/")
                     append(it)
                 }
@@ -157,9 +143,10 @@ class UIController<T : BaseEventListener>(
     fun navigateSingleTop(routeName: String, vararg args: String) {
         var buildRoute = routeName
         if (args.isNotEmpty()) {
-            args.forEach {
-                buildRoute = buildString {
-                    append(routeName)
+
+            buildRoute = buildString {
+                append(routeName)
+                args.forEach {
                     append("/")
                     append(it)
                 }
@@ -188,9 +175,9 @@ class UIController<T : BaseEventListener>(
     fun navigateAndReplace(routeName: String, vararg args: String) {
         var buildRoute = routeName
         if (args.isNotEmpty()) {
-            args.forEach {
-                buildRoute = buildString {
-                    append(routeName)
+            buildRoute = buildString {
+                append(routeName)
+                args.forEach {
                     append("/")
                     append(it)
                 }
@@ -215,9 +202,9 @@ class UIController<T : BaseEventListener>(
     fun navigateAndReplaceAll(routeName: String, vararg args: String) {
         var buildRoute = routeName
         if (args.isNotEmpty()) {
-            args.forEach {
-                buildRoute = buildString {
-                    append(routeName)
+            buildRoute = buildString {
+                append(routeName)
+                args.forEach {
                     append("/")
                     append(it)
                 }
@@ -239,74 +226,44 @@ class UIController<T : BaseEventListener>(
         event.addOnBottomSheetChangeListener(listener)
 
 
-    fun sendEvent(eventName: ScreenToAppEvent) =
+    fun sendEvent(eventName: String) =
         event.sendEvent(eventName)
 
     fun exit() =
-        event.sendEvent(ScreenToAppEvent.EXIT_APP)
+        event.sendEvent("EXIT")
 //end region
 
-    fun listenChanges() =
-        this.router.addOnDestinationChangedListener { _, destination, _ ->
+    fun listenChanges() = this
+        .router
+        .addOnDestinationChangedListener { _, destination, _ ->
             currentRoute = destination.route.orEmpty()
-
         }
 
     fun showBottomSheet() {
-        runSuspend {
-            bottomSheetState.show()
-        }
+        runSuspend { bottomSheetState.show() }
     }
 
     fun hideBottomSheet() {
-        runSuspend {
-            bottomSheetState.hide()
-        }
+        runSuspend { bottomSheetState.hide() }
     }
 
     //region string
-    fun getString(res: Int): String = context.getString(res)
+    fun getString(res: Int): String =
+        context.getString(res)
+
     fun getString(res: Int, vararg params: String): String =
         context.getString(res, *params)
-//end region
-}
-
-@Composable
-inline fun <reified T : BaseEventListener> rememberUIController(
-    event: T,
-    router: NavHostController = rememberNavController(),
-    scope: CoroutineScope = rememberCoroutineScope(),
-    allowHideBottomSheet: Boolean = true,
-    context: Context = LocalContext.current
-): UIController<T> {
-    val state = rememberModalBottomSheetState(
-        initialValue = Hidden,
-        confirmValueChange = {
-            if (allowHideBottomSheet)
-                true
-            else
-                event.changeBottomSheet(it)
-        }
-    )
-    return remember {
-        UIController(
-            router,
-            state,
-            scope,
-            event,
-            context
-        )
-    }
+    //end region
 }
 
 @Composable
 fun rememberUIController(
-    event: EventListener = EventListener(),
+    event: BaseEventListener = EventListener(),
     router: NavHostController = rememberNavController(),
     scope: CoroutineScope = rememberCoroutineScope(),
     allowHideBottomSheet: Boolean = true,
     context: Context = LocalContext.current
-): UIController<EventListener> {
+): UIController {
     val state = rememberModalBottomSheetState(
         initialValue = Hidden,
         confirmValueChange = {

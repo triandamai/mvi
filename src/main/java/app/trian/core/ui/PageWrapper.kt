@@ -15,18 +15,16 @@ import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import app.trian.core.ui.extensions.hideKeyboard
-import app.trian.core.ui.listener.BaseEventListener
-import app.trian.core.ui.listener.EventListener
 import app.trian.core.ui.listener.KeyboardListener
 import app.trian.core.ui.listener.NavigationListener
 import app.trian.core.ui.listener.SnacbarListener
 import app.trian.core.ui.listener.ToastListener
 import app.trian.core.ui.viewModel.BaseViewModel
 
-@JvmName("PageWrapperEvent")
-inline fun <reified ViewModel : BaseViewModel<*, *>, E : BaseEventListener> NavGraphBuilder.pageWrapper(
+
+inline fun <reified ViewModel : BaseViewModel<*, *>> NavGraphBuilder.pageWrapper(
     route: String,
-    controller: UIController<E>,
+    controller: UIController,
     parent: String? = null,
     arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),
@@ -132,23 +130,4 @@ inline fun <reified ViewModel : BaseViewModel<*, *>, E : BaseEventListener> NavG
         })
         content(viewModel)
     }
-}
-
-@JvmName("PageWrapper")
-inline fun <reified ViewModel : BaseViewModel<*, *>> NavGraphBuilder.pageWrapper(
-    route: String,
-    controller: UIController<EventListener>,
-    parent: String? = null,
-    arguments: List<NamedNavArgument> = emptyList(),
-    deepLinks: List<NavDeepLink> = emptyList(),
-    crossinline content: @Composable ViewModel.() -> Unit = {}
-) {
-    pageWrapper<ViewModel, EventListener>(
-        route = route,
-        controller = controller,
-        parent = parent,
-        arguments = arguments,
-        deepLinks = deepLinks,
-        content = content
-    )
 }

@@ -5,17 +5,16 @@
 package app.trian.core.ui
 
 import app.trian.core.ui.extensions.hideKeyboard
-import app.trian.core.ui.listener.BaseEventListener
 import app.trian.core.ui.listener.BottomSheetChangeListener
-import app.trian.core.ui.listener.EventListener
 
-open class UIListener<State, Event, T : BaseEventListener>(
-    val controller: UIController<T>,
+open class UIListener<State, Event>(
+    val controller: UIController,
     val state: State,
     private val commit: (State) -> Unit = {},
     private val dispatcher: (Event) -> Unit = {},
 ) {
     val router get() = controller
+    val backStackEntry get() = controller.router.currentBackStackEntry
     fun commit(s: State.() -> State) {
         this.commit(s(state))
     }
@@ -58,14 +57,14 @@ open class UIListener<State, Event, T : BaseEventListener>(
     //end
 }
 
-class UIListenerData<State, Data, Event, T : BaseEventListener>(
-    controller: UIController<T>,
+class UIListenerData<State, Data, Event>(
+    controller: UIController,
     state: State,
     val data: Data,
     commit: (State) -> Unit = {},
     private val commitData: (Data) -> Unit = {},
     dispatcher: (Event) -> Unit = {},
-) : UIListener<State, Event, T>(
+) : UIListener<State, Event>(
     controller = controller,
     state = state,
     commit = commit,

@@ -5,6 +5,7 @@
 package app.trian.core.ui.listener
 
 import androidx.compose.material.ModalBottomSheetValue
+
 class EventListener : BaseEventListener()
 
 abstract class BaseEventListener {
@@ -17,7 +18,7 @@ abstract class BaseEventListener {
         appEvent = listener
     }
 
-    fun sendEvent(eventName: ScreenToAppEvent) {
+    fun sendEvent(eventName: String) {
         appEvent?.onEvent(eventName)
     }
     //end region
