@@ -1,0 +1,14 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<!--
+3  ~ Copyright © 2023 Blue Habit.
+4  ~
+5  ~ Unauthorized copying, publishing of this file, via any medium is strictly prohibited
+6  ~ Proprietary and confidential
+7-->
+8<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+9    package="app.trian.core.ui" >
+10
+11    <uses-sdk android:minSdkVersion="24" />
+11-->/Users/triandamai/AndroidStudioProjects/Resepku/core-ui/ui/src/main/AndroidManifest.xml
+12
+13</manifest>
