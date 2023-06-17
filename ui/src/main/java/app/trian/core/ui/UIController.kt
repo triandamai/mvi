@@ -141,7 +141,6 @@ class UIController(
     fun navigateSingleTop(routeName: String, vararg args: String) {
         var buildRoute = routeName
         if (args.isNotEmpty()) {
-
             buildRoute = buildString {
                 append(routeName)
                 args.forEach {
@@ -251,16 +250,14 @@ fun rememberUIController(
     event: BaseEventListener = EventListener(),
     router: NavHostController = rememberNavController(),
     scope: CoroutineScope = rememberCoroutineScope(),
-    allowHideBottomSheet: Boolean = true,
+    allowHideBottomSheet: Boolean = false,
     context: Context = LocalContext.current
 ): UIController {
     val state = rememberModalBottomSheetState(
         initialValue = Hidden,
         confirmValueChange = {
-            if (allowHideBottomSheet)
-                true
-            else
-                event.changeBottomSheet(it)
+            if (allowHideBottomSheet) true
+            else event.changeBottomSheet(it)
         }
     )
     return remember {

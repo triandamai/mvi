@@ -12,10 +12,8 @@ import androidx.annotation.StringRes
 sealed class ResultState<out R> {
     object Loading : ResultState<Nothing>()
     data class Result<out Result>(val data: Result) : ResultState<Result>()
-    data class Error(
-        val message: String = "",
-        @StringRes val stringId: Int = 0
-    ) : ResultState<Nothing>()
+    data class Error(val message: String = "", @StringRes val stringId: Int = R.string.app_name) :
+        ResultState<Nothing>()
 }
 
 sealed class ResultStateData<out R> {
@@ -32,6 +30,7 @@ sealed class ResultStateWithProgress<out R> {
     object Loading : ResultStateWithProgress<Nothing>()
     data class Finish<out Result>(val data: Result) : ResultStateWithProgress<Result>()
     data class Progress(val progress: Int) : ResultStateWithProgress<Nothing>()
-    data class Error(val message: String = "",  @StringRes val stringId: Int = 0) : ResultStateWithProgress<Nothing>()
+    data class Error(val message: String = "", @StringRes val stringId: Int = 0) :
+        ResultStateWithProgress<Nothing>()
 }
 

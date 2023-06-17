@@ -8,6 +8,7 @@ import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
@@ -47,7 +48,7 @@ val fontFamily = FontFamily(
     Font(R.font.poppins_thinitalic, FontWeight.Thin, FontStyle.Italic),
 )
 
-private val lightColors = lightColorScheme(
+val lightColors = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
     primaryContainer = md_theme_light_primaryContainer,
@@ -80,7 +81,7 @@ private val lightColors = lightColorScheme(
 )
 
 
-private val darkColors = darkColorScheme(
+val darkColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
     primaryContainer = md_theme_dark_primaryContainer,
@@ -112,10 +113,112 @@ private val darkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+val baseTypography = Typography(
+    displayLarge = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 57.sp,
+        lineHeight = 65.sp,
+    ),
+    displayMedium = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 45.sp,
+        lineHeight = 52.sp
+    ),
+    displaySmall = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 36.sp,
+        lineHeight = 44.sp
+    ),
+    headlineLarge = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 32.sp,
+        lineHeight = 40.sp
+    ),
+    headlineMedium = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 28.sp,
+        lineHeight = 36.sp
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp,
+        lineHeight = 32.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.W400,
+        fontSize = 22.sp,
+        lineHeight = 28.sp
+    ),
+    titleMedium = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp,
+        lineHeight = 24.sp
+    ),
+    titleSmall = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+        lineHeight = 20.sp
+    ),
+    labelLarge = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+        lineHeight = 20.sp
+    ),
+    labelMedium = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 12.sp,
+        lineHeight = 16.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 11.sp,
+        lineHeight = 16.sp
+    ),
+    bodyLarge = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 20.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 12.sp,
+        lineHeight = 16.sp
+    )
+)
+val baseShapes = Shapes(
+    small = RoundedCornerShape(4.dp),
+    medium = RoundedCornerShape(4.dp),
+    large = RoundedCornerShape(0.dp)
+)
+
 @Composable
 fun ApplicationTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
+    lightColor: ColorScheme = lightColors,
+    darkColor: ColorScheme = darkColors,
+    typography: Typography = baseTypography,
+    shapes:Shapes= baseShapes,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -124,8 +227,8 @@ fun ApplicationTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> darkColors
-        else -> lightColors
+        darkTheme -> darkColor
+        else -> lightColor
     }
     val view = LocalView.current
     if (!view.isInEditMode) {
@@ -134,107 +237,10 @@ fun ApplicationTheme(
 
         SideEffect {
             (view.context as Activity).window.statusBarColor = colorScheme.surface.toArgb()
-            WindowCompat.getInsetsController(currentWindow!!,view).isAppearanceLightStatusBars = !darkTheme
+            WindowCompat.getInsetsController(currentWindow!!, view).isAppearanceLightStatusBars =
+                !darkTheme
         }
     }
-
-    val typography = Typography(
-        displayLarge = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 57.sp,
-            lineHeight = 65.sp,
-        ),
-        displayMedium = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 45.sp,
-            lineHeight = 52.sp
-        ),
-        displaySmall = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 36.sp,
-            lineHeight = 44.sp
-        ),
-        headlineLarge = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 32.sp,
-            lineHeight = 40.sp
-        ),
-        headlineMedium = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 28.sp,
-            lineHeight = 36.sp
-        ),
-        headlineSmall = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Medium,
-            fontSize = 24.sp,
-            lineHeight = 32.sp
-        ),
-        titleLarge = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.W400,
-            fontSize = 22.sp,
-            lineHeight = 28.sp
-        ),
-        titleMedium = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Medium,
-            fontSize = 16.sp,
-            lineHeight = 24.sp
-        ),
-        titleSmall = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Medium,
-            fontSize = 14.sp,
-            lineHeight = 20.sp
-        ),
-        labelLarge = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Medium,
-            fontSize = 14.sp,
-            lineHeight = 20.sp
-        ),
-        labelMedium = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Medium,
-            fontSize = 12.sp,
-            lineHeight = 16.sp
-        ),
-        labelSmall = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Medium,
-            fontSize = 11.sp,
-            lineHeight = 16.sp
-        ),
-        bodyLarge = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 16.sp,
-            lineHeight = 24.sp
-        ),
-        bodyMedium = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 14.sp,
-            lineHeight = 20.sp
-        ),
-        bodySmall = TextStyle(
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Medium,
-            fontSize = 12.sp,
-            lineHeight = 16.sp
-        )
-    )
-    val shapes = Shapes(
-        small = RoundedCornerShape(4.dp),
-        medium = RoundedCornerShape(4.dp),
-        large = RoundedCornerShape(0.dp)
-    )
 
     MaterialTheme(
         colorScheme = colorScheme,
