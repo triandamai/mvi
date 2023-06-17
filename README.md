@@ -1,14 +1,12 @@
-# GOAL 
-Repository ini bertujuan untuk membuat annotation processor yang dapat meng generate boilerplate ketike membuat aplikasi
+# Why?
+Project ini bertujuan untuk  mengurangi boilerplate dan konfigurasi ketika membuat aplikasi, dengan memberikan solusi berupa prebuild konfiguration dan `annotation processor`.
 
-*Asumsikan kita memiliki Design Pattern MVI
+Sebagai contoh untuk membuat sebuah halaman cukup dengan mendeklasaikan sebuah fungsi `@Composable` dengan anotasi `@Navigation` seperti berikut:
 
-Untuk membuat fitur/halaman cukup dengan mendeklasaikan sebuah fungsi `@Composable` dengan anotasi `@Page` seperti berikut:
-
-## Halaman Pertama:
+## Halaman Pertama
 
 ```kotlin
-@Page(
+@Navigation(
     route="halaman-pertama",
     viewModel=DetailQuizViewModel::class
 )
@@ -22,35 +20,30 @@ internal fun ScreenDetailQuiz(
             //mutasi state
             commit { copy(count = state.count+1) } 
         }
-    ){
-        Text("${state.count}")
-    }
+    ){ Text("${state.count}") }
 
     Button(
         onClick={
+            //navigasi
             router.navigate("halaman-kedua",state.count)
         }
-    ){
-        Text("Ke halaman Kedua")
-    }
+    ){ Text("Ke halaman Kedua") }
 }
 ```
 ## Halaman Kedua:
 
 ```kotlin
 @Navigation(
-    route="halaman-kedua/{id}",
-    arguments=[
-        navArgument("id"){type=NavType.StringType}
-    ],
+    route="halaman-kedua",
     viewModel=DetailQuizViewModel::class
 )
+@Argument(name="id", type=NavType.StringType)
 @Composable
 internal fun ScreenDetailQuiz(
     uiEvent: UIListener<DetailQuizState, DetailQuizEvent>
 ) = UiWrapper(uiEvent) { //utility untuk men-dsl uiEvent
     LaunchedEffect(this){
-        val arg = router.arguments.get<String>("id")
+        val arg = backStackEntry.arguments.get<String>("id")
         commit{copy(message=arg)}
     }
 
@@ -59,27 +52,25 @@ internal fun ScreenDetailQuiz(
             //action
             dispatch(DetailQuizEvent.ChangeMessage("World"))
         }
-    ){
-        Text("Hello ${state.message}")
-    }
+    ){ Text("Hello ${state.message}") }
 }
 ```
 
-Kita tidak perku mendefinisikan NavHost, initialize ViewModel dengan otomatis akan men-generate routing beserta konfigurasinya di belakang layar
-dan cukup dengan menulis di `MainActivity`:
+Pada entry point  `MainActivity`:
 ```kotlin
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var uiController: UIController<EventListener>
+    private lateinit var uiController: UIController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            uiController = rememberUIController(
-                event = EventListener()
-            )
+            uiController = rememberUIController(event = EventListener())
+            
             BaseMainApp(uiController) {
-                AppNavigation.routes(uiController = uiController)
+                NavHost(controller,"halaman-pertama") {
+                    quizComponent(uiController = uiController)
+                }
             }
         }
     }
@@ -90,7 +81,7 @@ class MainActivity : ComponentActivity() {
 Project ini tidak untuk menggantikan arsitektur yang sudah ada seperti hilt,navigation component dll,
 tetapi ini dibuat diatas arsitektur yang sudah ada dan akan men-cover beberapa permasalahan:
 1. Mengurangi boilerplate code
-2. Mengurangi painfull konfigurasi
+2. Mengurangi konfigurasi yang berlebihan
 3. Pengujian yang lebih baik
 4. Memudahkan proses `Preview` dan LiveEdit
-5. membuat sebuah rule yang memudahkan proses development dengan tim yang scalable
+5. membuat sebuah rule atau aturan untuk memudahkan kolaborasi dengan tim
