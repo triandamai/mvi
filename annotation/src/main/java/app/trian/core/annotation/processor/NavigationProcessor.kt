@@ -5,17 +5,17 @@
 package app.trian.core.annotation.processor
 
 import app.trian.core.annotation.Navigation
+import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.processing.Dependencies
+import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.validate
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.writeTo
 import kotlin.reflect.KClass
 
@@ -23,182 +23,104 @@ import kotlin.reflect.KClass
 class NavigationProcessor(
     private val environment: SymbolProcessorEnvironment
 ) : SymbolProcessor {
+    @OptIn(KspExperimental::class)
     override fun process(resolver: Resolver): List<KSAnnotated> {
 
         //collection function with annotation
-        val listedFunctions = resolver.findAnnotations(Navigation::class).toList()
+        val findNavigationAnnotation =
+            resolver.findAnnotations(Navigation::class, environment.logger).toList()
         //skip if there no annotation
-        if (!listedFunctions.iterator().hasNext()) return emptyList()
+        if (!findNavigationAnnotation.iterator().hasNext()) return emptyList()
 
-//        val data = listedFunctions.map {
-//            getFunctionPayload(it, resolver, environment.logger)
-//        }.groupBy {
-//            it.group
-//        }
-
-        val moduleName = getModuleName(resolver)
-        val importList: MutableList<Pair<String, String>> = mutableListOf()
-
-//        val eventListenerType = ClassName("app.trian.core.ui.listener", "EventListener")
-//        uiControllerType.parameterizedBy(eventListenerType)
-        val uiControllerType = ClassName("app.trian.core.ui", "UIController")
-
-        val createFunctionRoute = FunSpec
-            .builder("${moduleName}Component")
-            .receiver(ClassName("androidx.navigation", "NavGraphBuilder"))
-            .addParameter(
-                "uiController",
-                uiControllerType
-            )
-        listedFunctions.forEach {
-            val meta = getFunctionPayload(it, resolver, environment.logger)
-            importList.addAll(
-                listOf(
-                    Pair(meta.screenPackage, meta.screenName),
-                    Pair(meta.viewModelPackage, meta.viewModel)
-                )
-            )
-
-            createFunctionRoute.addStatement(
-                buildPageWrapper(
-                    route = meta.arguments.buildRouteName(meta.route),
-                    args = meta.arguments.buildNvArgument(),
-                    parent = meta.parent,
-                    deepLink = meta.deepLink.buildDeeplink(),
-                    subscriber = buildSubscriberState(meta.isStateWithData),
-                    body = buildScreen(
-                        meta.screenName,
-                        meta.isStateWithData
-                    ),
-                    viewModelName = meta.viewModel,
-                )
+        val functionDeclarations = findNavigationAnnotation.map {
+            getFunctionPayload(it, resolver, environment.logger)
+        }.groupBy { it.group }.map {
+            Pair(
+                NavigationGroup(
+                    it.key,
+                    it.value.firstOrNull()?.startDestination.orEmpty()
+                ),
+                it.value
             )
         }
 
-        val generatorFile = FileSpec
-            .builder(
-                packageName = "app.trian.ksp",
-                fileName = "${moduleName.replaceFirstChar { it.uppercaseChar() }}Component"
+        val module = getModuleName(resolver)
+        val importList: MutableList<Pair<String, String>> = mutableListOf(
+            Pair("androidx.compose.runtime", "getValue"),
+            Pair("androidx.navigation", "NavType"),
+            Pair("androidx.navigation", "navArgument"),
+            Pair("androidx.navigation", "navDeepLink"),
+            Pair("androidx.navigation", "navigation"),
+            Pair("kotlin.collections", "listOf"),
+        )
+
+
+        val createFunctionRoute = FunSpec
+            .builder(module.componentName)
+            .receiver(navGraphBuilder)
+            .addParameter(
+                uiControllerName,
+                uiControllerType
             )
-            .addFileComment("Generated file not supposed to edit \n")
+
+        //generate navigation
+        functionDeclarations.forEach { (group, data) ->
+            //not a nested navigation
+            if (group.route == notNestedNavigation) {
+                data.forEach {
+                    importList.addAll(
+                        listOf(
+                            Pair(it.screenPackage, it.screenName),
+                            Pair(it.viewModelPackage, it.viewModelName)
+                        )
+                    )
+                    buildPageWrapper(
+                        funSpec = createFunctionRoute,
+                        argument = it.arguments,
+                        deepLink = it.deepLink,
+                        parent = it.parent,
+                        route = it.route,
+                        screenName = it.screenName,
+                        screenPackage = it.screenPackage,
+                        viewModelName = it.viewModelName,
+                        viewModelPackage = it.viewModelPackage,
+                        hasData = it.isStateWithData
+                    )
+                }
+            } else {
+                //todo::create nested
+            }
+        }
+
+        val generatorFile = FileSpec
+            .builder(packageName = "app.trian.ksp", fileName = module.fileName)
+            .addFileComment("Generated file, not supposed to edit this file! \n")
             .addFileComment("copyright 2023. trian.app")
 
         importList.forEach { generatorFile.addImport(it.first, it.second) }
 
-        generatorFile
-            .addImport("androidx.compose.runtime", "getValue")
-            .addImport("androidx.navigation", "NavType")
-            .addImport("androidx.navigation", "navArgument")
-            .addImport("androidx.navigation", "navDeepLink")
-            .addImport("androidx.compose.runtime", "collectAsState")
-            .addImport("app.trian.core.ui", "pageWrapper")
-            .addImport("app.trian.core.ui", "UIListenerData")
-            .addImport("app.trian.core.ui", "UIListener")
-            .addFunction(createFunctionRoute.build())
+        generatorFile.addFunction(createFunctionRoute.build())
 
 
-        //end get
+        //create file for each module
         generatorFile.build().writeTo(
             environment.codeGenerator,
             Dependencies(
                 false,
-                *listedFunctions.mapNotNull { it.containingFile }.toList().toTypedArray(),
+                *findNavigationAnnotation.mapNotNull { it.containingFile }.toList().toTypedArray(),
             )
         )
-
-        return (listedFunctions).filterNot { it.validate() }.toList()
+        return (findNavigationAnnotation).filterNot { it.validate() }.toList()
 
     }
 
     private fun Resolver.findAnnotations(
-        kClass: KClass<*>
+        kClass: KClass<*>,
+        logger: KSPLogger
     ) = getSymbolsWithAnnotation(
         kClass.qualifiedName.toString()
-    ).filterIsInstance<KSFunctionDeclaration>().filter { it ->
-        it.parameters.map { it.name?.asString() }.contains("uiEvent")
-    }
-
-    private fun getModuleName(resolver: Resolver): String {
-
-        //get moduleName
-        val moduleDescriptor = resolver::class.java
-            .getDeclaredField("module")
-            .apply {
-                isAccessible = true
-            }
-            .get(resolver)
-
-        val rawName = moduleDescriptor::class.java
-            .getMethod("getName")
-            .invoke(moduleDescriptor)
-            .toString()
-
-        return rawName.removeSurrounding("<", ">")
-            .removePrefix("feature-")
-            .removePrefix("core-")
-            .removeSuffix("_debug")
-            .removeSuffix("_release")
-    }
-
-    private fun buildPageWrapper(
-        viewModelName: String,
-        route: String,
-        parent: String,
-        args: String,
-        deepLink: String,
-        subscriber: String,
-        body: String
-    ): String {
-        return buildString {
-            append(
-                """
-                 pageWrapper<$viewModelName>(
-                    route="$route",
-                    parent="$parent",
-                    arguments=$args,
-                    deepLinks=$deepLink,
-                    controller=uiController
-                 ){
-                    $subscriber
-                    $body
-                  }
-            """.trimIndent()
-            )
-        }
-    }
-
-    private fun buildSubscriberState(hasData: Boolean): String {
-        return buildString {
-            append("val state by uiState.collectAsState() \n")
-            if (hasData) {
-                append("val data by uiDataState.collectAsState()")
-            }
-        }
-    }
-
-    private fun buildScreen(
-        screenName: String,
-        hasData: Boolean
-    ): String {
-        val listenerClass = if (hasData) "UIListenerData" else "UIListener"
-        val mutation = if (hasData) """
-            data=data,
-            commitData=::commitData,
-        """.trimIndent() else ""
-        return buildString {
-            append(
-                """
-                $screenName(
-                    uiEvent = $listenerClass(
-                        controller = uiController,
-                        state = state,
-                        $mutation
-                        commit = ::commit,
-                        dispatcher = ::dispatch
-                    )
-                )
-            """.trimIndent()
-            )
-        }
+    ).filterIsInstance<KSFunctionDeclaration>().filter {
+        val name = it.parameters.first().type.resolve().declaration.simpleName.asString()
+        (name == "UIListener" || name == "UIListenerData")
     }
 }

@@ -16,6 +16,7 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import app.trian.core.ui.extensions.hideKeyboard
 import app.trian.core.ui.listener.KeyboardListener
 import app.trian.core.ui.listener.NavigationListener
@@ -28,8 +29,8 @@ inline fun <reified ViewModel : BaseViewModel<*, *>> NavGraphBuilder.pageWrapper
     route: String,
     controller: UIController,
     parent: String? = null,
-    arguments: List<NamedNavArgument> = emptyList(),
-    deepLinks: List<NavDeepLink> = emptyList(),
+    arguments: List<NamedNavArgument> = listOf(),
+    deepLinks: List<NavDeepLink> = listOf(),
     crossinline content: @Composable ViewModel.() -> Unit = {}
 ) {
     composable(

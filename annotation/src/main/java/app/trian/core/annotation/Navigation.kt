@@ -10,15 +10,29 @@ import kotlin.reflect.KClass
 @Retention(AnnotationRetention.SOURCE)
 annotation class Navigation(
     val route: String,
-    val parent: String = "",
-    val arguments: Array<String> = [],
-    val deeplink: Array<String> = [],
+    val parentRoute: String = "",
+    val group: String = "",
     val viewModel: KClass<*>
 )
 
+@Repeatable
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class NavigationGroup(
-    val route: String,
-    val startDestination: String = "",
+annotation class Argument(
+    val name: String,
+    val navType: NavType = NavType.String,
+    val order: Int = 0
 )
+
+@Repeatable
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class DeepLink(
+    val uri: String,
+)
+
+enum class NavType {
+    String,
+    Integer,
+    Boolean
+}
