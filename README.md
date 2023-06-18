@@ -43,7 +43,7 @@ internal fun ScreenDetailQuiz(
     Button(
         onClick={
             //navigasi
-            router.navigate("halaman-kedua",state.count)
+            router.navigate("halaman-kedua","World")
         }
     ){ Text("Ke halaman Kedua") }
 }
@@ -54,13 +54,13 @@ internal fun ScreenDetailQuiz(
     route="halaman-kedua",
     viewModel=DetailQuizViewModel::class
 )
-@Argument(name="quizId", type=NavType.StringType)
+@Argument(name="quizName", type=NavType.StringType)
 @Composable
 internal fun ScreenDetailQuiz(
     uiEvent: UIListener<DetailQuizState, DetailQuizEvent>
 ) = UiWrapper(uiEvent) { //utility untuk men-dsl uiEvent
     LaunchedEffect(this){
-        val arg = backStackEntry.arguments.get<String>("quizId")
+        val arg = backStackEntry.arguments.get<String>("quizName")
         commit{copy(message=arg)}
     }
     Text("Hello ${state.message}")
@@ -75,7 +75,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val uiController = rememberUIController(event = EventListener())
             
-            BaseMainApp(uiController) {
+            QuizTheme {
                 NavHost(controller,"halaman-pertama") {
                     quizComponent(uiController = uiController)
                 }
