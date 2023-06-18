@@ -76,7 +76,7 @@ allprojects {
 - Application `build.gradle`:
 ```groovy
 plugins{
-    id 'com.google.devtools.ksp'
+    id 'com.google.devtools.ksp' version '1.8.0-1.0.9'
 }
 dependencies {
     implementation 'com.github.triandamai.mvi:ui:0.1'
