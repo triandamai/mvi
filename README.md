@@ -1,3 +1,4 @@
+[![](https://jitpack.io/v/triandamai/mvi.svg)](https://jitpack.io/#triandamai/mvi)
 # Why?
 Project ini bertujuan untuk mengurangi boilerplate dan konfigurasi ketika membuat aplikasi, dengan memberikan solusi berupa `prebuild configuration` dan `annotation processor`.
 
