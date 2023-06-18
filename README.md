@@ -3,9 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Memulai
-untuk menggunakan library ini anda dapat mencoba dengan menambahkan beberapa dependencies:
-
-- Root project gradle `build.gradle`:
+Anda dapat mencoba dengan menambahkan dependencies pada `build.gradle` atau `build.gradle.kts`:
+1. root project gradle `build.gradle`:
 ```groovy
 allprojects {
     repositories {
@@ -13,7 +12,7 @@ allprojects {
     }
 }
 ```
-- Application `build.gradle`:
+2. app `build.gradle`:
 ```groovy
 plugins{
     id 'com.google.devtools.ksp' version '1.8.0-1.0.9'
