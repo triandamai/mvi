@@ -26,4 +26,4 @@ dependencyResolutionManagement {
 rootProject.name = "MVI"
 include(":androidApp")
 include(":ui")
-include(":annotation")
+include(":processor")

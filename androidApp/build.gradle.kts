@@ -89,8 +89,8 @@ android {
 
 dependencies {
     implementation(project(":ui"))
-    implementation(project(":annotation"))
-    ksp(project(":annotation"))
+    implementation(project(":processor"))
+    ksp(project(":processor"))
     coreLibraryDesugaring(libs.desugar.jdk.lib)
 
     implementation(libs.android.material)

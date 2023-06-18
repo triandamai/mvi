@@ -23,7 +23,6 @@ import kotlin.reflect.KClass
 class NavigationProcessor(
     private val environment: SymbolProcessorEnvironment
 ) : SymbolProcessor {
-    @OptIn(KspExperimental::class)
     override fun process(resolver: Resolver): List<KSAnnotated> {
 
         //collection function with annotation

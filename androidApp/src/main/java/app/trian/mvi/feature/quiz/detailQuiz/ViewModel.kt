@@ -44,7 +44,7 @@ class DetailQuizViewModel @Inject constructor(
                 loading = {},
                 error = {},
                 success = {
-                    commitData { copy(quiz = it) }
+
                 }
             )
     }

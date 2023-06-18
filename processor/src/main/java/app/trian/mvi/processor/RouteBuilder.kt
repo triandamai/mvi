@@ -14,11 +14,11 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.MemberName
 
 
-val pageWrapper = MemberName("app.trian.core.ui", "pageWrapper")
+val pageWrapper = MemberName("app.trian.mvi.ui", "pageWrapper")
 val collectAsState = MemberName("androidx.compose.runtime", "collectAsState")
-val listener = MemberName("app.trian.core.ui", "UIListener")
-val listenerData = MemberName("app.trian.core.ui", "UIListenerData")
-val uiControllerType = ClassName("app.trian.core.ui", "UIController")
+val listener = MemberName("app.trian.mvi.ui", "UIListener")
+val listenerData = MemberName("app.trian.mvi.ui", "UIListenerData")
+val uiControllerType = ClassName("app.trian.mvi.ui", "UIController")
 val navGraphBuilder = ClassName("androidx.navigation", "NavGraphBuilder")
 
 const val uiControllerName = "uiController"

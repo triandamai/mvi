@@ -11,7 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/androidApp" />
-            <option value="$PROJECT_DIR$/annotation" />
+            <option value="$PROJECT_DIR$/processor" />
             <option value="$PROJECT_DIR$/ui" />
           </set>
         </option>
