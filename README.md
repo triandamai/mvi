@@ -29,7 +29,7 @@ Project ini bertujuan untuk mengurangi boilerplate dan konfigurasi ketika membua
 
 Sebagai contoh untuk membuat sebuah halaman cukup dengan mendeklasaikan sebuah fungsi `@Composable` dengan anotasi `@Navigation`,`Argument` seperti berikut:
 
-## Halaman Pertama
+### Halaman Pertama
 
 ```kotlin
 @Navigation(
@@ -48,7 +48,7 @@ internal fun ScreenDetailQuiz(
     ){ Text("Ke halaman Kedua") }
 }
 ```
-## Halaman Kedua:
+### Halaman Kedua:
 ```kotlin
 @Navigation(
     route="halaman-kedua",
