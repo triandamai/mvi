@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#2934D0</color>
+    <color name="onPrimary">#FFFFFF</color>
+    <color name="background">#FFFFFF</color>
+    <color name="onBackground">#767780</color>
+    <color name="surface">#F8F9FA</color>
+    <color name="onSurface">#000000</color>
+    <color name="textActive">#474747</color>
+    <color name="textInActive">#989797</color>
+</resources>

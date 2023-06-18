@@ -9,12 +9,14 @@
 plugins {
     alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
+    `maven-publish`
     //should place at the bottom plugins to avoid warning dagger not recognized by any processor
     alias(libs.plugins.org.jetbrains.kotlin.kapt)
+
 }
 
 android {
-    namespace = "app.trian.core.ui"
+    namespace = "app.trian.mvi.ui"
     compileSdk = 33
 
     defaultConfig {
@@ -56,14 +58,11 @@ android {
 }
 
 dependencies {
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.8.0-1.0.9")
     coreLibraryDesugaring(libs.desugar.jdk.lib)
 
 
     implementation(libs.android.material)
-    implementation(libs.compose.markdown)
 
-    implementation(libs.mp.android.chart)
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
@@ -75,8 +74,6 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.compose.material)
     implementation(libs.compose.material2)
-    implementation(libs.compose.calendar)
-    implementation(libs.wheel.picker.compose)
     implementation(libs.coil.compose)
     implementation(libs.navigation.compose)
     implementation(libs.multidex)
@@ -102,4 +99,17 @@ dependencies {
     testImplementation(libs.robolectric)
 
     debugImplementation(libs.leak.canary)
+}
+
+afterEvaluate {
+    publishing{
+        publications {
+            register("release",MavenPublication::class){
+                from(components["release"])
+                groupId = "app.trian.mvi.ui"
+                version = "1.0"
+                artifactId = "ui"
+            }
+        }
+    }
 }

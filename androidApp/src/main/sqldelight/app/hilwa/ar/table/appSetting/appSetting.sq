@@ -1,0 +1,31 @@
+CREATE TABLE IF NOT EXISTS AppSetting(
+    settingId TEXT NOT NULL PRIMARY KEY,
+    theme TEXT NOT NULL,
+    createdAt TEXT NOT NULL,
+    updatedAt TEXT NOT NULL
+);
+
+getAppSetting:
+SELECT *
+FROM AppSetting
+WHERE settingId=?;
+
+insertSetting:
+INSERT INTO AppSetting(
+    settingId,
+    theme,
+    createdAt,
+    updatedAt
+) VALUES (?,?,?,?);
+
+
+updateTheme:
+UPDATE AppSetting
+SET theme=?,
+    updatedAt=?
+WHERE settingId=?;
+
+deleteAppSetting:
+DELETE FROM AppSetting
+WHERE settingId=?;
+
