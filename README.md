@@ -19,9 +19,9 @@ plugins{
     id 'com.google.devtools.ksp' version '1.8.0-1.0.9'
 }
 dependencies {
-    implementation 'com.github.triandamai.mvi:ui:0.1'
-    implementation 'com.github.triandamai.mvi:processor:0.1'
-    ksp 'com.github.triandamai.mvi:processor:0.1'
+    implementation 'com.github.triandamai.mvi:ui:<version>'
+    implementation 'com.github.triandamai.mvi:processor:<version>'
+    ksp 'com.github.triandamai.mvi:processor:<version>'
 }
 ```
 
