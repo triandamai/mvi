@@ -1,27 +1,19 @@
 # Why?
-Project ini bertujuan untuk  mengurangi boilerplate dan konfigurasi ketika membuat aplikasi, dengan memberikan solusi berupa prebuild konfiguration dan `annotation processor`.
+Project ini bertujuan untuk mengurangi boilerplate dan konfigurasi ketika membuat aplikasi, dengan memberikan solusi berupa `prebuild configuration` dan `annotation processor`.
 
-Sebagai contoh untuk membuat sebuah halaman cukup dengan mendeklasaikan sebuah fungsi `@Composable` dengan anotasi `@Navigation` seperti berikut:
+Sebagai contoh untuk membuat sebuah halaman cukup dengan mendeklasaikan sebuah fungsi `@Composable` dengan anotasi `@Navigation`,`Argument` seperti berikut:
 
 ## Halaman Pertama
 
 ```kotlin
 @Navigation(
     route="halaman-pertama",
-    viewModel=DetailQuizViewModel::class
+    viewModel=ListQuizViewModel::class
 )
 @Composable
 internal fun ScreenDetailQuiz(
-    uiEvent: UIListener<DetailQuizState, DetailQuizEvent>
+    uiEvent: UIListener<ListQuizState, ListQuizEvent>
 ) = UiWrapper(uiEvent) { //utility untuk men-dsl uiEvent
-    //content
-    Button(
-        onClick={
-            //mutasi state
-            commit { copy(count = state.count+1) } 
-        }
-    ){ Text("${state.count}") }
-
     Button(
         onClick={
             //navigasi
@@ -31,41 +23,31 @@ internal fun ScreenDetailQuiz(
 }
 ```
 ## Halaman Kedua:
-
 ```kotlin
 @Navigation(
     route="halaman-kedua",
     viewModel=DetailQuizViewModel::class
 )
-@Argument(name="id", type=NavType.StringType)
+@Argument(name="quizId", type=NavType.StringType)
 @Composable
 internal fun ScreenDetailQuiz(
     uiEvent: UIListener<DetailQuizState, DetailQuizEvent>
 ) = UiWrapper(uiEvent) { //utility untuk men-dsl uiEvent
     LaunchedEffect(this){
-        val arg = backStackEntry.arguments.get<String>("id")
+        val arg = backStackEntry.arguments.get<String>("quizId")
         commit{copy(message=arg)}
     }
-
-    Button(
-        onClick={
-            //action
-            dispatch(DetailQuizEvent.ChangeMessage("World"))
-        }
-    ){ Text("Hello ${state.message}") }
+    Text("Hello ${state.message}")
 }
 ```
-
-Pada entry point  `MainActivity`:
+Processor akan mencari halaman dengan anotasi `Navigation` dan membuat component sesuai dengan nama module yang kemudian di pakai pada entry point  `MainActivity`:
 ```kotlin
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var uiController: UIController
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            uiController = rememberUIController(event = EventListener())
+            val uiController = rememberUIController(event = EventListener())
             
             BaseMainApp(uiController) {
                 NavHost(controller,"halaman-pertama") {
@@ -74,6 +56,29 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+```
+
+# Memulai
+untuk menggunakan library ini anda dapat mencoba dengan menambahkan beberapa dependencies:
+
+- Root project gradle `build.gradle`:
+```groovy
+allprojects {
+		repositories {
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+- Application `build.gradle`:
+```groovy
+plugins{
+    id 'com.google.devtools.ksp'
+}
+dependencies {
+    implementation 'com.github.triandamai.mvi:ui:0.1'
+    implementation 'com.github.triandamai.mvi:processor:0.1'
+    ksp 'com.github.triandamai.mvi:processor:0.1'
 }
 ```
 
