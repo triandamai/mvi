@@ -88,9 +88,15 @@ android {
 }
 
 dependencies {
+//    com.github.triandamai.core-ui:processor:0.1
+//    com.github.triandamai.core-ui:ui:0.1
     implementation(project(":ui"))
     implementation(project(":processor"))
     ksp(project(":processor"))
+
+//    implementation("com.github.triandamai.core-ui:ui:0.1")
+//    implementation("com.github.triandamai.core-ui:processor:0.1")
+//    ksp("com.github.triandamai.core-ui:processor:0.1")
     coreLibraryDesugaring(libs.desugar.jdk.lib)
 
     implementation(libs.android.material)
