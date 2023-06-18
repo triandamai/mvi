@@ -65,10 +65,10 @@ untuk menggunakan library ini anda dapat mencoba dengan menambahkan beberapa dep
 - Root project gradle `build.gradle`:
 ```groovy
 allprojects {
-		repositories {
-			maven { url 'https://jitpack.io' }
-		}
-	}
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
 ```
 - Application `build.gradle`:
 ```groovy
@@ -81,6 +81,67 @@ dependencies {
     ksp 'com.github.triandamai.mvi:processor:0.1'
 }
 ```
+# MVI(Model View Intent)
+
+## Model
+```kotlin
+@Immutable
+@Parcelize
+data class StartQuizState(
+    val showContent:Boolean=false,
+    val quizId:String=""
+) :  Parcelable
+```
+
+## Event
+```kotlin
+sealed interface StartQuizEvent {
+    object ShowResult:StartQuizEvent
+}
+```
+
+## ViewModel
+```kotlin
+
+@HiltViewModel
+class StartQuizViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    private val savedStateHandle: SavedStateHandle,
+    private val getQuizQuestionUseCase: GetQuizQuestionUseCase
+) : BaseViewModelData<StartQuizState, StartQuizEvent>(
+    context,
+    DetailQuizState(),
+    DetailQuizDataState()
+) {
+    init {
+        handleActions()
+        getQuiz()
+    }
+
+    private fun quizId(): String = savedStateHandle.get<String>(StartQuiz.argKey).orEmpty()
+
+    private fun getQuiz() = async {
+        getQuizQuestionUseCase(quizId())
+            .onEach(
+                loading = {},
+                error = {},
+                success = {
+                    commit { copy(questions=it) }
+                }
+            )
+    }
+
+    override fun handleActions() = onEvent { event->
+        when(event){
+            StartQuizEvent.ShowResult->{
+                //show
+            }
+        }
+    }
+
+}
+```
+
 
 Project ini tidak untuk menggantikan arsitektur yang sudah ada seperti hilt,navigation component dll,
 tetapi ini dibuat diatas arsitektur yang sudah ada dan akan men-cover beberapa permasalahan:
