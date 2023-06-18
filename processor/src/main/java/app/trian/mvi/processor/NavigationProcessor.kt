@@ -92,7 +92,7 @@ class NavigationProcessor(
         }
 
         val generatorFile = FileSpec
-            .builder(packageName = "app.trian.ksp", fileName = module.fileName)
+            .builder(packageName = "app.trian.mvi", fileName = module.fileName)
             .addFileComment("Generated file, not supposed to edit this file! \n")
             .addFileComment("copyright 2023. trian.app")
 

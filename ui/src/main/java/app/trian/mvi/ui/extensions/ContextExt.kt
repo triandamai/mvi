@@ -13,18 +13,13 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+
 fun Context.findActivity(): ComponentActivity? = when (this) {
     is ComponentActivity -> this
     is ContextWrapper -> baseContext.findActivity()
     else -> null
 }
 
-/**
- * Utility for context
- * author Trian Damai
- * created_at 29/01/22 - 22.08
- * site https://trian.app
- */
 fun Context.hideKeyboard() {
     val activity = (this as Activity)
     val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

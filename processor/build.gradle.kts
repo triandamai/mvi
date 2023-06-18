@@ -9,17 +9,10 @@
  */
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-//    alias(libs.plugins.com.android.library)
-//    alias(libs.plugins.org.jetbrains.kotlin.android)
     kotlin("jvm")
     //should place at the bottom plugins to avoid warning dagger not recognized by any processor
     `maven-publish`
 }
-//android{
-//    namespace="app.trian.mvi.processor"
-//    compileSdk = 33
-//}
-
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
