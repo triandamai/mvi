@@ -1,6 +1,30 @@
 # Android MVI
 [![](https://jitpack.io/v/triandamai/mvi.svg)](https://jitpack.io/#triandamai/mvi)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+# Memulai
+untuk menggunakan library ini anda dapat mencoba dengan menambahkan beberapa dependencies:
+
+- Root project gradle `build.gradle`:
+```groovy
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+- Application `build.gradle`:
+```groovy
+plugins{
+    id 'com.google.devtools.ksp' version '1.8.0-1.0.9'
+}
+dependencies {
+    implementation 'com.github.triandamai.mvi:ui:0.1'
+    implementation 'com.github.triandamai.mvi:processor:0.1'
+    ksp 'com.github.triandamai.mvi:processor:0.1'
+}
+```
+
 # Why?
 Project ini bertujuan untuk mengurangi boilerplate dan konfigurasi ketika membuat aplikasi, dengan memberikan solusi berupa `prebuild configuration` dan `annotation processor`.
 
@@ -62,28 +86,6 @@ class MainActivity : ComponentActivity() {
 }
 ```
 
-# Memulai
-untuk menggunakan library ini anda dapat mencoba dengan menambahkan beberapa dependencies:
-
-- Root project gradle `build.gradle`:
-```groovy
-allprojects {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
-}
-```
-- Application `build.gradle`:
-```groovy
-plugins{
-    id 'com.google.devtools.ksp' version '1.8.0-1.0.9'
-}
-dependencies {
-    implementation 'com.github.triandamai.mvi:ui:0.1'
-    implementation 'com.github.triandamai.mvi:processor:0.1'
-    ksp 'com.github.triandamai.mvi:processor:0.1'
-}
-```
 # MVI(Model View Intent)
 
 ## Model
