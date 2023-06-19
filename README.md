@@ -1,9 +1,35 @@
+# Android MVI
+[![](https://jitpack.io/v/triandamai/mvi.svg)](https://jitpack.io/#triandamai/mvi)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+# Memulai
+Anda dapat mencoba dengan menambahkan dependencies pada `build.gradle` atau `build.gradle.kts`:
+1. root project gradle `build.gradle`:
+```groovy
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+2. app `build.gradle`:
+```groovy
+plugins{
+    id 'com.google.devtools.ksp' version '1.8.0-1.0.9'
+}
+dependencies {
+    implementation 'com.github.triandamai.mvi:ui:<version>'
+    implementation 'com.github.triandamai.mvi:processor:<version>'
+    ksp 'com.github.triandamai.mvi:processor:<version>'
+}
+```
+
 # Why?
 Project ini bertujuan untuk mengurangi boilerplate dan konfigurasi ketika membuat aplikasi, dengan memberikan solusi berupa `prebuild configuration` dan `annotation processor`.
 
 Sebagai contoh untuk membuat sebuah halaman cukup dengan mendeklasaikan sebuah fungsi `@Composable` dengan anotasi `@Navigation`,`Argument` seperti berikut:
 
-## Halaman Pertama
+### Halaman Pertama
 
 ```kotlin
 @Navigation(
@@ -17,24 +43,24 @@ internal fun ScreenDetailQuiz(
     Button(
         onClick={
             //navigasi
-            router.navigate("halaman-kedua",state.count)
+            router.navigate("halaman-kedua","World")
         }
     ){ Text("Ke halaman Kedua") }
 }
 ```
-## Halaman Kedua:
+### Halaman Kedua:
 ```kotlin
 @Navigation(
     route="halaman-kedua",
     viewModel=DetailQuizViewModel::class
 )
-@Argument(name="quizId", type=NavType.StringType)
+@Argument(name="quizName", type=NavType.StringType)
 @Composable
 internal fun ScreenDetailQuiz(
     uiEvent: UIListener<DetailQuizState, DetailQuizEvent>
 ) = UiWrapper(uiEvent) { //utility untuk men-dsl uiEvent
     LaunchedEffect(this){
-        val arg = backStackEntry.arguments.get<String>("quizId")
+        val arg = backStackEntry.arguments.get<String>("quizName")
         commit{copy(message=arg)}
     }
     Text("Hello ${state.message}")
@@ -49,7 +75,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val uiController = rememberUIController(event = EventListener())
             
-            BaseMainApp(uiController) {
+            QuizTheme {
                 NavHost(controller,"halaman-pertama") {
                     quizComponent(uiController = uiController)
                 }
@@ -59,31 +85,9 @@ class MainActivity : ComponentActivity() {
 }
 ```
 
-# Memulai
-untuk menggunakan library ini anda dapat mencoba dengan menambahkan beberapa dependencies:
-
-- Root project gradle `build.gradle`:
-```groovy
-allprojects {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
-}
-```
-- Application `build.gradle`:
-```groovy
-plugins{
-    id 'com.google.devtools.ksp'
-}
-dependencies {
-    implementation 'com.github.triandamai.mvi:ui:0.1'
-    implementation 'com.github.triandamai.mvi:processor:0.1'
-    ksp 'com.github.triandamai.mvi:processor:0.1'
-}
-```
 # MVI(Model View Intent)
 
-## Model
+## Model(State & ViewModel)
 ```kotlin
 @Immutable
 @Parcelize
@@ -92,15 +96,7 @@ data class StartQuizState(
     val quizId:String=""
 ) :  Parcelable
 ```
-
-## Event
-```kotlin
-sealed interface StartQuizEvent {
-    object ShowResult:StartQuizEvent
-}
-```
-
-## ViewModel
+### ViewModel
 ```kotlin
 
 @HiltViewModel
@@ -141,6 +137,20 @@ class StartQuizViewModel @Inject constructor(
 
 }
 ```
+
+## Intent
+```kotlin
+sealed interface StartQuizEvent {
+    object ShowResult:StartQuizEvent
+}
+```
+
+## View
+```kotlin
+
+```
+
+
 
 
 Project ini tidak untuk menggantikan arsitektur yang sudah ada seperti hilt,navigation component dll,
