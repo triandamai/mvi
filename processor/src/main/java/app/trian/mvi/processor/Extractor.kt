@@ -37,12 +37,8 @@ fun getFunctionPayload(
         val name = it.arguments.getParameterValue<String>("name")
         val type = it.arguments.getParameterValue<KSType>("navType")
             .declaration.simpleName.asString()
-        val navType = when (type) {
-            "String" -> NavType.String
-            "Boolean" -> NavType.Boolean
-            "Integer" -> NavType.Integer
-            else -> NavType.String
-        }
+
+        val navType = NavType.valueOf(type)
 
         NavArgument(
             name,
@@ -60,7 +56,7 @@ fun getFunctionPayload(
 
     val isBaseViewModelData = findViewModelFile?.superTypes?.map {
         it.resolve().declaration.simpleName.asString()
-    }?.first().toString() == "BaseViewModelData"
+    }?.first().toString() == "MviViewModelData"
 
     return NavigationModel(
         route = route,

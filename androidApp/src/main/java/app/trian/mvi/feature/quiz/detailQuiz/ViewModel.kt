@@ -11,7 +11,7 @@ package app.trian.mvi.feature.quiz.detailQuiz
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import app.trian.mvi.data.domain.quiz.GetDetailQuizUseCase
-import app.trian.mvi.ui.viewModel.BaseViewModelData
+import app.trian.mvi.ui.viewModel.MviViewModelData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -21,7 +21,7 @@ class DetailQuizViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val savedStateHandle: SavedStateHandle,
     private val getDetailQuizUseCase: GetDetailQuizUseCase
-) : BaseViewModelData<DetailQuizState, DetailQuizDataState, DetailQuizEvent>(
+) : MviViewModelData<DetailQuizState, DetailQuizDataState, DetailQuizEvent>(
     context,
     DetailQuizState(),
     DetailQuizDataState()

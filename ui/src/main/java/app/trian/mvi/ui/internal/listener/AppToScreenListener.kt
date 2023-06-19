@@ -2,7 +2,7 @@
  * Copyright (c) 2023 trian.app.
  */
 
-package app.trian.mvi.ui.listener
+package app.trian.mvi.ui.internal.listener
 
 
 fun interface AppToScreenListener {

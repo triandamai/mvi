@@ -6,11 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import app.trian.mvi.feature.quiz.listQuiz.ListQuiz
 import app.trian.mvi.ui.BaseMainApp
-import app.trian.mvi.ui.UIController
-import app.trian.mvi.ui.listener.BaseEventListener
-import app.trian.mvi.ui.listener.EventListener
-import app.trian.mvi.ui.rememberUIController
-import app.trian.ksp.androidAppComponent
+import app.trian.mvi.ui.internal.UIController
+import app.trian.mvi.ui.internal.listener.BaseEventListener
+import app.trian.mvi.ui.internal.listener.EventListener
+import app.trian.mvi.ui.internal.rememberUIController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,7 +26,7 @@ class MainActivity : ComponentActivity() {
             )
             BaseMainApp(uiController) {
                 NavHost(
-                    navController = uiController.router,
+                    navController = uiController.navigator.navHost,
                     startDestination = ListQuiz.routeName
                 ) {
                     androidAppComponent(it)

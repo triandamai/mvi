@@ -12,6 +12,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import app.trian.mvi.ui.internal.UIController
+import app.trian.mvi.ui.internal.rememberUIController
 import app.trian.mvi.ui.theme.ApplicationTheme
 import app.trian.mvi.ui.theme.baseShapes
 import app.trian.mvi.ui.theme.baseTypography

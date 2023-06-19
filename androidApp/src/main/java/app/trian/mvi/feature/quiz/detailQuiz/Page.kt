@@ -50,9 +50,9 @@ import app.trian.mvi.NavType
 import app.trian.mvi.Navigation
 import app.trian.mvi.ui.BaseMainApp
 import app.trian.mvi.ui.BaseScreen
-import app.trian.mvi.ui.UIListenerData
 import app.trian.mvi.ui.UIWrapper
-import app.trian.mvi.ui.rememberUIController
+import app.trian.mvi.ui.internal.UIListenerData
+import app.trian.mvi.ui.internal.rememberUIController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import kotlinx.coroutines.delay
@@ -100,10 +100,10 @@ internal fun ScreenDetailQuiz(
                 textConfirmation = "Oke",
                 textCancel = "Batal",
                 onDismiss = {
-                    hideBottomSheet()
+                    controller.bottomSheet.hide()
                 },
                 onConfirm = {
-                    hideBottomSheet()
+                    controller.bottomSheet.show()
                 }
             )
         }
@@ -115,7 +115,7 @@ internal fun ScreenDetailQuiz(
         ) {
             IconButton(
                 onClick = {
-                    router.navigateUp()
+                    controller.navigator.navigateUp()
                 },
                 modifier = Modifier.align(Alignment.TopEnd)
             ) {
@@ -199,7 +199,7 @@ internal fun ScreenDetailQuiz(
                         ButtonPrimary(
                             text = "Kerjakan Sekarang",
                             onClick = {
-                                showBottomSheet()
+                                controller.bottomSheet.show()
                             }
                         )
                     }

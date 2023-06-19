@@ -18,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import app.trian.mvi.ui.internal.UIController
+import app.trian.mvi.ui.internal.rememberUIController
 
 
 @Composable
@@ -41,7 +43,7 @@ fun BaseScreen(
                 bottomSheet()
             }
         },
-        sheetState = controller.bottomSheetState,
+        sheetState = controller.bottomSheet.state,
         sheetBackgroundColor = MaterialTheme.colorScheme.surface,
         sheetShape = RoundedCornerShape(
             topStart = 10.dp,

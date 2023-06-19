@@ -11,7 +11,7 @@ import androidx.annotation.StringRes
 
 sealed class ResultState<out R> {
     object Loading : ResultState<Nothing>()
-    data class Result<out Result>(val data: Result) : ResultState<Result>()
+    data class Result<out Out>(val data: Out) : ResultState<Out>()
     data class Error(val message: String = "", @StringRes val stringId: Int = R.string.app_name) :
         ResultState<Nothing>()
 }

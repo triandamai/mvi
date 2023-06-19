@@ -5,6 +5,7 @@
 package app.trian.mvi.ui
 
 import androidx.compose.runtime.Composable
+import app.trian.mvi.ui.internal.UIListener
 
 @Composable
 inline fun <reified T : UIListener<*, *>> UIWrapper(

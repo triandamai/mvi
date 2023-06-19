@@ -12,16 +12,7 @@ import androidx.lifecycle.viewModelScope
 import app.trian.mvi.ui.ResultState
 import app.trian.mvi.ui.ResultStateData
 import app.trian.mvi.ui.ResultStateWithProgress
-import app.trian.mvi.ui.listener.BottomSheetListener
-import app.trian.mvi.ui.listener.BottomSheetListenerImpl
-import app.trian.mvi.ui.listener.KeyboardListener
-import app.trian.mvi.ui.listener.KeyboardListenerImpl
-import app.trian.mvi.ui.listener.NavigationListener
-import app.trian.mvi.ui.listener.NavigationListenerImpl
-import app.trian.mvi.ui.listener.SnacbarListener
-import app.trian.mvi.ui.listener.SnackbarListenerImpl
-import app.trian.mvi.ui.listener.ToastListener
-import app.trian.mvi.ui.listener.ToastListenerImpl
+import app.trian.mvi.ui.internal.UIController
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -36,7 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @SuppressLint("StaticFieldLeak")
-abstract class BaseViewModel<State : Parcelable, Action>(
+abstract class MviViewModel<State : Parcelable, Action>(
     val context: Context,
     private val initialState: State,
 ) : ViewModel() {
@@ -48,50 +39,15 @@ abstract class BaseViewModel<State : Parcelable, Action>(
     val uiState get() = _uiState.asStateFlow()
 
     private val action = Channel<Action>(Channel.UNLIMITED)
-
-    private var _toastListener: ToastListener = ToastListenerImpl()
-    protected val toast get() = _toastListener
-    private var _navigationListener: NavigationListener = NavigationListenerImpl()
-    protected val navigation get() = _navigationListener
-
-    private var _bottomSheetListener: BottomSheetListener = BottomSheetListenerImpl()
-    protected val bottomSheet get() = _bottomSheetListener
-
-    private var _snackbarListener: SnacbarListener = SnackbarListenerImpl()
-    protected val snackbar get() = _snackbarListener
-
-    private var _keyboardListener: KeyboardListener = KeyboardListenerImpl()
-    protected val keyboard get() = _keyboardListener
+    private lateinit var _controller:UIController
+    val controller get() = _controller
 
 
     //listener
-    fun addToastListener(listener: ToastListener) {
-        _toastListener = listener
+    fun setController(controller: UIController) {
+        _controller = controller
     }
-
-    fun addNavigationListener(listener: NavigationListener) {
-        _navigationListener = listener
-    }
-
-    fun addBottomSheetListener(listener: BottomSheetListener) {
-        _bottomSheetListener = listener
-    }
-
-    fun addSnackbarListener(listener: SnacbarListener) {
-        _snackbarListener = listener
-    }
-
-    fun addOnKeyboardListener(listener: KeyboardListener) {
-        _keyboardListener = listener
-    }
-
-    fun showKeyboard() {
-        _keyboardListener.onShowKeyboard()
-    }
-
-    fun hideKeyboard() {
-        _keyboardListener.onHideKeyboard()
-    }
+    //
 
     //end
     protected fun onEvent(
@@ -184,6 +140,7 @@ abstract class BaseViewModel<State : Parcelable, Action>(
                             context.getString(it.stringId)
                         }
                     )
+
                     ResultStateWithProgress.Loading -> loading()
                     is ResultStateWithProgress.Finish -> onFinish(it.data)
                     is ResultStateWithProgress.Progress -> onProgress(it.progress)
@@ -207,11 +164,11 @@ abstract class BaseViewModel<State : Parcelable, Action>(
     }
 }
 
-abstract class BaseViewModelData<State : Parcelable, DataState : Parcelable, Action>(
+abstract class MviViewModelData<State : Parcelable, DataState : Parcelable, Action>(
     context: Context,
     initialState: State,
     private val initialData: DataState
-) : BaseViewModel<State, Action>(context, initialState) {
+) : MviViewModel<State, Action>(context, initialState) {
     private val _uiDataState: MutableStateFlow<DataState> = MutableStateFlow(initialData)
     val uiDataState get() = _uiDataState.asStateFlow()
 

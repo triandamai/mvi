@@ -19,14 +19,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import app.trian.mvi.Navigation
 import app.trian.mvi.components.ItemQuiz
 import app.trian.mvi.feature.quiz.detailQuiz.DetailQuiz
-import app.trian.mvi.Navigation
 import app.trian.mvi.ui.BaseMainApp
 import app.trian.mvi.ui.BaseScreen
-import app.trian.mvi.ui.UIListenerData
 import app.trian.mvi.ui.UIWrapper
-import app.trian.mvi.ui.rememberUIController
+import app.trian.mvi.ui.internal.UIListenerData
+import app.trian.mvi.ui.internal.rememberUIController
 
 object ListQuiz {
     const val routeName = "ListQuiz"
@@ -72,7 +72,7 @@ internal fun ScreenListQuiz(
                         quizAmountQuestion = it.question.size,
                         onClick = {
 
-                            router.navigateSingleTop(DetailQuiz.routeName,it.id)
+                            controller.navigator.navigateSingleTop(DetailQuiz.routeName,it.id)
                         }
                     )
                 }
