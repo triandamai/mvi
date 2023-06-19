@@ -87,7 +87,7 @@ class MainActivity : ComponentActivity() {
 
 # MVI(Model View Intent)
 
-## Model
+## Model(State & ViewModel)
 ```kotlin
 @Immutable
 @Parcelize
@@ -96,15 +96,7 @@ data class StartQuizState(
     val quizId:String=""
 ) :  Parcelable
 ```
-
-## Event
-```kotlin
-sealed interface StartQuizEvent {
-    object ShowResult:StartQuizEvent
-}
-```
-
-## ViewModel
+### ViewModel
 ```kotlin
 
 @HiltViewModel
@@ -145,6 +137,20 @@ class StartQuizViewModel @Inject constructor(
 
 }
 ```
+
+## Intent
+```kotlin
+sealed interface StartQuizEvent {
+    object ShowResult:StartQuizEvent
+}
+```
+
+## View
+```kotlin
+
+```
+
+
 
 
 Project ini tidak untuk menggantikan arsitektur yang sudah ada seperti hilt,navigation component dll,
