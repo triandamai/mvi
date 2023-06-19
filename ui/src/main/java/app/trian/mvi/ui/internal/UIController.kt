@@ -38,6 +38,8 @@ class UIController(
 
     val navigator get() = Navigator(router, event)
 
+    val eventListener get() = event
+
     val bottomSheet
         get() = BottomSheet(
             bottomSheetState,
