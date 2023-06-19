@@ -4,8 +4,6 @@
 
 package app.trian.mvi.ui.viewModel
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,9 +24,7 @@ import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@SuppressLint("StaticFieldLeak")
 abstract class MviViewModel<State : Parcelable, Action>(
-    val context: Context,
     private val initialState: State,
 ) : ViewModel() {
     companion object {
@@ -39,7 +35,7 @@ abstract class MviViewModel<State : Parcelable, Action>(
     val uiState get() = _uiState.asStateFlow()
 
     private val action = Channel<Action>(Channel.UNLIMITED)
-    private lateinit var _controller:UIController
+    private lateinit var _controller: UIController
     val controller get() = _controller
 
 
@@ -94,7 +90,7 @@ abstract class MviViewModel<State : Parcelable, Action>(
                 when (it) {
                     is ResultState.Error -> error(
                         it.message.ifEmpty {
-                            context.getString(it.stringId)
+                            controller.getString(it.stringId)
                         }
                     )
 
@@ -115,7 +111,7 @@ abstract class MviViewModel<State : Parcelable, Action>(
                 when (it) {
                     is ResultStateData.Error -> error(
                         it.message.ifEmpty {
-                            context.getString(it.stringId)
+                            controller.getString(it.stringId)
                         }
                     )
 
@@ -137,7 +133,7 @@ abstract class MviViewModel<State : Parcelable, Action>(
                 when (it) {
                     is ResultStateWithProgress.Error -> error(
                         it.message.ifEmpty {
-                            context.getString(it.stringId)
+                            controller.getString(it.stringId)
                         }
                     )
 
@@ -165,10 +161,9 @@ abstract class MviViewModel<State : Parcelable, Action>(
 }
 
 abstract class MviViewModelData<State : Parcelable, DataState : Parcelable, Action>(
-    context: Context,
     initialState: State,
     private val initialData: DataState
-) : MviViewModel<State, Action>(context, initialState) {
+) : MviViewModel<State, Action>(initialState) {
     private val _uiDataState: MutableStateFlow<DataState> = MutableStateFlow(initialData)
     val uiDataState get() = _uiDataState.asStateFlow()
 
