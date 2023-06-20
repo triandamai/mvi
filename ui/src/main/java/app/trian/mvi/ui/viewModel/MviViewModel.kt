@@ -90,7 +90,12 @@ abstract class MviViewModel<State : Parcelable, Action>(
                 when (it) {
                     is ResultState.Error -> error(
                         it.message.ifEmpty {
-                            controller.getString(it.stringId)
+                            try {
+                                controller.getString(it.stringId)
+                            }catch (e:Exception){
+                                "Unknown error message"
+                            }
+
                         }
                     )
 
@@ -111,7 +116,11 @@ abstract class MviViewModel<State : Parcelable, Action>(
                 when (it) {
                     is ResultStateData.Error -> error(
                         it.message.ifEmpty {
-                            controller.getString(it.stringId)
+                            try {
+                                controller.getString(it.stringId)
+                            }catch (e:Exception){
+                                "Unknown error message"
+                            }
                         }
                     )
 

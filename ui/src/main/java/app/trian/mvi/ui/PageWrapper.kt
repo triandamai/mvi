@@ -30,19 +30,20 @@ inline fun <reified ViewModel : MviViewModel<*, *>> NavGraphBuilder.pageWrapper(
         deepLinks = deepLinks
     ) {
         val viewModel: ViewModel = (if (parent.isNullOrEmpty()) {
-            hiltViewModel()
+            hiltViewModel<ViewModel>().apply {
+                setController(controller)
+            }
         } else {
             val parentEntry = remember(controller.navigator.currentBackStackEntry) {
                 controller
                     .navigator
                     .getBackStackEntry(parent)
             }
-            hiltViewModel(parentEntry)
-        })
-
-        LaunchedEffect(key1 = viewModel, block = {
-            viewModel.setController(controller)
+            hiltViewModel<ViewModel>(parentEntry).apply {
+                setController(controller)
+            }
         })
         content(viewModel)
     }
 }
+
