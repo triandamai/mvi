@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
@@ -43,17 +42,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.trian.mvi.components.BottomSheetConfirmation
-import app.trian.mvi.components.ButtonPrimary
 import app.trian.mvi.Argument
 import app.trian.mvi.DeepLink
 import app.trian.mvi.NavType
 import app.trian.mvi.Navigation
+import app.trian.mvi.components.BottomSheetConfirmation
+import app.trian.mvi.components.ButtonPrimary
 import app.trian.mvi.ui.BaseMainApp
 import app.trian.mvi.ui.BaseScreen
 import app.trian.mvi.ui.UIWrapper
 import app.trian.mvi.ui.internal.UIListenerData
-import app.trian.mvi.ui.internal.listener.BottomSheetChangeListener
 import app.trian.mvi.ui.internal.rememberUIController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
