@@ -29,7 +29,7 @@ inline fun <reified ViewModel : MviViewModel<*, *>> NavGraphBuilder.pageWrapper(
         arguments = arguments,
         deepLinks = deepLinks
     ) {
-        val viewModel: ViewModel = (if (parent.isNullOrEmpty()) {
+        val viewModel = (if (parent.isNullOrEmpty()) {
             hiltViewModel<ViewModel>().apply {
                 setController(controller)
             }

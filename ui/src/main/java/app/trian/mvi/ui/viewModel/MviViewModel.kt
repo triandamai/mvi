@@ -34,7 +34,7 @@ abstract class MviViewModel<State : Parcelable, Action>(
     private val _uiState: MutableStateFlow<State> = MutableStateFlow(initialState)
     val uiState get() = _uiState.asStateFlow()
 
-    private val action = Channel<Action>(Channel.UNLIMITED)
+    private val _action = Channel<Action>(Channel.UNLIMITED)
     private lateinit var _controller: UIController
     val controller get() = _controller
 
@@ -50,7 +50,7 @@ abstract class MviViewModel<State : Parcelable, Action>(
         block: suspend (Action) -> Unit
     ) {
         async {
-            action
+            _action
                 .consumeAsFlow()
                 .collect {
                     block(it)
@@ -142,7 +142,11 @@ abstract class MviViewModel<State : Parcelable, Action>(
                 when (it) {
                     is ResultStateWithProgress.Error -> error(
                         it.message.ifEmpty {
-                            controller.getString(it.stringId)
+                            try {
+                                controller.getString(it.stringId)
+                            }catch (e:Exception){
+                                "Unknown error message"
+                            }
                         }
                     )
 
@@ -157,13 +161,13 @@ abstract class MviViewModel<State : Parcelable, Action>(
         commit(initialState)
     }
 
-    fun dispatch(e: Action) = async { action.send(e) }
+    fun dispatch(e: Action) = async { _action.send(e) }
 
 
     override fun onCleared() {
         super.onCleared()
 
-        action.cancel()
+        _action.cancel()
         _uiState.tryEmit(initialState)
         async { currentCoroutineContext().cancel() }
     }
