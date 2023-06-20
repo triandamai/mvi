@@ -43,7 +43,7 @@ fun BaseScreen(
                 bottomSheet()
             }
         },
-        sheetState = controller.bottomSheet.state,
+        sheetState = controller.bottomSheet.state!!,
         sheetBackgroundColor = MaterialTheme.colorScheme.surface,
         sheetShape = RoundedCornerShape(
             topStart = 10.dp,

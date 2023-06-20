@@ -6,5 +6,5 @@ package app.trian.mvi.ui.internal.listener
 
 
 fun interface AppToScreenListener {
-    fun onEvent(eventName: String, vararg params: String)
+    fun onEvent(eventName: String, vararg params: Any)
 }

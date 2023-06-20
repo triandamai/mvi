@@ -10,7 +10,6 @@ class EventListener : BaseEventListener()
 
 abstract class BaseEventListener {
     private var appEvent: AppToScreenListener? = null
-    private var bottomSheetChangeListener: BottomSheetChangeListener? = null
     private var screenToAppListener: ScreenToAppListener? = null
 
 
@@ -33,16 +32,6 @@ abstract class BaseEventListener {
         screenToAppListener?.onEvent(eventName,*param)
     }
     //end region
-
-    //region bottom sheet
-    fun addOnBottomSheetChangeListener(listener: BottomSheetChangeListener) {
-        bottomSheetChangeListener = listener
-    }
-
-    fun changeBottomSheet(value: ModalBottomSheetValue): Boolean =
-        bottomSheetChangeListener?.onChange(value) ?: false
-
-    //end
 
     fun clear() {
         appEvent = null

@@ -9,5 +9,5 @@ interface NavigationListener {
     fun navigate(routeName: String, vararg params: String)
     fun navigateSingleTop(routeName: String, vararg params: String)
     fun navigateAndReplace(routeName: String, vararg params: String)
-    fun navigateBackAndClose(routeName: String, vararg params: String)
+    fun navigateBackAndClose()
 }

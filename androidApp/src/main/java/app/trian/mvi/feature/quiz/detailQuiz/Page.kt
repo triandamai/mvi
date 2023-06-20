@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
@@ -52,6 +53,7 @@ import app.trian.mvi.ui.BaseMainApp
 import app.trian.mvi.ui.BaseScreen
 import app.trian.mvi.ui.UIWrapper
 import app.trian.mvi.ui.internal.UIListenerData
+import app.trian.mvi.ui.internal.listener.BottomSheetChangeListener
 import app.trian.mvi.ui.internal.rememberUIController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -88,6 +90,9 @@ internal fun ScreenDetailQuiz(
             copy(
                 showContent = true
             )
+        }
+        controller.bottomSheet.onStateChangedListener {
+            false
         }
     })
 
@@ -204,8 +209,6 @@ internal fun ScreenDetailQuiz(
                         )
                     }
                 }
-
-
             }
         }
     }

@@ -14,9 +14,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
@@ -28,23 +30,17 @@ import kotlinx.coroutines.launch
 
 class UIController(
     private val router: NavHostController,
-    private val bottomSheetState: ModalBottomSheetState,
+    private val bottomSheetState: BottomSheet,
+    private val modelBottomSheetState: ModalBottomSheetState,
     private val scope: CoroutineScope,
     private val event: BaseEventListener = EventListener(),
     private val context: Context
 ) {
 
     var snackbarHostState by mutableStateOf(SnackbarHostState())
-
     val navigator get() = Navigator(router, event)
-
     val eventListener get() = event
-
-    val bottomSheet
-        get() = BottomSheet(
-            bottomSheetState,
-            scope
-        )
+    val bottomSheet get() = bottomSheetState
     val keyboard get() = Keyboard(context)
 
     val snackBar
@@ -76,23 +72,27 @@ fun rememberUIController(
     event: BaseEventListener = EventListener(),
     router: NavHostController = rememberNavController(),
     scope: CoroutineScope = rememberCoroutineScope(),
-    allowHideBottomSheet: Boolean = false,
     context: Context = LocalContext.current
 ): UIController {
-    val state = rememberModalBottomSheetState(
+
+    val bottomSheet = BottomSheet(scope)
+
+    val modalBottomSheetState = rememberModalBottomSheetState(
         initialValue = Hidden,
-        confirmValueChange = {
-            if (allowHideBottomSheet) true
-            else event.changeBottomSheet(it)
-        }
+        skipHalfExpanded = true,
+        confirmValueChange = { bottomSheet.changeState(it) }
     )
+    bottomSheet.setState(modalBottomSheetState)
+
     return remember {
         UIController(
             router,
-            state,
+            bottomSheet,
+            modalBottomSheetState,
             scope,
             event,
             context
         )
+
     }
 }

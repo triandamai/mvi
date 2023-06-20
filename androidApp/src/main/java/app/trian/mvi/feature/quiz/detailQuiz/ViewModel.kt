@@ -18,11 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailQuizViewModel @Inject constructor(
-    @ApplicationContext context: Context,
     private val savedStateHandle: SavedStateHandle,
     private val getDetailQuizUseCase: GetDetailQuizUseCase
 ) : MviViewModelData<DetailQuizState, DetailQuizDataState, DetailQuizEvent>(
-    context,
     DetailQuizState(),
     DetailQuizDataState()
 ) {

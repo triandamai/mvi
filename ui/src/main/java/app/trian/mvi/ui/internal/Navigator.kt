@@ -14,11 +14,11 @@ class Navigator(
     fun getBackStackEntry(route: String) = navHostController.getBackStackEntry(route)
 
     //region route
-    fun navigateBackAndClose() {
-        navHostController.navigateUp()
-        event.sendEventToApp("EXIT")
-    }
 
+    /**
+     * Navigate back
+     * @throws IllegalArgumentException from navHostController
+     */
     override fun navigateUp() {
         navHostController.navigateUp()
     }
@@ -70,13 +70,6 @@ class Navigator(
             launchSingleTop = true
         }
     }
-
-    fun navigateSingleTop(routeName: String) {
-        this.navHostController.navigate(routeName) {
-            launchSingleTop = true
-        }
-    }
-
     /**
      * Navigation into [routeName] as destination, and pop all backstack before last route
      * if same route exist on back stack, will be replace with [routeName]
@@ -105,38 +98,14 @@ class Navigator(
         }
     }
 
-    override fun navigateBackAndClose(routeName: String, vararg params: String) {
-
-    }
-
     /**
-     * Navigation into [routeName] as destination, and pop all backstack from last route
-     * if same route exist on back stack, will be replace with [routeName]
-     *
-     * @param routeName is a destination
-     * @param args is arguments/parameter also support multiple type
-     *
+     * Navigation back and then close the app
      *
      * @throws IllegalArgumentException from navHostController
      */
-    fun navigateAndReplaceAll(routeName: String, vararg args: String) {
-        var buildRoute = routeName
-        if (args.isNotEmpty()) {
-            buildRoute = buildString {
-                append(routeName)
-                args.forEach {
-                    append("/")
-                    append(it)
-                }
-            }
-        }
-        this.navHostController.navigate(buildRoute) {
-            popUpTo(navHostController.graph.startDestinationId) {
-                inclusive = true
-            }
-        }
+    override fun navigateBackAndClose() {
+        navigateUp()
+        event.sendEventToApp("EXIT")
     }
     //end region
-
-
 }
