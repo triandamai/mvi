@@ -15,12 +15,12 @@ allprojects {
 2. app `build.gradle`:
 ```groovy
 plugins{
-    id 'com.google.devtools.ksp' version '1.8.0-1.0.9'
+    id("com.google.devtools.ksp") version ("1.8.0-1.0.9")
 }
 dependencies {
-    implementation 'com.github.triandamai.mvi:ui:<version>'
-    implementation 'com.github.triandamai.mvi:processor:<version>'
-    ksp 'com.github.triandamai.mvi:processor:<version>'
+    implementation("com.github.triandamai.mvi:ui:<version>")
+    implementation("com.github.triandamai.mvi:processor:<version>")
+    ksp("com.github.triandamai.mvi:processor:<version>")
 }
 ```
 
