@@ -68,7 +68,7 @@ inline fun <reified ViewModel : MviViewModel<*, *, *>> NavGraphBuilder.pageWrapp
                     BaseUIEvent.NavigateBackAndClose -> controller.navigator.navigateBackAndClose()
                     BaseUIEvent.NavigateUp -> controller.navigator.navigateUp()
                     BaseUIEvent.Nothing -> {}
-                    is BaseUIEvent.Navigate -> controller.navigator.navigateSingleTop(
+                    is BaseUIEvent.Navigate -> controller.navigator.navigate(
                         event.route,
                         *event.params
                     )

@@ -37,13 +37,13 @@ Sebagai contoh untuk membuat sebuah halaman cukup dengan mendeklasaikan sebuah f
     viewModel=ListQuizViewModel::class
 )
 @Composable
-internal fun ScreenDetailQuiz(
-    uiEvent: UIListener<ListQuizState, ListQuizEvent>
-) = UiWrapper(uiEvent) { //utility untuk men-dsl uiEvent
+internal fun DetailQuizScreen(
+    uiContract: UIContract<ListQuizState,ListQuizIntent, ListQuizAction>
+) = UiWrapper(uiContract) { //utility untuk men-dsl uiEvent
     Button(
         onClick={
             //navigasi
-            router.navigate("halaman-kedua","World")
+            navigator.navigate("halaman-kedua","World")
         }
     ){ Text("Ke halaman Kedua") }
 }
@@ -56,11 +56,11 @@ internal fun ScreenDetailQuiz(
 )
 @Argument(name="quizName", type=NavType.StringType)
 @Composable
-internal fun ScreenDetailQuiz(
-    uiEvent: UIListener<DetailQuizState, DetailQuizEvent>
-) = UiWrapper(uiEvent) { //utility untuk men-dsl uiEvent
+internal fun DetailQuizScreen(
+    uiContract: UIContract<DetailQuizState, DetailQuizIntent,DetailQuizAction>
+) = UiWrapper(uiContract) { //utility untuk men-dsl uiEvent
     LaunchedEffect(this){
-        val arg = backStackEntry.arguments.get<String>("quizName")
+        val arg = navigator.arguments.get<String>("quizName")
         commit{copy(message=arg)}
     }
     Text("Hello ${state.message}")
@@ -84,74 +84,38 @@ class MainActivity : ComponentActivity() {
     }
 }
 ```
-
-# MVI(Model View Intent)
-
-## Model(State & ViewModel)
+ViewModel:
 ```kotlin
-@Immutable
-@Parcelize
-data class StartQuizState(
-    val showContent:Boolean=false,
-    val quizId:String=""
-) :  Parcelable
-```
-### ViewModel
-```kotlin
-
 @HiltViewModel
-class StartQuizViewModel @Inject constructor(
-    @ApplicationContext context: Context,
-    private val savedStateHandle: SavedStateHandle,
-    private val getQuizQuestionUseCase: GetQuizQuestionUseCase
-) : BaseViewModelData<StartQuizState, StartQuizEvent>(
-    context,
-    DetailQuizState(),
-    DetailQuizDataState()
+class ListQuizViewModel @Inject constructor(
+    private val getListQuizUseCase: GetListQuizUseCase
+) : MviViewModel<ListQuizState, ListQuizIntent, ListQuizAction>(
+    ListQuizState(),
 ) {
     init {
-        handleActions()
-        getQuiz()
+        getListQuiz()
     }
 
-    private fun quizId(): String = savedStateHandle.get<String>(StartQuiz.argKey).orEmpty()
-
-    private fun getQuiz() = async {
-        getQuizQuestionUseCase(quizId())
+    private fun getListQuiz() = async {
+        getListQuizUseCase()
             .onEach(
                 loading = {},
-                error = {},
-                success = {
-                    commit { copy(questions=it) }
-                }
+                error = { _, _ -> },
+                success = {},
+                empty = {}
             )
     }
 
-    override fun handleActions() = onEvent { event->
-        when(event){
-            StartQuizEvent.ShowResult->{
-                //show
+    override fun onAction(action: ListQuizAction) {
+        when (action) {
+            ListQuizAction.Nothing -> {
+            // sendUiEvent(BaseUIEvent.Navigate(DetailQuiz.routeName,"sasas"))
             }
         }
     }
 
 }
 ```
-
-## Intent
-```kotlin
-sealed interface StartQuizEvent {
-    object ShowResult:StartQuizEvent
-}
-```
-
-## View
-```kotlin
-
-```
-
-
-
 
 Project ini tidak untuk menggantikan arsitektur yang sudah ada seperti hilt,navigation component dll,
 tetapi ini dibuat diatas arsitektur yang sudah ada dan akan men-cover beberapa permasalahan:

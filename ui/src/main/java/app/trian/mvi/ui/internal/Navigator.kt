@@ -23,6 +23,11 @@ class Navigator(
         navHostController.navigateUp()
     }
 
+    override fun navigateBack() {
+        navHostController.popBackStack()
+    }
+
+
     /**
      * Navigation into [routeName] as destination and keep the previous route
      *
