@@ -8,6 +8,8 @@
 package app.trian.mvi.ui
 
 import androidx.annotation.StringRes
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 sealed class ResultState<out R> {
     object Loading : ResultState<Nothing>()
@@ -33,4 +35,3 @@ sealed class ResultStateWithProgress<out R> {
     data class Error(val message: String = "", @StringRes val stringId: Int = 0) :
         ResultStateWithProgress<Nothing>()
 }
-

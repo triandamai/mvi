@@ -26,38 +26,33 @@ import androidx.navigation.compose.rememberNavController
 import app.trian.mvi.ui.internal.listener.BaseEventListener
 import app.trian.mvi.ui.internal.listener.EventListener
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 class UIController(
     private val router: NavHostController,
-    private val bottomSheetState: BottomSheet,
-    private val modelBottomSheetState: ModalBottomSheetState,
     private val scope: CoroutineScope,
     private val event: BaseEventListener = EventListener(),
     private val context: Context
 ) {
-
-    var snackbarHostState by mutableStateOf(SnackbarHostState())
     val navigator get() = Navigator(router, event)
     val eventListener get() = event
-    val bottomSheet get() = bottomSheetState
     val keyboard get() = Keyboard(context)
-
-    val snackBar
-        get() = Snackbar(
-            snackbarHostState,
-            context,
-            scope
-        )
-
-    val toast
-        get() = ToastMvi(
-            context
-        )
-
+    val toast get() = ToastMvi(context)
 
     //region event
 
+    //coroutine
+    fun launch(
+        context: CoroutineContext = EmptyCoroutineContext,
+        start: CoroutineStart = CoroutineStart.DEFAULT, block: suspend () -> Unit
+    ) {
+        scope.launch(context, start) { block() }
+    }
+
+    //end
     //region string
     fun getString(res: Int): String =
         context.getString(res)
@@ -75,20 +70,9 @@ fun rememberUIController(
     context: Context = LocalContext.current
 ): UIController {
 
-    val bottomSheet = BottomSheet(scope)
-
-    val modalBottomSheetState = rememberModalBottomSheetState(
-        initialValue = Hidden,
-        skipHalfExpanded = true,
-        confirmValueChange = { bottomSheet.changeState(it) }
-    )
-    bottomSheet.setState(modalBottomSheetState)
-
     return remember {
         UIController(
             router,
-            bottomSheet,
-            modalBottomSheetState,
             scope,
             event,
             context

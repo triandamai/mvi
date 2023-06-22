@@ -9,13 +9,27 @@ import com.google.devtools.ksp.getClassDeclarationByName
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSAnnotation
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSType
+import java.io.FileNotFoundException
+import java.lang.IllegalArgumentException
+
+fun getNavigationGroup(
+    classDeclaration: KSClassDeclaration
+): NavigationGroup {
+
+
+    val annotation = classDeclaration.annotations.getAnnotation("NavigationGroup").first()
+    val route = annotation.arguments.getParameterValue<String>("route")
+    val startDestination = annotation.arguments.getParameterValue<String>("startDestination")
+
+    return NavigationGroup(route, startDestination)
+}
 
 fun getFunctionPayload(
     functionDeclaration: KSFunctionDeclaration,
-    resolver: Resolver,
-    logger: KSPLogger
+    resolver: Resolver
 ): NavigationModel {
     val location = functionDeclaration.packageName.asString()
     val screenName = functionDeclaration.simpleName.asString()
@@ -33,6 +47,9 @@ fun getFunctionPayload(
     val parent = annotation.arguments.getParameterValue<String>("parentRoute")
     val group = annotation.arguments.getParameterValue<String>("group")
     val viewModel = annotation.arguments.getParameterValue<KSType>("viewModel").declaration
+    val viewModelLocation =
+        viewModel.packageName.asString().plus(".").plus(viewModel.simpleName.asString())
+
     val argParams = arg.map {
         val name = it.arguments.getParameterValue<String>("name")
         val type = it.arguments.getParameterValue<KSType>("navType")
@@ -50,13 +67,16 @@ fun getFunctionPayload(
         it.arguments.getParameterValue<String>("uri")
     }
 
-    val findViewModelFile = resolver.getClassDeclarationByName(
-        "${viewModel.packageName.asString()}.${viewModel.simpleName.asString()}"
-    )
+    val findViewModelFile = resolver.getClassDeclarationByName(viewModelLocation)
+        ?: throw FileNotFoundException("Cannot find ViewModel ${viewModel.packageName.asString()}.${viewModel.simpleName.asString()}")
 
-    val isBaseViewModelData = findViewModelFile?.superTypes?.map {
+    val viewModelSuperType = findViewModelFile.superTypes.map {
         it.resolve().declaration.simpleName.asString()
-    }?.first().toString() == "MviViewModelData"
+    }.first().toString()
+
+    if (viewModelSuperType !in listOf("MviViewModel")) {
+        throw IllegalArgumentException("ViewModel must extends MviViewModel!!")
+    }
 
     return NavigationModel(
         route = route,
@@ -68,7 +88,6 @@ fun getFunctionPayload(
         screenPackage = location,
         viewModelName = viewModel.simpleName.asString(),
         viewModelPackage = viewModel.packageName.asString(),
-        isStateWithData = isBaseViewModelData
     )
 }
 

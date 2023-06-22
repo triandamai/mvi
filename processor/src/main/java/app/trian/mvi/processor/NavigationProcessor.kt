@@ -5,20 +5,30 @@
 package app.trian.mvi.processor
 
 import app.trian.mvi.Navigation
-import com.google.devtools.ksp.KspExperimental
+import app.trian.mvi.NavigationGroup
 import com.google.devtools.ksp.processing.Dependencies
-import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
+import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.validate
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ksp.writeTo
+import java.lang.IllegalArgumentException
 import kotlin.reflect.KClass
 
+val importList: MutableList<Pair<String, String>> = mutableListOf(
+    Pair("androidx.compose.runtime", "getValue"),
+    Pair("androidx.navigation", "NavType"),
+    Pair("androidx.navigation", "navArgument"),
+    Pair("androidx.navigation", "navDeepLink"),
+    Pair("androidx.navigation", "navigation"),
+    Pair("kotlin.collections", "listOf"),
+)
 
 class NavigationProcessor(
     private val environment: SymbolProcessorEnvironment
@@ -27,32 +37,22 @@ class NavigationProcessor(
 
         //collection function with annotation
         val findNavigationAnnotation =
-            resolver.findAnnotations(Navigation::class, environment.logger).toList()
+            resolver.findFunctionAnnotations(Navigation::class).toList()
+
+        val findNavigationGroupAnnotation =
+            resolver.findClassAnnotations(NavigationGroup::class).toList()
         //skip if there no annotation
         if (!findNavigationAnnotation.iterator().hasNext()) return emptyList()
 
-        val functionDeclarations = findNavigationAnnotation.map {
-            getFunctionPayload(it, resolver, environment.logger)
-        }.groupBy { it.group }.map {
-            Pair(
-                NavigationGroup(
-                    it.key,
-                    it.value.firstOrNull()?.startDestination.orEmpty()
-                ),
-                it.value
-            )
+        val pageDeclaration = findNavigationAnnotation.map {
+            getFunctionPayload(it, resolver)
+        }.groupBy { it.group }
+
+        val nestedDeclaration = findNavigationGroupAnnotation.map {
+            getNavigationGroup(it)
         }
 
         val module = getModuleName(resolver)
-        val importList: MutableList<Pair<String, String>> = mutableListOf(
-            Pair("androidx.compose.runtime", "getValue"),
-            Pair("androidx.navigation", "NavType"),
-            Pair("androidx.navigation", "navArgument"),
-            Pair("androidx.navigation", "navDeepLink"),
-            Pair("androidx.navigation", "navigation"),
-            Pair("kotlin.collections", "listOf"),
-        )
-
 
         val createFunctionRoute = FunSpec
             .builder(module.componentName)
@@ -63,9 +63,9 @@ class NavigationProcessor(
             )
 
         //generate navigation
-        functionDeclarations.forEach { (group, data) ->
+        pageDeclaration.forEach { (group, data) ->
             //not a nested navigation
-            if (group.route == notNestedNavigation) {
+            if (group == notNestedNavigation) {
                 data.forEach {
                     importList.addAll(
                         listOf(
@@ -83,11 +83,37 @@ class NavigationProcessor(
                         screenPackage = it.screenPackage,
                         viewModelName = it.viewModelName,
                         viewModelPackage = it.viewModelPackage,
-                        hasData = it.isStateWithData
                     )
                 }
             } else {
-                //todo::create nested
+                val findNested = nestedDeclaration.firstOrNull { it.route == group }
+                    ?: throw IllegalArgumentException("Navigation Group for $group not found,try create class with @NavigationGroup")
+                buildNestedNavigation(
+                    funSpec = createFunctionRoute,
+                    route = findNested.route,
+                    startDestination = findNested.startDestination,
+                    buildPage = { file ->
+                        data.forEach {
+                            importList.addAll(
+                                listOf(
+                                    Pair(it.screenPackage, it.screenName),
+                                    Pair(it.viewModelPackage, it.viewModelName)
+                                )
+                            )
+                            buildPageWrapper(
+                                funSpec = file,
+                                argument = it.arguments,
+                                deepLink = it.deepLink,
+                                parent = it.parent,
+                                route = it.route,
+                                screenName = it.screenName,
+                                screenPackage = it.screenPackage,
+                                viewModelName = it.viewModelName,
+                                viewModelPackage = it.viewModelPackage,
+                            )
+                        }
+                    }
+                )
             }
         }
 
@@ -113,13 +139,20 @@ class NavigationProcessor(
 
     }
 
-    private fun Resolver.findAnnotations(
-        kClass: KClass<*>,
-        logger: KSPLogger
+    private fun Resolver.findFunctionAnnotations(
+        kClass: KClass<*>
     ) = getSymbolsWithAnnotation(
         kClass.qualifiedName.toString()
     ).filterIsInstance<KSFunctionDeclaration>().filter {
         val name = it.parameters.first().type.resolve().declaration.simpleName.asString()
-        (name == "UIListener" || name == "UIListenerData")
+        (name == "UIContract")
+    }
+
+    private fun Resolver.findClassAnnotations(
+        kClass: KClass<*>
+    ) = getSymbolsWithAnnotation(
+        kClass.qualifiedName.toString()
+    ).filterIsInstance<KSClassDeclaration>().filter {
+        it.classKind == ClassKind.INTERFACE
     }
 }

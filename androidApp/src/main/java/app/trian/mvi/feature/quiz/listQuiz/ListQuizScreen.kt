@@ -1,11 +1,3 @@
-/*
- * Copyright (c) 2023 trian.app.
- *
- *  Unauthorized copying, publishing of this file, via any medium is strictly prohibited
- *  Proprietary and confidential
- *
- */
-
 package app.trian.mvi.feature.quiz.listQuiz
 
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.trian.mvi.Navigation
@@ -25,7 +18,7 @@ import app.trian.mvi.feature.quiz.detailQuiz.DetailQuiz
 import app.trian.mvi.ui.BaseMainApp
 import app.trian.mvi.ui.BaseScreen
 import app.trian.mvi.ui.UIWrapper
-import app.trian.mvi.ui.internal.UIListenerData
+import app.trian.mvi.ui.internal.UIContract
 import app.trian.mvi.ui.internal.rememberUIController
 
 object ListQuiz {
@@ -38,12 +31,14 @@ object ListQuiz {
     viewModel = ListQuizViewModel::class
 )
 @Composable
-internal fun ScreenListQuiz(
-    uiEvent: UIListenerData<ListQuizState, ListQuizDataState, ListQuizEvent>
-) = UIWrapper(uiEvent) {
+internal fun ListQuizScreen(
+    uiContract: UIContract<ListQuizState, ListQuizIntent, ListQuizAction>
+) = UIWrapper(uiContract) {
+    LaunchedEffect(key1 = this, block = {
+        dispatch(ListQuizAction.Nothing)
+    })
 
     BaseScreen(
-        controller=controller,
         topAppBar = {
             TopAppBar(
                 title = {
@@ -64,15 +59,14 @@ internal fun ScreenListQuiz(
     ) {
         LazyColumn(
             content = {
-                items(data.quiz) {
+                items(state.quiz) {
                     ItemQuiz(
                         quizName = it.quizTitle,
                         quizImage = it.quizImage,
                         quizProgress = it.progress,
                         quizAmountQuestion = it.question.size,
                         onClick = {
-
-                            controller.navigator.navigateSingleTop(DetailQuiz.routeName,it.id)
+                            controller.navigator.navigateSingleTop(DetailQuiz.routeName, it.id)
                         }
                     )
                 }
@@ -86,11 +80,11 @@ internal fun ScreenListQuiz(
 @Composable
 fun PreviewScreenListQuiz() {
     BaseMainApp {
-        ScreenListQuiz(
-            uiEvent = UIListenerData(
+        ListQuizScreen(
+            uiContract = UIContract(
                 controller = rememberUIController(),
                 state = ListQuizState(),
-                data = ListQuizDataState()
+                intent = ListQuizIntent.Nothing
             )
         )
     }

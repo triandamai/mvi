@@ -5,10 +5,10 @@
 package app.trian.mvi.ui
 
 import androidx.compose.runtime.Composable
-import app.trian.mvi.ui.internal.UIListener
+import app.trian.mvi.ui.internal.UIContract
 
 @Composable
-inline fun <reified T : UIListener<*, *>> UIWrapper(
-    uiEvent: T,
+inline fun <reified T : UIContract<*,*, *>> UIWrapper(
+    uiContract: T,
     content: @Composable T.() -> Unit
-) { content(uiEvent) }
+) { content(uiContract) }

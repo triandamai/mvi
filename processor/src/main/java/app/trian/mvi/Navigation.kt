@@ -15,6 +15,13 @@ annotation class Navigation(
     val viewModel: KClass<*>
 )
 
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.SOURCE)
+annotation class NavigationGroup(
+    val route: String,
+    val startDestination: String,
+)
+
 @Repeatable
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)

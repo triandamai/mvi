@@ -9,11 +9,11 @@ class ToastMvi(
     private val context:Context
 ):ToastListener {
     override fun show(message: String, length: Int) {
-        Toast.makeText(context,message,length)
+        Toast.makeText(context,message,length).show()
     }
 
     override fun show(@StringRes message: Int, vararg params: String, length: Int) {
-        Toast.makeText(context,context.getString(message,*params),length)
+        Toast.makeText(context,context.getString(message,*params),length).show()
     }
 
 }

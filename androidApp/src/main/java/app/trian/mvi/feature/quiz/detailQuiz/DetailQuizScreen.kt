@@ -24,9 +24,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -51,7 +53,7 @@ import app.trian.mvi.components.ButtonPrimary
 import app.trian.mvi.ui.BaseMainApp
 import app.trian.mvi.ui.BaseScreen
 import app.trian.mvi.ui.UIWrapper
-import app.trian.mvi.ui.internal.UIListenerData
+import app.trian.mvi.ui.internal.UIContract
 import app.trian.mvi.ui.internal.rememberUIController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -78,24 +80,23 @@ object DetailQuiz {
     uri = "https://app.hilwa.ar/{quizId}"
 )
 @Composable
-internal fun ScreenDetailQuiz(
-    uiEvent: UIListenerData<DetailQuizState, DetailQuizDataState, DetailQuizEvent>
-) = UIWrapper(uiEvent) {
+internal fun DetailQuizScreen(
+    uiContract: UIContract<DetailQuizState, DetailQuizIntent, DetailQuizAction>
+) = UIWrapper(uiContract) {
 
-    LaunchedEffect(key1 = this, block = {
+    val bottomSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmValueChange = {
+            true
+        }
+    )
+    LaunchedEffect(key1 = uiContract.state, block = {
         delay(1000)
-        commit {
-            copy(
-                showContent = true
-            )
-        }
-        controller.bottomSheet.onStateChangedListener {
-            false
-        }
+        commit { copy(showContent = true) }
     })
 
     BaseScreen(
-        controller = controller,
+        modalBottomSheetState = bottomSheetState,
         bottomSheet = {
             BottomSheetConfirmation(
                 title = "Sudah siap?",
@@ -103,10 +104,14 @@ internal fun ScreenDetailQuiz(
                 textConfirmation = "Oke",
                 textCancel = "Batal",
                 onDismiss = {
-                    controller.bottomSheet.hide()
+                    launch {
+                        bottomSheetState.hide()
+                    }
                 },
                 onConfirm = {
-                    controller.bottomSheet.show()
+                    launch {
+                        bottomSheetState.show()
+                    }
                 }
             )
         }
@@ -118,7 +123,9 @@ internal fun ScreenDetailQuiz(
         ) {
             IconButton(
                 onClick = {
-                    controller.navigator.navigateUp()
+                   launch {
+                       bottomSheetState.show()
+                   }
                 },
                 modifier = Modifier.align(Alignment.TopEnd)
             ) {
@@ -175,7 +182,7 @@ internal fun ScreenDetailQuiz(
                             Image(
                                 painter = rememberAsyncImagePainter(
                                     model = ImageRequest.Builder(LocalContext.current)
-                                        .data(data.quiz.quizImage)
+                                        .data(state.quiz.quizImage)
                                         .crossfade(true)
                                         .build()
                                 ),
@@ -189,7 +196,7 @@ internal fun ScreenDetailQuiz(
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = data.quiz.quizDescription,
+                                text = state.quiz.quizDescription,
                                 modifier = Modifier.fillMaxWidth(),
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.bodyMedium,
@@ -202,7 +209,9 @@ internal fun ScreenDetailQuiz(
                         ButtonPrimary(
                             text = "Kerjakan Sekarang",
                             onClick = {
-                                controller.bottomSheet.show()
+                                launch {
+                                    bottomSheetState.show()
+                                }
                             }
                         )
                     }
@@ -216,11 +225,11 @@ internal fun ScreenDetailQuiz(
 @Composable
 fun PreviewScreenDetailQuiz() {
     BaseMainApp {
-        ScreenDetailQuiz(
-            uiEvent = UIListenerData(
+        DetailQuizScreen(
+            uiContract = UIContract(
                 controller = rememberUIController(),
                 state = DetailQuizState(),
-                data = DetailQuizDataState()
+                intent = null
             )
         )
     }

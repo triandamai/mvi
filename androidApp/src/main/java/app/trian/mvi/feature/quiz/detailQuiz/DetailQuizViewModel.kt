@@ -1,16 +1,8 @@
-/*
- * Copyright (c) 2023 trian.app.
- *
- *  Unauthorized copying, publishing of this file, via any medium is strictly prohibited
- *  Proprietary and confidential
- *
- */
-
 package app.trian.mvi.feature.quiz.detailQuiz
 
 import androidx.lifecycle.SavedStateHandle
 import app.trian.mvi.data.domain.quiz.GetDetailQuizUseCase
-import app.trian.mvi.ui.viewModel.MviViewModelData
+import app.trian.mvi.ui.viewModel.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -18,12 +10,10 @@ import javax.inject.Inject
 class DetailQuizViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val getDetailQuizUseCase: GetDetailQuizUseCase
-) : MviViewModelData<DetailQuizState, DetailQuizDataState, DetailQuizEvent>(
+) : MviViewModel<DetailQuizState, DetailQuizIntent, DetailQuizAction>(
     DetailQuizState(),
-    DetailQuizDataState()
 ) {
     init {
-        handleActions()
         getQuiz()
     }
 
@@ -32,19 +22,23 @@ class DetailQuizViewModel @Inject constructor(
     private fun getQuiz() = async {
         commit {
             copy(
-                quizId=quizId()
+                quizId = quizId()
             )
         }
         getDetailQuizUseCase(quizId())
             .onEach(
                 loading = {},
-                error = {},
+                error = { _, _ -> },
                 success = {
 
                 }
             )
     }
 
-    override fun handleActions() = onEvent {}
+    override fun onAction(action: DetailQuizAction) {
+        //not empty
+
+    }
+
 
 }

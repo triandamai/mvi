@@ -34,7 +34,6 @@ class Navigator(
     override fun navigate(routeName: String, vararg params: String) {
         var buildRoute = routeName
         if (params.isNotEmpty()) {
-
             buildRoute = buildString {
                 append(routeName)
                 params.forEach {

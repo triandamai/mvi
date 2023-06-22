@@ -1,27 +1,17 @@
-/*
- * Copyright (c) 2023 trian.app.
- *
- *  Unauthorized copying, publishing of this file, via any medium is strictly prohibited
- *  Proprietary and confidential
- *
- */
-
 package app.trian.mvi.feature.quiz.listQuiz
 
 import app.trian.mvi.data.domain.quiz.GetListQuizUseCase
-import app.trian.mvi.ui.viewModel.MviViewModelData
+import app.trian.mvi.ui.viewModel.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class ListQuizViewModel @Inject constructor(
     private val getListQuizUseCase: GetListQuizUseCase
-) : MviViewModelData<ListQuizState, ListQuizDataState, ListQuizEvent>(
+) : MviViewModel<ListQuizState, ListQuizIntent, ListQuizAction>(
     ListQuizState(),
-    ListQuizDataState()
 ) {
     init {
-        handleActions()
         getListQuiz()
     }
 
@@ -29,12 +19,18 @@ class ListQuizViewModel @Inject constructor(
         getListQuizUseCase()
             .onEach(
                 loading = {},
-                error = {},
+                error = { _, _ -> },
                 success = {},
                 empty = {}
             )
     }
 
-    override fun handleActions() = onEvent {}
+    override fun onAction(action: ListQuizAction) {
+        when (action) {
+            ListQuizAction.Nothing -> {
+            // sendUiEvent(BaseUIEvent.Navigate(DetailQuiz.routeName,"sasas"))
+            }
+        }
+    }
 
 }

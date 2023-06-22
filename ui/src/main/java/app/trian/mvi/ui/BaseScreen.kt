@@ -10,26 +10,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import app.trian.mvi.ui.internal.UIController
-import app.trian.mvi.ui.internal.rememberUIController
 
 
 @Composable
 fun BaseScreen(
-    controller: UIController = rememberUIController(),
+    modalBottomSheetState: ModalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     topAppBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     bottomSheet: @Composable () -> Unit = { },
-    content: @Composable (controller: UIController) -> Unit = { }
+    content: @Composable () -> Unit = { }
 ) {
     ModalBottomSheetLayout(
         sheetContent = {
@@ -43,7 +42,7 @@ fun BaseScreen(
                 bottomSheet()
             }
         },
-        sheetState = controller.bottomSheet.state!!,
+        sheetState = modalBottomSheetState,
         sheetBackgroundColor = MaterialTheme.colorScheme.surface,
         sheetShape = RoundedCornerShape(
             topStart = 10.dp,
@@ -53,20 +52,14 @@ fun BaseScreen(
         Scaffold(
             topBar = topAppBar,
             bottomBar = bottomBar,
-            snackbarHost = {
-                SnackbarHost(
-                    hostState = controller.snackbarHostState,
-                    snackbar = {
-                        Snackbar(snackbarData = it)
-                    })
-            },
+            snackbarHost = {},
             containerColor = backgroundColor,
             contentColor = MaterialTheme.colorScheme.onSurface,
         ) {
             Column(
                 modifier = Modifier.padding(it)
             ) {
-                content(controller)
+                content()
             }
         }
     }
