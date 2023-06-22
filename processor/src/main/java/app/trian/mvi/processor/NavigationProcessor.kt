@@ -88,6 +88,7 @@ class NavigationProcessor(
             } else {
                 val findNested = nestedDeclaration.firstOrNull { it.route == group }
                     ?: throw IllegalArgumentException("Navigation Group for $group not found,try create class with @NavigationGroup")
+                createFunctionRoute.addComment("Navigation for ${findNested.route}")
                 buildNestedNavigation(
                     funSpec = createFunctionRoute,
                     route = findNested.route,

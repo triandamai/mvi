@@ -47,6 +47,7 @@ fun buildPageWrapper(
     viewModelName: String,
     viewModelPackage: String,
 ) = with(funSpec) {
+    addComment("Navigation for $screenPackage.$screenName")
     addStatement(1, "%M<%T>(", pageWrapper, ClassName(viewModelPackage, viewModelName))
     buildWrapperParams(funSpec, createRoute(route, argument), parent, argument, deepLink)
     addStatement(1, "){")
@@ -119,6 +120,7 @@ fun buildDeeplink(
 }
 
 fun buildCollectState(funSpec: FunSpec.Builder) = with(funSpec) {
+    addComment("Collecting state from ViewModel")
     addStatement(3, "val state by uiState.%M()", collectAsState)
     addStatement(3, "val intent by intent.%M(initial=null)", collectAsState)
 }
@@ -129,13 +131,7 @@ fun buildScreen(
     screenPackage: String
 ) = with(funSpec) {
     addStatement(3, "%M(", MemberName(screenPackage, screenName))
-    addStatement(4, "uiContract=%M(", contract)
-    addStatement(6, "controller=uiController,")
-    addStatement(6, "state=state,")
-    addStatement(6, "intent=intent,")
-    addStatement(6, "mutation=::commit,")
-    addStatement(6, "dispatcher=::dispatch")
-    addStatement(4, ")")
+    addStatement(4, "%M(controller=uiController,state=state,intent=intent,mutation=::commit,dispatcher=::dispatch)", contract)
     addStatement(3, ")")
 }
 

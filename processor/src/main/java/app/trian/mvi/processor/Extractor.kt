@@ -75,7 +75,7 @@ fun getFunctionPayload(
     }.first().toString()
 
     if (viewModelSuperType !in listOf("MviViewModel")) {
-        throw IllegalArgumentException("ViewModel must extends MviViewModel!!")
+        throw IllegalArgumentException("$viewModelLocation must extends MviViewModel")
     }
 
     return NavigationModel(

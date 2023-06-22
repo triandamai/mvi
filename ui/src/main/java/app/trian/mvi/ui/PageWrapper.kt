@@ -46,29 +46,29 @@ inline fun <reified ViewModel : MviViewModel<*, *, *>> NavGraphBuilder.pageWrapp
         LaunchedEffect(key1 = Unit, block = {
             viewModel.uiEvent.catch { }.collect { event ->
                 when (event) {
-                    is BaseUIEvent.ShowToast -> Toast.makeText(
+                    is UIEvent.ShowToast -> Toast.makeText(
                         ctx,
                         event.message,
                         Toast.LENGTH_SHORT
                     )
                         .show()
 
-                    is BaseUIEvent.ShowSnackBar -> {
+                    is UIEvent.ShowSnackBar -> {
 
                     }
 
-                    is BaseUIEvent.NavigateAndReplace ->
+                    is UIEvent.NavigateAndReplace ->
                         controller.navigator.navigateAndReplace(event.route, *event.params)
 
-                    is BaseUIEvent.NavigateSingleTop -> controller.navigator.navigateSingleTop(
+                    is UIEvent.NavigateSingleTop -> controller.navigator.navigateSingleTop(
                         event.route,
                         *event.params
                     )
 
-                    BaseUIEvent.NavigateBackAndClose -> controller.navigator.navigateBackAndClose()
-                    BaseUIEvent.NavigateUp -> controller.navigator.navigateUp()
-                    BaseUIEvent.Nothing -> {}
-                    is BaseUIEvent.Navigate -> controller.navigator.navigate(
+                    UIEvent.NavigateBackAndClose -> controller.navigator.navigateBackAndClose()
+                    UIEvent.NavigateUp -> controller.navigator.navigateUp()
+                    UIEvent.Nothing -> {}
+                    is UIEvent.Navigate -> controller.navigator.navigate(
                         event.route,
                         *event.params
                     )

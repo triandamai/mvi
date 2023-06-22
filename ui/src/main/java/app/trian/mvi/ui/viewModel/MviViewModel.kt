@@ -5,16 +5,12 @@
 package app.trian.mvi.ui.viewModel
 
 import android.os.Parcelable
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.trian.mvi.ui.BaseUIEvent
+import app.trian.mvi.ui.UIEvent
 import app.trian.mvi.ui.ResultState
 import app.trian.mvi.ui.ResultStateData
 import app.trian.mvi.ui.ResultStateWithProgress
-import app.trian.mvi.ui.internal.UIController
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.currentCoroutineContext
@@ -22,10 +18,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 abstract class MviViewModel<State : Parcelable, Intent, Action>(
     private val initialState: State,
@@ -34,8 +28,8 @@ abstract class MviViewModel<State : Parcelable, Intent, Action>(
     private val _uiState: MutableStateFlow<State> = MutableStateFlow(initialState)
     val uiState get() = _uiState.asStateFlow()
 
-    private val _baseUiEvent = Channel<BaseUIEvent>(Channel.BUFFERED)
-    val uiEvent = _baseUiEvent.receiveAsFlow()
+    private val _UiEvent = Channel<UIEvent>(Channel.BUFFERED)
+    val uiEvent = _UiEvent.receiveAsFlow()
 
     private val _intent:MutableStateFlow<Intent?> = MutableStateFlow(null)
     val intent get() = _intent.asStateFlow()
@@ -115,8 +109,8 @@ abstract class MviViewModel<State : Parcelable, Intent, Action>(
         _intent.tryEmit(intent)
     }
 
-    fun sendUiEvent(event: BaseUIEvent) {
-        _baseUiEvent.trySend(event)
+    fun sendUiEvent(event: UIEvent) {
+        _UiEvent.trySend(event)
     }
 
     fun resetState() {
@@ -126,7 +120,7 @@ abstract class MviViewModel<State : Parcelable, Intent, Action>(
     override fun onCleared() {
         super.onCleared()
 
-        _baseUiEvent.trySend(BaseUIEvent.Nothing)
+        _UiEvent.trySend(UIEvent.Nothing)
         _uiState.tryEmit(initialState)
         async { currentCoroutineContext().cancel() }
     }
