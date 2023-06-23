@@ -28,8 +28,8 @@ abstract class MviViewModel<State : Parcelable, Intent, Action>(
     private val _uiState: MutableStateFlow<State> = MutableStateFlow(initialState)
     val uiState get() = _uiState.asStateFlow()
 
-    private val _UiEvent = Channel<UIEvent>(Channel.BUFFERED)
-    val uiEvent = _UiEvent.receiveAsFlow()
+    private val _uiEventChannel = Channel<UIEvent>(Channel.BUFFERED)
+    val uiEvent = _uiEventChannel.receiveAsFlow()
 
     private val _intent:MutableStateFlow<Intent?> = MutableStateFlow(null)
     val intent get() = _intent.asStateFlow()
@@ -110,7 +110,7 @@ abstract class MviViewModel<State : Parcelable, Intent, Action>(
     }
 
     fun sendUiEvent(event: UIEvent) {
-        _UiEvent.trySend(event)
+        _uiEventChannel.trySend(event)
     }
 
     fun resetState() {
@@ -120,7 +120,7 @@ abstract class MviViewModel<State : Parcelable, Intent, Action>(
     override fun onCleared() {
         super.onCleared()
 
-        _UiEvent.trySend(UIEvent.Nothing)
+        _uiEventChannel.trySend(UIEvent.Nothing)
         _uiState.tryEmit(initialState)
         async { currentCoroutineContext().cancel() }
     }
