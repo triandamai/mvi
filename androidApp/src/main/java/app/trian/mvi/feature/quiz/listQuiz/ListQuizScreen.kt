@@ -19,6 +19,8 @@ import app.trian.mvi.ui.BaseMainApp
 import app.trian.mvi.ui.BaseScreen
 import app.trian.mvi.ui.UIWrapper
 import app.trian.mvi.ui.internal.UIContract
+import app.trian.mvi.ui.internal.listener.BaseEventListener
+import app.trian.mvi.ui.internal.listener.EventListener
 import app.trian.mvi.ui.internal.rememberUIController
 
 object ListQuiz {
@@ -32,6 +34,7 @@ object ListQuiz {
 )
 @Composable
 internal fun ListQuizScreen(
+    event:BaseEventListener=EventListener(),
     uiContract: UIContract<ListQuizState, ListQuizIntent, ListQuizAction>
 ) = UIWrapper(uiContract) {
     LaunchedEffect(key1 = this, block = {

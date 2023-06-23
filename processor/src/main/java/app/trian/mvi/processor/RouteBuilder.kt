@@ -9,6 +9,9 @@
 package app.trian.mvi.processor
 
 import app.trian.mvi.NavType
+import app.trian.mvi.processor.model.NavArgument
+import app.trian.mvi.processor.model.Screen
+import app.trian.mvi.processor.model.ScreenDependencies
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.MemberName
@@ -17,9 +20,11 @@ val pageWrapper = MemberName("app.trian.mvi.ui", "pageWrapper")
 val collectAsState = MemberName("androidx.compose.runtime", "collectAsState")
 val contract = MemberName("app.trian.mvi.ui.internal", "UIContract")
 val uiControllerType = ClassName("app.trian.mvi.ui.internal", "UIController")
+val eventType = ClassName("app.trian.mvi.ui.internal.listener", "BaseEventListener")
 val navGraphBuilder = ClassName("androidx.navigation", "NavGraphBuilder")
 
 const val uiControllerName = "uiController"
+const val eventName = "event"
 const val notNestedNavigation = "default"
 
 fun buildNestedNavigation(
@@ -40,19 +45,18 @@ fun buildPageWrapper(
     funSpec: FunSpec.Builder,
     route: String,
     parent: String,
-    argument: Array<NavArgument>,
-    deepLink: Array<String>,
-    screenName: String,
-    screenPackage: String,
+    arguments: List<NavArgument>,
+    deepLinks: List<String>,
+    screen: Screen,
     viewModelName: String,
     viewModelPackage: String,
 ) = with(funSpec) {
-    addComment("Navigation for $screenPackage.$screenName")
+    addComment("Navigation for ${screen.locationPackage}.${screen.name}")
     addStatement(1, "%M<%T>(", pageWrapper, ClassName(viewModelPackage, viewModelName))
-    buildWrapperParams(funSpec, createRoute(route, argument), parent, argument, deepLink)
+    buildWrapperParams(funSpec, createRoute(route, arguments), parent, arguments, deepLinks)
     addStatement(1, "){")
     buildCollectState(funSpec)
-    buildScreen(funSpec, screenName, screenPackage)
+    buildScreen(funSpec, screen)
     addStatement(1, "}")
 }
 
@@ -60,8 +64,8 @@ fun buildWrapperParams(
     funSpec: FunSpec.Builder,
     route: String,
     parent: String,
-    argument: Array<NavArgument>,
-    deepLinks: Array<String>
+    argument: List<NavArgument>,
+    deepLinks: List<String>
 ) = with(funSpec) {
 
     addStatement(2, "route=%S,", route)
@@ -72,7 +76,7 @@ fun buildWrapperParams(
 
 }
 
-fun createRoute(route: String, argument: Array<NavArgument>): String {
+fun createRoute(route: String, argument: List<NavArgument>): String {
     return buildString {
         append(route)
         if (argument.isNotEmpty()) {
@@ -86,7 +90,7 @@ fun createRoute(route: String, argument: Array<NavArgument>): String {
 
 fun buildNavArgument(
     funSpec: FunSpec.Builder,
-    arguments: Array<NavArgument>
+    arguments: List<NavArgument>
 ) = with(funSpec) {
     if (arguments.isEmpty()) {
         addStatement(2, "arguments=listOf(),")
@@ -105,7 +109,7 @@ fun buildNavArgument(
 
 fun buildDeeplink(
     funSpec: FunSpec.Builder,
-    deepLinks: Array<String>
+    deepLinks: List<String>
 ) = with(funSpec) {
     if (deepLinks.isEmpty()) {
         addStatement(2, "deepLinks=listOf(),")
@@ -127,13 +131,21 @@ fun buildCollectState(funSpec: FunSpec.Builder) = with(funSpec) {
 
 fun buildScreen(
     funSpec: FunSpec.Builder,
-    screenName: String,
-    screenPackage: String
+    screen: Screen
 ) = with(funSpec) {
-    addStatement(3, "%M(", MemberName(screenPackage, screenName))
-    addStatement(4, "%M(controller=uiController,state=state,intent=intent,mutation=::commit,dispatcher=::dispatch)", contract)
+    addStatement(3, "%M(", MemberName(screen.locationPackage, screen.name))
+    addStatement(
+        4,
+        "${screen.uiContract.value}=%M(controller=uiController,state=state,intent=intent,mutation=::commit,dispatcher=::dispatch),",
+        screen.uiContract.memberName
+    )
+    addStatement(
+        4,
+        "${screen.eventContract.value}=$eventName"
+    )
     addStatement(3, ")")
 }
+
 
 fun NavType.getStringType() = when (this) {
     NavType.String -> "NavType.StringType"

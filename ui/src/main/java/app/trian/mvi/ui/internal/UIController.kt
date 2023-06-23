@@ -38,7 +38,6 @@ class UIController(
     private val context: Context
 ) {
     val navigator get() = Navigator(router, event)
-    val eventListener get() = event
     val keyboard get() = Keyboard(context)
     val toast get() = ToastMvi(context)
 

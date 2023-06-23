@@ -54,6 +54,8 @@ import app.trian.mvi.ui.BaseMainApp
 import app.trian.mvi.ui.BaseScreen
 import app.trian.mvi.ui.UIWrapper
 import app.trian.mvi.ui.internal.UIContract
+import app.trian.mvi.ui.internal.listener.BaseEventListener
+import app.trian.mvi.ui.internal.listener.EventListener
 import app.trian.mvi.ui.internal.rememberUIController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -81,6 +83,7 @@ object DetailQuiz {
 )
 @Composable
 internal fun DetailQuizScreen(
+    event: BaseEventListener = EventListener(),
     uiContract: UIContract<DetailQuizState, DetailQuizIntent, DetailQuizAction>
 ) = UIWrapper(uiContract) {
 

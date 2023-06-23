@@ -4,8 +4,6 @@
 
 package app.trian.mvi.ui.internal.listener
 
-import androidx.compose.material.ModalBottomSheetValue
-
 class EventListener : BaseEventListener()
 
 abstract class BaseEventListener {

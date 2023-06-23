@@ -17,6 +17,7 @@ import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.validate
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ksp.writeTo
 import java.lang.IllegalArgumentException
 import kotlin.reflect.KClass
@@ -61,6 +62,10 @@ class NavigationProcessor(
                 uiControllerName,
                 uiControllerType
             )
+            .addParameter(
+                eventName,
+                eventType
+            )
 
         //generate navigation
         pageDeclaration.forEach { (group, data) ->
@@ -69,20 +74,19 @@ class NavigationProcessor(
                 data.forEach {
                     importList.addAll(
                         listOf(
-                            Pair(it.screenPackage, it.screenName),
-                            Pair(it.viewModelPackage, it.viewModelName)
+                            Pair(it.screen.locationPackage, it.screen.name),
+                            Pair(it.viewModel.locationPackage, it.viewModel.name)
                         )
                     )
                     buildPageWrapper(
                         funSpec = createFunctionRoute,
-                        argument = it.arguments,
-                        deepLink = it.deepLink,
+                        arguments = it.arguments,
+                        deepLinks = it.deepLink,
                         parent = it.parent,
                         route = it.route,
-                        screenName = it.screenName,
-                        screenPackage = it.screenPackage,
-                        viewModelName = it.viewModelName,
-                        viewModelPackage = it.viewModelPackage,
+                        screen = it.screen,
+                        viewModelName = it.viewModel.name,
+                        viewModelPackage = it.viewModel.locationPackage,
                     )
                 }
             } else {
@@ -97,20 +101,19 @@ class NavigationProcessor(
                         data.forEach {
                             importList.addAll(
                                 listOf(
-                                    Pair(it.screenPackage, it.screenName),
-                                    Pair(it.viewModelPackage, it.viewModelName)
+                                    Pair(it.screen.locationPackage, it.screen.name),
+                                    Pair(it.viewModel.locationPackage, it.viewModel.name)
                                 )
                             )
                             buildPageWrapper(
-                                funSpec = file,
-                                argument = it.arguments,
-                                deepLink = it.deepLink,
+                                funSpec = createFunctionRoute,
+                                arguments = it.arguments,
+                                deepLinks = it.deepLink,
                                 parent = it.parent,
                                 route = it.route,
-                                screenName = it.screenName,
-                                screenPackage = it.screenPackage,
-                                viewModelName = it.viewModelName,
-                                viewModelPackage = it.viewModelPackage,
+                                screen = it.screen,
+                                viewModelName = it.viewModel.name,
+                                viewModelPackage = it.viewModel.locationPackage,
                             )
                         }
                     }
@@ -145,8 +148,10 @@ class NavigationProcessor(
     ) = getSymbolsWithAnnotation(
         kClass.qualifiedName.toString()
     ).filterIsInstance<KSFunctionDeclaration>().filter {
-        val name = it.parameters.first().type.resolve().declaration.simpleName.asString()
-        (name == "UIContract")
+        val types = it.parameters.map { it.type.resolve().declaration.simpleName.asString() }
+        val eventListener = "BaseEventListener" in types
+        val uiContract = "UIContract" in types
+        (eventListener && uiContract)
     }
 
     private fun Resolver.findClassAnnotations(

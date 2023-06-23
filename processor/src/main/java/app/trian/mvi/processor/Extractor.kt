@@ -5,40 +5,53 @@
 package app.trian.mvi.processor
 
 import app.trian.mvi.NavType
+import app.trian.mvi.processor.model.NavArgument
+import app.trian.mvi.processor.model.Module
+import app.trian.mvi.processor.model.NavGroup
+import app.trian.mvi.processor.model.Nav
+import app.trian.mvi.processor.model.Screen
+import app.trian.mvi.processor.model.ScreenDependencies
+import app.trian.mvi.processor.model.ViewModel
 import com.google.devtools.ksp.getClassDeclarationByName
-import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSType
+import com.squareup.kotlinpoet.MemberName
 import java.io.FileNotFoundException
-import java.lang.IllegalArgumentException
 
 fun getNavigationGroup(
     classDeclaration: KSClassDeclaration
-): NavigationGroup {
-
-
+): NavGroup {
     val annotation = classDeclaration.annotations.getAnnotation("NavigationGroup").first()
     val route = annotation.arguments.getParameterValue<String>("route")
     val startDestination = annotation.arguments.getParameterValue<String>("startDestination")
 
-    return NavigationGroup(route, startDestination)
+    return NavGroup(route, startDestination)
 }
 
 fun getFunctionPayload(
     functionDeclaration: KSFunctionDeclaration,
     resolver: Resolver
-): NavigationModel {
+): Nav {
     val location = functionDeclaration.packageName.asString()
     val screenName = functionDeclaration.simpleName.asString()
+
+    val params = functionDeclaration.parameters
+
+    val paramsEventName = params.map { it }
+        .firstOrNull { it.type.resolve().declaration.simpleName.asString() == "BaseEventListener" }
+        ?: throw java.lang.IllegalArgumentException("BaseEventListener must be defined at $screenName")
+    val paramsUiContractName = params.map { it }
+        .firstOrNull { it.type.resolve().declaration.simpleName.asString() == "UIContract" }
+        ?: throw java.lang.IllegalArgumentException("UIContract must be defined at $screenName")
+
 
     val annotation: KSAnnotation =
         functionDeclaration.annotations.getAnnotation("Navigation").first()
     val arg =
         functionDeclaration.annotations.getAnnotation("Argument")
-
     val deepLink =
         functionDeclaration.annotations.getAnnotation("DeepLink")
 
@@ -78,16 +91,36 @@ fun getFunctionPayload(
         throw IllegalArgumentException("$viewModelLocation must extends MviViewModel")
     }
 
-    return NavigationModel(
+    return Nav(
         route = route,
         parent = parent,
         group = group.ifEmpty { notNestedNavigation },
-        arguments = argParams.toTypedArray(),
-        deepLink = deepLinkParam.toTypedArray(),
-        screenName = screenName,
-        screenPackage = location,
-        viewModelName = viewModel.simpleName.asString(),
-        viewModelPackage = viewModel.packageName.asString(),
+        arguments = argParams,
+        deepLink = deepLinkParam,
+        screen = Screen(
+            name = screenName,
+            locationPackage = location,
+            eventContract = ScreenDependencies(
+                memberName = MemberName(
+                    paramsEventName.type.resolve().declaration.packageName.asString(),
+                    paramsEventName.type.resolve().declaration.simpleName.asString()
+                ),
+                type = "",
+                value = paramsEventName.name?.asString().toString()
+            ),
+            uiContract = ScreenDependencies(
+                memberName = MemberName(
+                    paramsUiContractName.type.resolve().declaration.packageName.asString(),
+                    paramsUiContractName.type.resolve().declaration.simpleName.asString()
+                ),
+                type = "",
+                value = paramsUiContractName.name?.asString().toString()
+            )
+        ),
+        viewModel = ViewModel(
+            locationPackage = viewModel.packageName.asString(),
+            name = viewModel.simpleName.asString()
+        )
     )
 }
 

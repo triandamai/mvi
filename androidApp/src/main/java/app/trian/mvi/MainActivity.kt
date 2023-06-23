@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     navController = uiController.navigator.navHost,
                     startDestination = ListQuiz.routeName
                 ) {
-                    androidAppComponent(it)
+                    androidAppComponent(it,eventListener)
                 }
             }
         }
