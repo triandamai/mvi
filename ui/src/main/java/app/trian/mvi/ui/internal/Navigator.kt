@@ -74,6 +74,7 @@ class Navigator(
             launchSingleTop = true
         }
     }
+
     /**
      * Navigation into [routeName] as destination, and pop all backstack before last route
      * if same route exist on back stack, will be replace with [routeName]
@@ -95,7 +96,7 @@ class Navigator(
             }
         }
         this.navHostController.navigate(buildRoute) {
-            popUpTo(navHostController.graph.startDestinationId) {
+            popUpTo(navHostController.graph.id) {
                 inclusive = true
             }
             launchSingleTop = true

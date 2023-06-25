@@ -53,10 +53,7 @@ inline fun <reified ViewModel : MviViewModel<*, *, *>> NavGraphBuilder.pageWrapp
                     )
                         .show()
 
-                    is UIEvent.ShowSnackBar -> {
-
-                    }
-
+                    is UIEvent.ShowSnackBar -> {}
                     is UIEvent.NavigateAndReplace ->
                         controller.navigator.navigateAndReplace(event.route, *event.params)
 
@@ -64,14 +61,14 @@ inline fun <reified ViewModel : MviViewModel<*, *, *>> NavGraphBuilder.pageWrapp
                         event.route,
                         *event.params
                     )
-
-                    UIEvent.NavigateBackAndClose -> controller.navigator.navigateBackAndClose()
-                    UIEvent.NavigateUp -> controller.navigator.navigateUp()
-                    UIEvent.Nothing -> {}
                     is UIEvent.Navigate -> controller.navigator.navigate(
                         event.route,
                         *event.params
                     )
+                    UIEvent.NavigateBackAndClose -> controller.navigator.navigateBackAndClose()
+                    UIEvent.NavigateUp -> controller.navigator.navigateUp()
+                    UIEvent.Nothing -> {}
+
                 }
             }
         })
