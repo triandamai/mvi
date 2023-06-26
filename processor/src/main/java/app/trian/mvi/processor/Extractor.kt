@@ -42,7 +42,7 @@ fun getFunctionPayload(
 
     val paramsEventName = params.map { it }
         .firstOrNull { it.type.resolve().declaration.simpleName.asString() == "BaseEventListener" }
-        ?: throw java.lang.IllegalArgumentException("BaseEventListener must be defined at $screenName")
+
     val paramsUiContractName = params.map { it }
         .firstOrNull { it.type.resolve().declaration.simpleName.asString() == "UIContract" }
         ?: throw java.lang.IllegalArgumentException("UIContract must be defined at $screenName")
@@ -100,7 +100,7 @@ fun getFunctionPayload(
         screen = Screen(
             name = screenName,
             locationPackage = location,
-            eventContract = ScreenDependencies(
+            eventContract = if (paramsEventName == null) null else ScreenDependencies(
                 memberName = MemberName(
                     paramsEventName.type.resolve().declaration.packageName.asString(),
                     paramsEventName.type.resolve().declaration.simpleName.asString()

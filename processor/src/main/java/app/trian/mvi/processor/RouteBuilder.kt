@@ -139,10 +139,12 @@ fun buildScreen(
         "${screen.uiContract.value}=%M(controller=uiController,state=state,intent=intent,mutation=::commit,dispatcher=::dispatch),",
         screen.uiContract.memberName
     )
-    addStatement(
-        4,
-        "${screen.eventContract.value}=$eventName"
-    )
+    if (screen.eventContract != null) {
+        addStatement(
+            4,
+            "${screen.eventContract.value}=$eventName"
+        )
+    }
     addStatement(3, ")")
 }
 

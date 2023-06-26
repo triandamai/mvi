@@ -4,5 +4,5 @@ data class Screen(
     val locationPackage: String,
     val name: String,
     val uiContract: ScreenDependencies,
-    val eventContract: ScreenDependencies
+    val eventContract: ScreenDependencies?
 )
