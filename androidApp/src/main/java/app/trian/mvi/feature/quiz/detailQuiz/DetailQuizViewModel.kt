@@ -2,6 +2,7 @@ package app.trian.mvi.feature.quiz.detailQuiz
 
 import androidx.lifecycle.SavedStateHandle
 import app.trian.mvi.data.domain.quiz.GetDetailQuizUseCase
+import app.trian.mvi.ui.ResultState
 import app.trian.mvi.ui.viewModel.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -26,13 +27,13 @@ class DetailQuizViewModel @Inject constructor(
             )
         }
         getDetailQuizUseCase(quizId())
-            .onEach(
-                loading = {},
-                error = { _, _ -> },
-                success = {
-
+            .collect{
+                when(it){
+                    is ResultState.Error -> TODO()
+                    ResultState.Loading -> TODO()
+                    is ResultState.Result -> it.data
                 }
-            )
+            }
     }
 
     override fun onAction(action: DetailQuizAction) {

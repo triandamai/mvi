@@ -22,7 +22,8 @@ open class UIContract<State, Intent, Event>(
 
     fun launch(
         context: CoroutineContext = EmptyCoroutineContext,
-        start: CoroutineStart = CoroutineStart.DEFAULT, block: suspend () -> Unit
+        start: CoroutineStart = CoroutineStart.DEFAULT,
+        block: suspend () -> Unit
     ) {
         controller.launch(context, start) { block() }
     }
