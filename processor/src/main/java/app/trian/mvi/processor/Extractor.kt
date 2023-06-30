@@ -13,6 +13,7 @@ import app.trian.mvi.processor.model.Screen
 import app.trian.mvi.processor.model.ScreenDependencies
 import app.trian.mvi.processor.model.ViewModel
 import com.google.devtools.ksp.getClassDeclarationByName
+import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
@@ -33,20 +34,43 @@ fun getNavigationGroup(
 
 fun getFunctionPayload(
     functionDeclaration: KSFunctionDeclaration,
-    resolver: Resolver
+    resolver: Resolver,
+    kspLogger: KSPLogger
 ): Nav {
     val location = functionDeclaration.packageName.asString()
     val screenName = functionDeclaration.simpleName.asString()
 
-    val params = functionDeclaration.parameters
+    val deps = functionDeclaration.parameters.map {
+        val name = it.type.resolve().declaration.simpleName.asString()
 
-    val paramsEventName = params.map { it }
-        .firstOrNull { it.type.resolve().declaration.simpleName.asString() == "BaseEventListener" }
+        kspLogger.info("Found $name")
+        when (name) {
+            in setOf("BaseEventListener", "EventListener") -> ScreenDependencies(
+                memberName = MemberName(
+                    it.type.resolve().declaration.packageName.asString(),
+                    it.type.resolve().declaration.simpleName.asString()
+                ),
+                type = "event",
+                value = it.name?.asString().toString(),
+                parameterName = it.name?.asString().toString()
+            )
 
-    val paramsUiContractName = params.map { it }
-        .firstOrNull { it.type.resolve().declaration.simpleName.asString() == "UIContract" }
-        ?: throw java.lang.IllegalArgumentException("UIContract must be defined at $screenName")
+            "UIContract" -> ScreenDependencies(
+                memberName = MemberName(
+                    it.type.resolve().declaration.packageName.asString(),
+                    it.type.resolve().declaration.simpleName.asString()
+                ),
+                type = "uiContract",
+                value = it.name?.asString().toString(),
+                parameterName = it.name?.asString().toString()
+            )
 
+            else -> null
+        }
+    }
+    if (deps.firstOrNull { it?.type == "uiContract" } == null) {
+        throw java.lang.IllegalArgumentException("UIContract must be defined at $screenName")
+    }
 
     val annotation: KSAnnotation =
         functionDeclaration.annotations.getAnnotation("Navigation").first()
@@ -100,22 +124,7 @@ fun getFunctionPayload(
         screen = Screen(
             name = screenName,
             locationPackage = location,
-            eventContract = if (paramsEventName == null) null else ScreenDependencies(
-                memberName = MemberName(
-                    paramsEventName.type.resolve().declaration.packageName.asString(),
-                    paramsEventName.type.resolve().declaration.simpleName.asString()
-                ),
-                type = "",
-                value = paramsEventName.name?.asString().toString()
-            ),
-            uiContract = ScreenDependencies(
-                memberName = MemberName(
-                    paramsUiContractName.type.resolve().declaration.packageName.asString(),
-                    paramsUiContractName.type.resolve().declaration.simpleName.asString()
-                ),
-                type = "",
-                value = paramsUiContractName.name?.asString().toString()
-            )
+            deps = deps.filterNotNull()
         ),
         viewModel = ViewModel(
             locationPackage = viewModel.packageName.asString(),

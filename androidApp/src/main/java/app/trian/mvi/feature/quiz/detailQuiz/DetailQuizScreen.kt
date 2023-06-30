@@ -83,8 +83,8 @@ object DetailQuiz {
 )
 @Composable
 internal fun DetailQuizScreen(
-    event: BaseEventListener = EventListener(),
-    uiContract: UIContract<DetailQuizState, DetailQuizIntent, DetailQuizAction>
+    uiContract: UIContract<DetailQuizState, DetailQuizIntent, DetailQuizAction>,
+    eventListener: BaseEventListener=EventListener()
 ) = UIWrapper(uiContract) {
 
     val bottomSheetState = rememberModalBottomSheetState(

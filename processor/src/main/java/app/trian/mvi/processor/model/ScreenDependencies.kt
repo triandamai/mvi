@@ -5,5 +5,6 @@ import com.squareup.kotlinpoet.MemberName
 data class ScreenDependencies(
     val memberName: MemberName,
     val type:String,
-    val value:String
+    val value:String,
+    val parameterName:String
 )

@@ -134,19 +134,23 @@ fun buildScreen(
     screen: Screen
 ) = with(funSpec) {
     addStatement(3, "%M(", MemberName(screen.locationPackage, screen.name))
-    addStatement(
-        4,
-        "${screen.uiContract.value}=%M(controller=uiController,state=state,intent=intent,mutation=::commit,dispatcher=::dispatch),",
-        screen.uiContract.memberName
-    )
-    if (screen.eventContract != null) {
-        addStatement(
-            4,
-            "${screen.eventContract.value}=$eventName"
-        )
+    screen.deps.forEach {
+        when(it.type){
+            "uiContract" -> addStatement(
+                4,
+                "${it.value}=%M(controller=uiController,state=state,intent=intent,mutation=::commit,dispatcher=::dispatch),",
+                it.memberName
+            )
+            "event" -> addStatement(
+                4,
+                "${it.parameterName}=$eventName,"
+            )
+        }
     }
+
     addStatement(3, ")")
 }
+
 
 
 fun NavType.getStringType() = when (this) {

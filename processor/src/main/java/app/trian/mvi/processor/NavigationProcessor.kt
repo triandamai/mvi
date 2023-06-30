@@ -45,9 +45,11 @@ class NavigationProcessor(
         //skip if there no annotation
         if (!findNavigationAnnotation.iterator().hasNext()) return emptyList()
 
+
         val pageDeclaration = findNavigationAnnotation.map {
-            getFunctionPayload(it, resolver)
+            getFunctionPayload(it, resolver, environment.logger)
         }.groupBy { it.group }
+
 
         val nestedDeclaration = findNavigationGroupAnnotation.map {
             getNavigationGroup(it)
@@ -106,7 +108,7 @@ class NavigationProcessor(
                                 )
                             )
                             buildPageWrapper(
-                                funSpec = createFunctionRoute,
+                                funSpec = file,
                                 arguments = it.arguments,
                                 deepLinks = it.deepLink,
                                 parent = it.parent,
@@ -149,9 +151,8 @@ class NavigationProcessor(
         kClass.qualifiedName.toString()
     ).filterIsInstance<KSFunctionDeclaration>().filter {
         val types = it.parameters.map { it.type.resolve().declaration.simpleName.asString() }
-        val eventListener = "BaseEventListener" in types
         val uiContract = "UIContract" in types
-        (eventListener && uiContract)
+        (uiContract)
     }
 
     private fun Resolver.findClassAnnotations(

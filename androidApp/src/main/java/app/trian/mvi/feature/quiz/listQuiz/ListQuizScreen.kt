@@ -34,7 +34,6 @@ object ListQuiz {
 )
 @Composable
 internal fun ListQuizScreen(
-    event:BaseEventListener=EventListener(),
     uiContract: UIContract<ListQuizState, ListQuizIntent, ListQuizAction>
 ) = UIWrapper(uiContract) {
     LaunchedEffect(key1 = this, block = {
