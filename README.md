@@ -114,6 +114,21 @@ class ListQuizViewModel @Inject constructor(
 
 }
 ```
+### ACTION and EFFECT
+
+Action:
+```kotlin
+sealed interface ListQuizAction {
+    object Nothing : ListQuizAction
+}
+```
+Effect:
+```kotlin
+sealed interface ListQuizEffect {
+    object Nothing : ListQuizEffect
+    data class ShowToast(val message:String) : ListQuizEffect
+}
+```
 
 This project doesn't mean to replace existing architecture, and work seamless with the existing:
 1. Reduce boiler plate
