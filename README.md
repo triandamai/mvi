@@ -3,16 +3,16 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Memulai
-Anda dapat mencoba dengan menambahkan dependencies pada `build.gradle` atau `build.gradle.kts`:
-1. root project gradle `build.gradle`:
-```groovy
+Add to `build.gradle` or `build.gradle.kts`:
+1. root project gradle `build.gradle.kts`:
+```kotlin
 allprojects {
     repositories {
-        maven { url 'https://jitpack.io' }
+        maven(url = "https://jitpack.io")
     }
 }
 ```
-2. app `build.gradle`:
+2. in your application module `build.gradle` or `build.gradle.kts`:
 ```groovy
 plugins{
     id("com.google.devtools.ksp") version ("1.8.0-1.0.9")
@@ -24,41 +24,37 @@ dependencies {
 }
 ```
 
-# Why?
-Project ini bertujuan untuk mengurangi boilerplate dan konfigurasi ketika membuat aplikasi, dengan memberikan solusi berupa `prebuild configuration` dan `annotation processor`.
+# Example
 
-Sebagai contoh untuk membuat sebuah halaman cukup dengan mendeklasaikan sebuah fungsi `@Composable` dengan anotasi `@Navigation`,`Argument` seperti berikut:
-
-### Halaman Pertama
-
+### First Page/Route
 ```kotlin
 @Navigation(
-    route="halaman-pertama",
+    route="first-page",
     viewModel=ListQuizViewModel::class
 )
 @Composable
-internal fun DetailQuizScreen(
-    uiContract: UIContract<ListQuizState,ListQuizIntent, ListQuizAction>
-) = UiWrapper(uiContract) { //utility untuk men-dsl uiEvent
+fun DetailQuizScreen(
+    uiContract: UIContract<ListQuizState, ListQuizAction>
+) = UiWrapper(uiContract) { 
     Button(
         onClick={
-            //navigasi
-            navigator.navigate("halaman-kedua","World")
+            //navigate to second page with params
+            navigator.navigate("second-page","World")
         }
-    ){ Text("Ke halaman Kedua") }
+    ){ Text("Send to Second Page") }
 }
 ```
 ### Halaman Kedua:
 ```kotlin
 @Navigation(
-    route="halaman-kedua",
+    route="second-page",
     viewModel=DetailQuizViewModel::class
 )
 @Argument(name="quizName", type=NavType.StringType)
 @Composable
-internal fun DetailQuizScreen(
-    uiContract: UIContract<DetailQuizState, DetailQuizIntent,DetailQuizAction>
-) = UiWrapper(uiContract) { //utility untuk men-dsl uiEvent
+fun DetailQuizScreen(
+    uiContract: UIContract<DetailQuizState,DetailQuizAction>
+) = UiWrapper(uiContract) {
     LaunchedEffect(this){
         val arg = navigator.arguments.get<String>("quizName")
         commit{copy(message=arg)}
@@ -66,7 +62,7 @@ internal fun DetailQuizScreen(
     Text("Hello ${state.message}")
 }
 ```
-Processor akan mencari halaman dengan anotasi `Navigation` dan membuat component sesuai dengan nama module yang kemudian di pakai pada entry point  `MainActivity`:
+### Use in `MainActivity`:
 ```kotlin
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -76,7 +72,9 @@ class MainActivity : ComponentActivity() {
             val uiController = rememberUIController(event = EventListener())
             
             QuizTheme {
-                NavHost(controller,"halaman-pertama") {
+                NavHost(controller,"first-page") {
+                    //add this line
+                    //this file are generated from annotation processor
                     quizComponent(uiController = uiController)
                 }
             }
@@ -84,12 +82,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 ```
-ViewModel:
+### ViewModel:
 ```kotlin
 @HiltViewModel
 class ListQuizViewModel @Inject constructor(
     private val getListQuizUseCase: GetListQuizUseCase
-) : MviViewModel<ListQuizState, ListQuizIntent, ListQuizAction>(
+) : MviViewModel<ListQuizState, ListQuizAction>(
     ListQuizState(),
 ) {
     init {
@@ -109,7 +107,7 @@ class ListQuizViewModel @Inject constructor(
     override fun onAction(action: ListQuizAction) {
         when (action) {
             ListQuizAction.Nothing -> {
-            // sendUiEvent(BaseUIEvent.Navigate(DetailQuiz.routeName,"sasas"))
+                
             }
         }
     }
@@ -117,13 +115,9 @@ class ListQuizViewModel @Inject constructor(
 }
 ```
 
-Project ini tidak untuk menggantikan arsitektur yang sudah ada seperti hilt,navigation component dll,
-tetapi ini dibuat diatas arsitektur yang sudah ada dan akan men-cover beberapa permasalahan:
-1. Mengurangi boilerplate code
-2. Mengurangi konfigurasi yang berlebihan
-3. Pengujian yang lebih baik
-4. Memudahkan proses `Preview` dan LiveEdit
-5. membuat sebuah rule atau aturan untuk memudahkan kolaborasi dengan tim
+This project doesn't mean to replace existing architecture, and work seamless with the existing:
+1. Reduce boiler plate
+2. Better testing (Screen/Page can be tested separately from ViewModel)
 
 # LICENSE
 
