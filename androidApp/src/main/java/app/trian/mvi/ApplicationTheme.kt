@@ -29,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
-import app.trian.mvi.R
 
 val fontFamily = FontFamily(
     Font(R.font.poppins_extrabold, FontWeight.ExtraBold),

@@ -23,7 +23,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun BaseScreen(
-    modalBottomSheetState: ModalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+    modalBottomSheetState: ModalBottomSheetState = rememberModalBottomSheetState(
+        initialValue =
+        ModalBottomSheetValue.Hidden
+    ),
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     topAppBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
