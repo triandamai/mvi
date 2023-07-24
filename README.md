@@ -44,7 +44,7 @@ fun DetailQuizScreen(
     ){ Text("Send to Second Page") }
 }
 ```
-### Halaman Kedua:
+### Second Page:
 ```kotlin
 @Navigation(
     route="second-page",
@@ -55,14 +55,27 @@ fun DetailQuizScreen(
 fun DetailQuizScreen(
     uiContract: UIContract<DetailQuizState,DetailQuizAction>
 ) = UiWrapper(uiContract) {
-    LaunchedEffect(this){
-        val arg = navigator.arguments.get<String>("quizName")
-        commit{copy(message=arg)}
-    }
-    Text("Hello ${state.message}")
+        LaunchedEffect(this){
+            val arg = navigator.arguments.get<String>("quizName")
+            commit{copy(message=arg)}
+        }
+        //when ViewModel send 'Effect' 
+        UseEffect(
+            key = state.effect,
+            onDispose = { copy(effect = ListQuizEffect.Nothing) }, //after effect triggered then the effect reset with this line
+            block = {
+                when (this) {
+                    ListQuizEffect.Nothing -> Unit
+                    is ListQuizEffect.ShowToast -> {
+                        //todo 
+                    }
+                }
+            }
+        )
+        Text("Hello ${state.message}")
 }
 ```
-### Use in `MainActivity`:
+### `MainActivity`:
 ```kotlin
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -104,6 +117,8 @@ class ListQuizViewModel @Inject constructor(
             )
     }
 
+    //handle event from screen
+    // when dispatch invoked
     override fun onAction(action: ListQuizAction) {
         when (action) {
             ListQuizAction.Nothing -> {
@@ -114,8 +129,15 @@ class ListQuizViewModel @Inject constructor(
 
 }
 ```
-### ACTION and EFFECT
-
+### State,ACTION and EFFECT
+State:
+```kotlin
+@Immutable
+@Parceliza
+data class ListQuizState(
+    val effect:ListQuizEffect=ListQuizEffect.Nothing
+)
+```
 Action:
 ```kotlin
 sealed interface ListQuizAction {
