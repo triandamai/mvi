@@ -2,7 +2,7 @@
  * Copyright (c) 2023 trian.app.
  */
 
-package app.trian.mvi.ui.theme
+package app.trian.mvi
 
 import android.app.Activity
 import android.os.Build
@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
-import app.trian.mvi.ui.R
+import app.trian.mvi.R
 
 val fontFamily = FontFamily(
     Font(R.font.poppins_extrabold, FontWeight.ExtraBold),

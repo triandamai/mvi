@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.trian.mvi.ui.BaseMainApp
+import app.trian.mvi.BaseMainApp
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
 /**

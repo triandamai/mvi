@@ -11,7 +11,7 @@ import javax.inject.Inject
 class DetailQuizViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val getDetailQuizUseCase: GetDetailQuizUseCase
-) : MviViewModel<DetailQuizState, DetailQuizIntent, DetailQuizAction>(
+) : MviViewModel<DetailQuizState, DetailQuizAction>(
     DetailQuizState(),
 ) {
     init {
@@ -29,15 +29,17 @@ class DetailQuizViewModel @Inject constructor(
         getDetailQuizUseCase(quizId())
             .collect{
                 when(it){
-                    is ResultState.Error -> TODO()
-                    ResultState.Loading -> TODO()
+                    is ResultState.Error -> Unit
+                    ResultState.Loading -> Unit
                     is ResultState.Result -> it.data
                 }
             }
     }
 
     override fun onAction(action: DetailQuizAction) {
-        //not empty
+       when(action){
+           DetailQuizAction.GetValue -> Unit
+       }
 
     }
 

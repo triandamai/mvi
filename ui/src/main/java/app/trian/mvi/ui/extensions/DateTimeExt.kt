@@ -20,36 +20,12 @@ fun LocalDate?.toReadableDate(pattern: String = "d MMMM, yyyy"): String {
     return this.formatDate(pattern.ifEmpty { "d MMMM, yyyy" })
 }
 
-fun LocalDate.getHeaderChart(): String {
-    return "${this.formatDate("d MMM")} - ${this.plusDays(6).formatDate("d MMM, yyyy")}"
-}
-
 
 fun getNowMillis(): LocalDate = LocalDate.now()
 
-fun LocalDate.formatDate(pattern: String): String {
+fun LocalDate.formatDate(pattern: String=String.Empty): String {
     if (pattern.isBlank()) {
         return this.format(DateTimeFormatter.BASIC_ISO_DATE)
     }
     return this.format(DateTimeFormatter.ofPattern(pattern))
 }
-
-
-fun LocalDate.getFirstDays(): Pair<LocalDate, LocalDate> {
-
-    var first: LocalDate = this
-
-    while (first.dayOfWeek != DayOfWeek.SUNDAY) {
-        first = first.minusDays(1);
-    }
-    return Pair(
-        first,
-        first.plusDays(6)
-    )
-
-}
-
-fun daysOfWeek() = DayOfWeek.values().rotateRight(7 - WeekFields.of(Locale.getDefault()).firstDayOfWeek.ordinal)
-
-
-internal fun <T> Array<T>.rotateRight(n: Int): List<T> = takeLast(n) + dropLast(n)

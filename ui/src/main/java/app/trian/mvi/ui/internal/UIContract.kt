@@ -1,13 +1,15 @@
 package app.trian.mvi.ui.internal
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import kotlinx.coroutines.CoroutineStart
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-open class UIContract<State, Intent, Event>(
+open class UIContract<State, Event>(
     val controller: UIController,
     val state: State,
-    val intent: Intent? = null,
     private val mutation: (State) -> Unit = {},
     private val dispatcher: (Event) -> Unit = {},
 ) {
@@ -27,6 +29,35 @@ open class UIContract<State, Intent, Event>(
     ) {
         controller.launch(context, start) { block() }
     }
+
     //end region
+
+    /**
+     * for collecting side effect from viewModel
+     * and `onDispose` require default effect
+     * when screen destroyed or trigger side effect
+     * */
+    @Composable
+    fun <T> UseEffect(
+        key: T,
+        onDispose: State.() -> State,
+        block: suspend T.() -> Unit
+    ) {
+        fun reset() {
+            mutation.invoke(onDispose(state))
+        }
+        LaunchedEffect(key1 = key, block = {
+            block(key).also {
+                reset()
+            }
+        })
+        DisposableEffect(key1 = key, effect = {
+            onDispose {
+                reset()
+            }
+        })
+
+
+    }
 
 }

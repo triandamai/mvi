@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import app.trian.mvi.feature.quiz.listQuiz.ListQuiz
-import app.trian.mvi.ui.BaseMainApp
 import app.trian.mvi.ui.internal.UIController
 import app.trian.mvi.ui.internal.listener.BaseEventListener
 import app.trian.mvi.ui.internal.listener.EventListener
@@ -29,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     navController = uiController.navigator.navHost,
                     startDestination = ListQuiz.routeName
                 ) {
-                   // androidAppComponent(it,eventListener)
+                    androidAppComponent(it,eventListener)
                 }
             }
         }
@@ -37,3 +36,10 @@ class MainActivity : ComponentActivity() {
 }
 
 
+class  NativeLibWrapper {
+    init {
+        System.loadLibrary("mvi")
+    }
+
+    external fun encrypt(key:String,plain:String):String
+}

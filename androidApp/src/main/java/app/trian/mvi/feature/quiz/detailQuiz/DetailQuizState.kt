@@ -11,7 +11,8 @@ import javax.annotation.concurrent.Immutable
 data class DetailQuizState(
     val showContent: Boolean = false,
     val quizId: String = "",
-    val quiz: @RawValue Quiz = Quiz()
+    val quiz: @RawValue Quiz = Quiz(),
+    val effect:@RawValue DetailQuizEffect = DetailQuizEffect.Nothing
 ) : Parcelable {
 }
 

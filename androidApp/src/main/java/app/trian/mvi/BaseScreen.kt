@@ -2,7 +2,7 @@
  * Copyright (c) 2023 trian.app.
  */
 
-package app.trian.mvi.ui
+package app.trian.mvi
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize

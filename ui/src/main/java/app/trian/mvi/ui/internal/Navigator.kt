@@ -95,11 +95,15 @@ class Navigator(
                 }
             }
         }
+        val currentRoute = navHostController.currentBackStackEntry?.destination?.route.orEmpty()
         this.navHostController.navigate(buildRoute) {
-            popUpTo(navHostController.graph.id) {
-                inclusive = true
+            if(currentRoute.isNotEmpty()) {
+                popUpTo(currentRoute) {
+                    inclusive = true
+                }
+            }else{
+                launchSingleTop = true
             }
-            launchSingleTop = true
         }
     }
 

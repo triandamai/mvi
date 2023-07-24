@@ -19,7 +19,7 @@ import app.trian.mvi.ui.viewModel.MviViewModel
 import kotlinx.coroutines.flow.catch
 
 
-inline fun <reified ViewModel : MviViewModel<*, *, *>> NavGraphBuilder.pageWrapper(
+inline fun <reified ViewModel : MviViewModel<*, *>> NavGraphBuilder.pageWrapper(
     route: String,
     controller: UIController,
     parent: String? = null,
@@ -44,33 +44,38 @@ inline fun <reified ViewModel : MviViewModel<*, *, *>> NavGraphBuilder.pageWrapp
             hiltViewModel(parentEntry)
         })
         LaunchedEffect(key1 = Unit, block = {
-            viewModel.uiEvent.catch { }.collect { event ->
-                when (event) {
-                    is UIEvent.ShowToast -> Toast.makeText(
-                        ctx,
-                        event.message,
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+            viewModel.uiEvent
+                .catch {
 
-                    is UIEvent.ShowSnackBar -> {}
-                    is UIEvent.NavigateAndReplace ->
-                        controller.navigator.navigateAndReplace(event.route, *event.params)
+                }.collect { event ->
+                    when (event) {
+                        is UIEvent.ShowToast -> Toast.makeText(
+                            ctx,
+                            event.message,
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
 
-                    is UIEvent.NavigateSingleTop -> controller.navigator.navigateSingleTop(
-                        event.route,
-                        *event.params
-                    )
-                    is UIEvent.Navigate -> controller.navigator.navigate(
-                        event.route,
-                        *event.params
-                    )
-                    UIEvent.NavigateBackAndClose -> controller.navigator.navigateBackAndClose()
-                    UIEvent.NavigateUp -> controller.navigator.navigateUp()
-                    UIEvent.Nothing -> {}
+                        is UIEvent.ShowSnackBar -> {}
+                        is UIEvent.NavigateAndReplace ->
+                            controller.navigator.navigateAndReplace(event.route, *event.params)
 
+                        is UIEvent.NavigateSingleTop -> controller.navigator.navigateSingleTop(
+                            event.route,
+                            *event.params
+                        )
+
+                        is UIEvent.Navigate -> controller.navigator.navigate(
+                            event.route,
+                            *event.params
+                        )
+
+                        UIEvent.NavigateBackAndClose -> controller.navigator.navigateBackAndClose()
+                        UIEvent.NavigateUp -> controller.navigator.navigateUp()
+                        UIEvent.Nothing -> {}
+
+                    }
                 }
-            }
         })
 
         content(viewModel)

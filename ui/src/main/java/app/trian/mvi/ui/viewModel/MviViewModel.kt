@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-abstract class MviViewModel<State : Parcelable, Intent, Action>(
+abstract class MviViewModel<State : Parcelable, Action>(
     private val initialState: State,
 ) : ViewModel() {
 
@@ -30,9 +30,6 @@ abstract class MviViewModel<State : Parcelable, Intent, Action>(
 
     private val _uiEventChannel = Channel<UIEvent>(Channel.BUFFERED)
     val uiEvent = _uiEventChannel.receiveAsFlow()
-
-    private val _intent:MutableStateFlow<Intent?> = MutableStateFlow(null)
-    val intent get() = _intent.asStateFlow()
 
     protected abstract fun onAction(action: Action)
 
@@ -104,10 +101,6 @@ abstract class MviViewModel<State : Parcelable, Intent, Action>(
     }
 
     fun dispatch(action: Action) = onAction(action)
-
-    fun sendIntent(intent: Intent) {
-        _intent.tryEmit(intent)
-    }
 
     fun sendUiEvent(event: UIEvent) {
         _uiEventChannel.trySend(event)

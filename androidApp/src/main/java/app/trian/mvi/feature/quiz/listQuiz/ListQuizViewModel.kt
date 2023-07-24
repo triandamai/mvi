@@ -8,7 +8,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ListQuizViewModel @Inject constructor(
     private val getListQuizUseCase: GetListQuizUseCase
-) : MviViewModel<ListQuizState, ListQuizIntent, ListQuizAction>(
+) : MviViewModel<ListQuizState, ListQuizAction>(
     ListQuizState(),
 ) {
     init {
@@ -28,7 +28,12 @@ class ListQuizViewModel @Inject constructor(
     override fun onAction(action: ListQuizAction) {
         when (action) {
             ListQuizAction.Nothing -> {
+
             // sendUiEvent(BaseUIEvent.Navigate(DetailQuiz.routeName,"sasas"))
+            }
+
+            ListQuizAction.Navigate -> {
+                commit { copy(effect=ListQuizEffect.DetailQuiz("sasas")) }
             }
         }
     }

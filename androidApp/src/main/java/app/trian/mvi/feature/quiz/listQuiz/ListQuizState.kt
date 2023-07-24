@@ -12,6 +12,8 @@ import javax.annotation.concurrent.Immutable
 @Parcelize
 data class ListQuizState(
     val a: String = String.Empty,
-    val quiz: @RawValue List<Quiz> = dummyQuiz
+    val quiz: @RawValue List<Quiz> = dummyQuiz,
+
+    val effect: @RawValue ListQuizEffect = ListQuizEffect.Nothing
 ) : Parcelable
 

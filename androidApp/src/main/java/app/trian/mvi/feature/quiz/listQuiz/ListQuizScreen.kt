@@ -12,11 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import app.trian.mvi.BaseMainApp
+import app.trian.mvi.BaseScreen
 import app.trian.mvi.Navigation
 import app.trian.mvi.components.ItemQuiz
 import app.trian.mvi.feature.quiz.detailQuiz.DetailQuiz
-import app.trian.mvi.ui.BaseMainApp
-import app.trian.mvi.ui.BaseScreen
 import app.trian.mvi.ui.UIWrapper
 import app.trian.mvi.ui.internal.UIContract
 import app.trian.mvi.ui.internal.rememberUIController
@@ -32,11 +32,21 @@ object ListQuiz {
 )
 @Composable
 internal fun ListQuizScreen(
-    uiContract: UIContract<ListQuizState, ListQuizIntent, ListQuizAction>
+    uiContract: UIContract<ListQuizState, ListQuizAction>
 ) = UIWrapper(uiContract) {
-    LaunchedEffect(key1 = this, block = {
-        dispatch(ListQuizAction.Nothing)
-    })
+
+    UseEffect(
+        key = state.effect,
+        onDispose = { copy(effect = ListQuizEffect.Nothing) },
+        block = {
+            when (this) {
+                ListQuizEffect.Nothing -> Unit
+                is ListQuizEffect.DetailQuiz -> {
+                    navigator.navigate(DetailQuiz.routeName, params)
+                }
+            }
+        }
+    )
 
     BaseScreen(
         topAppBar = {
@@ -66,7 +76,8 @@ internal fun ListQuizScreen(
                         quizProgress = it.progress,
                         quizAmountQuestion = it.question.size,
                         onClick = {
-                            controller.navigator.navigateSingleTop(DetailQuiz.routeName, it.id)
+                            dispatch(ListQuizAction.Navigate)
+                            //controller.navigator.navigateSingleTop(DetailQuiz.routeName, it.id)
                         }
                     )
                 }
@@ -84,7 +95,6 @@ fun PreviewScreenListQuiz() {
             uiContract = UIContract(
                 controller = rememberUIController(),
                 state = ListQuizState(),
-                intent = ListQuizIntent.Nothing
             )
         )
     }

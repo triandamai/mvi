@@ -39,8 +39,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import app.trian.mvi.BaseMainApp
 import app.trian.mvi.R
-import app.trian.mvi.ui.BaseMainApp
 import app.trian.mvi.ui.extensions.Empty
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest

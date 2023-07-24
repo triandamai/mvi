@@ -59,10 +59,6 @@ android {
 
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.lib)
-
-    implementation(libs.android.material)
-
-
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
@@ -71,8 +67,6 @@ dependencies {
     implementation(libs.compose.icon.extended)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
-    implementation(libs.compose.material)
-    implementation(libs.compose.material2)
     implementation(libs.coil.compose)
     implementation(libs.navigation.compose)
     implementation(libs.multidex)

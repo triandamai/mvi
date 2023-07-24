@@ -35,13 +35,14 @@ class NavigationProcessor(
     private val environment: SymbolProcessorEnvironment
 ) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
+        val findNavigationGroupAnnotation =
+            resolver.findClassAnnotations(NavigationGroup::class).toList()
 
         //collection function with annotation
         val findNavigationAnnotation =
             resolver.findFunctionAnnotations(Navigation::class).toList()
 
-        val findNavigationGroupAnnotation =
-            resolver.findClassAnnotations(NavigationGroup::class).toList()
+
         //skip if there no annotation
         if (!findNavigationAnnotation.iterator().hasNext()) return emptyList()
 
@@ -93,7 +94,7 @@ class NavigationProcessor(
                 }
             } else {
                 val findNested = nestedDeclaration.firstOrNull { it.route == group }
-                    ?: throw IllegalArgumentException("Navigation Group for $group not found,try create class with @NavigationGroup")
+                    ?: throw IllegalArgumentException("Navigation Group for $group at ${module.rawName} not found,try create class or interface with annotation @NavigationGroup")
                 createFunctionRoute.addComment("Navigation for ${findNested.route}")
                 buildNestedNavigation(
                     funSpec = createFunctionRoute,

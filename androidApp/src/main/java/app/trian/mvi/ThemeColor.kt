@@ -2,7 +2,7 @@
  * Copyright (c) 2023 trian.app.
  */
 
-package app.trian.mvi.ui.theme
+package app.trian.mvi
 
 import androidx.compose.ui.graphics.Color
 

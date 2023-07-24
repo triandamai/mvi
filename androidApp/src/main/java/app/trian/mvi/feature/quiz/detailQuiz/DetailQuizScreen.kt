@@ -8,6 +8,7 @@
 
 package app.trian.mvi.feature.quiz.detailQuiz
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -45,13 +46,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.trian.mvi.Argument
+import app.trian.mvi.BaseMainApp
+import app.trian.mvi.BaseScreen
 import app.trian.mvi.DeepLink
 import app.trian.mvi.NavType
 import app.trian.mvi.Navigation
 import app.trian.mvi.components.BottomSheetConfirmation
 import app.trian.mvi.components.ButtonPrimary
-import app.trian.mvi.ui.BaseMainApp
-import app.trian.mvi.ui.BaseScreen
 import app.trian.mvi.ui.UIWrapper
 import app.trian.mvi.ui.internal.UIContract
 import app.trian.mvi.ui.internal.listener.BaseEventListener
@@ -64,9 +65,6 @@ import kotlinx.coroutines.delay
 object DetailQuiz {
     const val routeName = "DetailQuiz"
     const val argKey = "quizId"
-    fun routeName() = routeName.plus("/")
-        .plus(argKey)
-
 
 }
 
@@ -83,8 +81,8 @@ object DetailQuiz {
 )
 @Composable
 internal fun DetailQuizScreen(
-    uiContract: UIContract<DetailQuizState, DetailQuizIntent, DetailQuizAction>,
-    eventListener: BaseEventListener=EventListener()
+    uiContract: UIContract<DetailQuizState, DetailQuizAction>,
+    eventListener: BaseEventListener = EventListener()
 ) = UIWrapper(uiContract) {
 
     val bottomSheetState = rememberModalBottomSheetState(
@@ -93,11 +91,14 @@ internal fun DetailQuizScreen(
             true
         }
     )
-    LaunchedEffect(key1 = uiContract.state, block = {
+    LaunchedEffect(key1 = state, block = {
         delay(1000)
         commit { copy(showContent = true) }
     })
 
+    BackHandler {
+        navigator.navigateUp()
+    }
     BaseScreen(
         modalBottomSheetState = bottomSheetState,
         bottomSheet = {
@@ -126,9 +127,9 @@ internal fun DetailQuizScreen(
         ) {
             IconButton(
                 onClick = {
-                   launch {
-                       bottomSheetState.show()
-                   }
+                    launch {
+                        bottomSheetState.show()
+                    }
                 },
                 modifier = Modifier.align(Alignment.TopEnd)
             ) {
@@ -231,8 +232,7 @@ fun PreviewScreenDetailQuiz() {
         DetailQuizScreen(
             uiContract = UIContract(
                 controller = rememberUIController(),
-                state = DetailQuizState(),
-                intent = null
+                state = DetailQuizState()
             )
         )
     }

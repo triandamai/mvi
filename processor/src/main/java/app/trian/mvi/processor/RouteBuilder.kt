@@ -126,7 +126,6 @@ fun buildDeeplink(
 fun buildCollectState(funSpec: FunSpec.Builder) = with(funSpec) {
     addComment("Collecting state from ViewModel")
     addStatement(3, "val state by uiState.%M()", collectAsState)
-    addStatement(3, "val intent by intent.%M(initial=null)", collectAsState)
 }
 
 fun buildScreen(
@@ -138,7 +137,7 @@ fun buildScreen(
         when(it.type){
             "uiContract" -> addStatement(
                 4,
-                "${it.value}=%M(controller=uiController,state=state,intent=intent,mutation=::commit,dispatcher=::dispatch),",
+                "${it.value}=%M(controller=uiController,state=state,mutation=::commit,dispatcher=::dispatch),",
                 it.memberName
             )
             "event" -> addStatement(

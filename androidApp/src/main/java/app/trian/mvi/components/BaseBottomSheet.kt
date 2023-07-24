@@ -32,7 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.trian.mvi.ui.BaseMainApp
+import app.trian.mvi.BaseMainApp
 
 @Composable
 fun BaseBottomSheet(

@@ -2,7 +2,7 @@
  * Copyright (c) 2023 trian.app.
  */
 
-package app.trian.mvi.ui
+package app.trian.mvi
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ColorScheme
@@ -14,11 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.trian.mvi.ui.internal.UIController
 import app.trian.mvi.ui.internal.rememberUIController
-import app.trian.mvi.ui.theme.ApplicationTheme
-import app.trian.mvi.ui.theme.baseShapes
-import app.trian.mvi.ui.theme.baseTypography
-import app.trian.mvi.ui.theme.darkColors
-import app.trian.mvi.ui.theme.lightColors
 
 @Composable
 fun BaseMainApp(
