@@ -1,8 +1,9 @@
-package app.trian.mvi.ui.internal
+package app.trian.mvi.ui.internal.contract
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import app.trian.mvi.ui.internal.UIController
 import kotlinx.coroutines.CoroutineStart
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -14,6 +15,8 @@ open class UIContract<State, Event>(
     private val dispatcher: (Event) -> Unit = {},
 ) {
     val navigator get() = controller.navigator
+    val keyboard get() = controller.keyboard
+    val toast get() = controller.toast
     fun commit(s: State.() -> State) {
         this.mutation(s(state))
     }
@@ -26,9 +29,8 @@ open class UIContract<State, Event>(
         context: CoroutineContext = EmptyCoroutineContext,
         start: CoroutineStart = CoroutineStart.DEFAULT,
         block: suspend () -> Unit
-    ) {
-        controller.launch(context, start) { block() }
-    }
+    ) = controller.launch(context, start) { block() }
+
 
     //end region
 
@@ -40,24 +42,18 @@ open class UIContract<State, Event>(
     @Composable
     fun <T> UseEffect(
         key: T,
-        onDispose: State.() -> State,
-        block: suspend T.() -> Unit
+        onReset: State.() -> State,
+        onEffect: suspend T.() -> Unit
     ) {
-        fun reset() {
-            mutation.invoke(onDispose(state))
-        }
         LaunchedEffect(key1 = key, block = {
-            block(key).also {
-                reset()
+            onEffect(key).also {
+                mutation.invoke(onReset(state))
             }
         })
         DisposableEffect(key1 = key, effect = {
             onDispose {
-                reset()
+                mutation.invoke(onReset(state))
             }
         })
-
-
     }
-
 }

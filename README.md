@@ -133,7 +133,7 @@ class ListQuizViewModel @Inject constructor(
 State:
 ```kotlin
 @Immutable
-@Parceliza
+@Parcelize
 data class ListQuizState(
     val effect:ListQuizEffect=ListQuizEffect.Nothing
 )

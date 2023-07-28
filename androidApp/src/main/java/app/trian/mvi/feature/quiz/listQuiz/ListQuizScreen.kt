@@ -17,7 +17,7 @@ import app.trian.mvi.Navigation
 import app.trian.mvi.components.ItemQuiz
 import app.trian.mvi.feature.quiz.detailQuiz.DetailQuiz
 import app.trian.mvi.ui.UIWrapper
-import app.trian.mvi.ui.internal.UIContract
+import app.trian.mvi.ui.internal.contract.UIContract
 import app.trian.mvi.ui.internal.rememberUIController
 
 object ListQuiz {
@@ -36,8 +36,8 @@ internal fun ListQuizScreen(
 
     UseEffect(
         key = state.effect,
-        onDispose = { copy(effect = ListQuizEffect.Nothing) },
-        block = {
+        onReset = { copy(effect = ListQuizEffect.Nothing) },
+        onEffect = {
             when (this) {
                 ListQuizEffect.Nothing -> Unit
                 is ListQuizEffect.DetailQuiz -> {

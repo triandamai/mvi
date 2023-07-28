@@ -11,6 +11,7 @@ import app.trian.mvi.ui.UIEvent
 import app.trian.mvi.ui.ResultState
 import app.trian.mvi.ui.ResultStateData
 import app.trian.mvi.ui.ResultStateWithProgress
+import app.trian.mvi.ui.internal.contract.MviState
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.currentCoroutineContext
@@ -21,7 +22,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-abstract class MviViewModel<State : Parcelable, Action>(
+abstract class MviViewModel<State : MviState<*>, Action>(
     private val initialState: State,
 ) : ViewModel() {
 

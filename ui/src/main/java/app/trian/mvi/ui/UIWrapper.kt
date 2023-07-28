@@ -5,10 +5,10 @@
 package app.trian.mvi.ui
 
 import androidx.compose.runtime.Composable
-import app.trian.mvi.ui.internal.UIContract
+import app.trian.mvi.ui.internal.contract.UIContract
 
 @Composable
-inline fun <reified T : UIContract<*,*>> UIWrapper(
+inline fun <reified T : UIContract<*, *>> UIWrapper(
     uiContract: T,
     content: @Composable T.() -> Unit
 ) { content(uiContract) }

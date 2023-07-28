@@ -3,5 +3,5 @@ package app.trian.mvi.processor.model
 data class Screen(
     val locationPackage: String,
     val name: String,
-    val deps:List<ScreenDependencies> = listOf(),
+    val dependencies:List<ScreenDependencies> = listOf(),
 )

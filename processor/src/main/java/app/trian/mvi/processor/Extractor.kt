@@ -40,7 +40,7 @@ fun getFunctionPayload(
     val location = functionDeclaration.packageName.asString()
     val screenName = functionDeclaration.simpleName.asString()
 
-    val deps = functionDeclaration.parameters.map {
+    val screenDependencies = functionDeclaration.parameters.map {
         val name = it.type.resolve().declaration.simpleName.asString()
 
         kspLogger.info("Found $name")
@@ -68,7 +68,7 @@ fun getFunctionPayload(
             else -> null
         }
     }
-    if (deps.firstOrNull { it?.type == "uiContract" } == null) {
+    if (screenDependencies.firstOrNull { it?.type == "uiContract" } == null) {
         throw java.lang.IllegalArgumentException("UIContract must be defined at $screenName")
     }
 
@@ -124,7 +124,7 @@ fun getFunctionPayload(
         screen = Screen(
             name = screenName,
             locationPackage = location,
-            deps = deps.filterNotNull()
+            dependencies = screenDependencies.filterNotNull()
         ),
         viewModel = ViewModel(
             locationPackage = viewModel.packageName.asString(),

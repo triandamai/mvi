@@ -54,7 +54,7 @@ import app.trian.mvi.Navigation
 import app.trian.mvi.components.BottomSheetConfirmation
 import app.trian.mvi.components.ButtonPrimary
 import app.trian.mvi.ui.UIWrapper
-import app.trian.mvi.ui.internal.UIContract
+import app.trian.mvi.ui.internal.contract.UIContract
 import app.trian.mvi.ui.internal.listener.BaseEventListener
 import app.trian.mvi.ui.internal.listener.EventListener
 import app.trian.mvi.ui.internal.rememberUIController

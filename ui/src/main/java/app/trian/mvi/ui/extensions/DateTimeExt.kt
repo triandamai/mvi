@@ -15,13 +15,9 @@ import java.util.Locale
 
 
 fun LocalDate?.toReadableDate(pattern: String = "d MMMM, yyyy"): String {
-
     if (this == null) return "Date not valid"
     return this.formatDate(pattern.ifEmpty { "d MMMM, yyyy" })
 }
-
-
-fun getNowMillis(): LocalDate = LocalDate.now()
 
 fun LocalDate.formatDate(pattern: String=String.Empty): String {
     if (pattern.isBlank()) {

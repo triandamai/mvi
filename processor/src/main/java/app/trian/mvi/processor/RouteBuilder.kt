@@ -11,7 +11,6 @@ package app.trian.mvi.processor
 import app.trian.mvi.NavType
 import app.trian.mvi.processor.model.NavArgument
 import app.trian.mvi.processor.model.Screen
-import app.trian.mvi.processor.model.ScreenDependencies
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.MemberName
@@ -133,7 +132,7 @@ fun buildScreen(
     screen: Screen
 ) = with(funSpec) {
     addStatement(3, "%M(", MemberName(screen.locationPackage, screen.name))
-    screen.deps.forEach {
+    screen.dependencies.forEach {
         when(it.type){
             "uiContract" -> addStatement(
                 4,

@@ -56,7 +56,6 @@ inline fun <reified ViewModel : MviViewModel<*, *>> NavGraphBuilder.pageWrapper(
                         )
                             .show()
 
-                        is UIEvent.ShowSnackBar -> {}
                         is UIEvent.NavigateAndReplace ->
                             controller.navigator.navigateAndReplace(event.route, *event.params)
 

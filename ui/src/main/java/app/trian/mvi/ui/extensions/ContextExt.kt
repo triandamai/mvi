@@ -64,13 +64,7 @@ fun Context.gotoApp() {
     }
 }
 
+fun Context.getScreenWidth(): Dp = with(this.resources.displayMetrics) { widthPixels.dp / density }
 
-fun Context.getScreenWidth(): Dp = this
-    .resources
-    .displayMetrics.widthPixels.dp /
-        this.resources.displayMetrics.density
-
-fun Context.getScreenHeight(): Dp = this
-    .resources
-    .displayMetrics.heightPixels.dp /
-        this.resources.displayMetrics.density
+fun Context.getScreenHeight(): Dp =
+    with(this.resources.displayMetrics) { heightPixels.dp / density }
