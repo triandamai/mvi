@@ -50,7 +50,7 @@ fun buildPageWrapper(
     viewModelName: String,
     viewModelPackage: String,
 ) = with(funSpec) {
-    addComment("Navigation for ${screen.locationPackage}.${screen.name}")
+    addComment(1,"Navigation for ${screen.locationPackage}.${screen.name}")
     addStatement(1, "%M<%T>(", pageWrapper, ClassName(viewModelPackage, viewModelName))
     buildWrapperParams(funSpec, createRoute(route, arguments), parent, arguments, deepLinks)
     addStatement(1, "){")
@@ -123,7 +123,7 @@ fun buildDeeplink(
 }
 
 fun buildCollectState(funSpec: FunSpec.Builder) = with(funSpec) {
-    addComment("Collecting state from ViewModel")
+    addComment(3,"Collecting state from ViewModel")
     addStatement(3, "val state by uiState.%M()", collectAsState)
 }
 
@@ -131,24 +131,31 @@ fun buildScreen(
     funSpec: FunSpec.Builder,
     screen: Screen
 ) = with(funSpec) {
+    addComment(3,"Invoke Screen")
     addStatement(3, "%M(", MemberName(screen.locationPackage, screen.name))
+    addComment(3,"Contract")
     screen.dependencies.forEach {
-        when(it.type){
-            "uiContract" -> addStatement(
-                4,
-                "${it.value}=%M(controller=uiController,state=state,mutation=::commit,dispatcher=::dispatch),",
-                it.memberName
-            )
-            "event" -> addStatement(
-                4,
-                "${it.parameterName}=$eventName,"
-            )
+        when (it.type) {
+            "uiContract" -> {
+                addStatement(4, "${it.value}=%M(", it.memberName)
+                addStatement(5, "controller=uiController,")
+                addStatement(5, "state=state,")
+                addStatement(5, "mutation=::commit,")
+                addStatement(5, "dispatcher=::dispatch")
+                addStatement(4, "),")
+            }
+
+            "event" -> {
+                addComment(3,"Event listener")
+                addStatement(
+                    4,
+                    "${it.parameterName}=$eventName,"
+                )
+            }
         }
     }
-
     addStatement(3, ")")
 }
-
 
 
 fun NavType.getStringType() = when (this) {
@@ -168,5 +175,18 @@ fun FunSpec.Builder.addStatement(
         }
     }
     this.addStatement("$buildSpace$statement", *arg)
+    return this
+}
+
+fun FunSpec.Builder.addComment(
+    indentation: Int,
+    comment: String,
+): FunSpec.Builder {
+    val buildSpace = buildString {
+        for (i in 0..indentation) {
+            append("  ")
+        }
+    }
+    this.addComment("$buildSpace$comment")
     return this
 }
