@@ -5,6 +5,7 @@
 package app.trian.mvi.processor
 
 import app.trian.mvi.NavType
+import app.trian.mvi.processor.model.DependenciesType
 import app.trian.mvi.processor.model.NavArgument
 import app.trian.mvi.processor.model.Module
 import app.trian.mvi.processor.model.NavGroup
@@ -50,7 +51,7 @@ fun getFunctionPayload(
                     it.type.resolve().declaration.packageName.asString(),
                     it.type.resolve().declaration.simpleName.asString()
                 ),
-                type = "event",
+                dependenciesType = DependenciesType.EVENT,
                 value = it.name?.asString().toString(),
                 parameterName = it.name?.asString().toString()
             )
@@ -60,7 +61,7 @@ fun getFunctionPayload(
                     it.type.resolve().declaration.packageName.asString(),
                     it.type.resolve().declaration.simpleName.asString()
                 ),
-                type = "uiContract",
+                dependenciesType = DependenciesType.CONTRACT,
                 value = it.name?.asString().toString(),
                 parameterName = it.name?.asString().toString()
             )
@@ -68,7 +69,7 @@ fun getFunctionPayload(
             else -> null
         }
     }
-    if (screenDependencies.firstOrNull { it?.type == "uiContract" } == null) {
+    if (screenDependencies.firstOrNull { it?.dependenciesType == DependenciesType.CONTRACT } == null) {
         throw java.lang.IllegalArgumentException("UIContract must be defined at $screenName")
     }
 

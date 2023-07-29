@@ -9,6 +9,7 @@
 package app.trian.mvi.processor
 
 import app.trian.mvi.NavType
+import app.trian.mvi.processor.model.DependenciesType
 import app.trian.mvi.processor.model.NavArgument
 import app.trian.mvi.processor.model.Screen
 import com.squareup.kotlinpoet.ClassName
@@ -50,11 +51,19 @@ fun buildPageWrapper(
     viewModelName: String,
     viewModelPackage: String,
 ) = with(funSpec) {
-    addComment(1,"Navigation for ${screen.locationPackage}.${screen.name}")
-    addStatement(1, "%M<%T>(", pageWrapper, ClassName(viewModelPackage, viewModelName))
-    buildWrapperParams(funSpec, createRoute(route, arguments), parent, arguments, deepLinks)
+    val viewModel = ClassName(viewModelPackage, viewModelName)
+    addComment(1, "Navigation for ${screen.locationPackage}.${screen.name}")
+    addStatement(1, "%M<%T>(", pageWrapper, viewModel)
+    buildWrapperParams(
+        funSpec,
+        createRoute(route, arguments),
+        parent,
+        arguments,
+        deepLinks
+    )
     addStatement(1, "){")
-    buildCollectState(funSpec)
+    addComment(3, "Collecting state and effect from ViewModel")
+    addStatement(3, "val state by uiState.%M()", collectAsState)
     buildScreen(funSpec, screen)
     addStatement(1, "}")
 }
@@ -66,13 +75,11 @@ fun buildWrapperParams(
     argument: List<NavArgument>,
     deepLinks: List<String>
 ) = with(funSpec) {
-
     addStatement(2, "route=%S,", route)
     addStatement(2, "parent=%S,", parent)
     addStatement(2, "controller=$uiControllerName,")
     buildNavArgument(funSpec, argument)
     buildDeeplink(funSpec, deepLinks)
-
 }
 
 fun createRoute(route: String, argument: List<NavArgument>): String {
@@ -122,21 +129,21 @@ fun buildDeeplink(
 
 }
 
-fun buildCollectState(funSpec: FunSpec.Builder) = with(funSpec) {
-    addComment(3,"Collecting state from ViewModel")
-    addStatement(3, "val state by uiState.%M()", collectAsState)
-}
-
 fun buildScreen(
     funSpec: FunSpec.Builder,
     screen: Screen
 ) = with(funSpec) {
-    addComment(3,"Invoke Screen")
+    addComment(3, "Invoke Screen")
     addStatement(3, "%M(", MemberName(screen.locationPackage, screen.name))
-    addComment(3,"Contract")
+    addComment(3, "Contract")
     screen.dependencies.forEach {
-        when (it.type) {
-            "uiContract" -> {
+        when (it.dependenciesType) {
+            DependenciesType.EVENT -> {
+                addComment(3, "Event listener")
+                addStatement(4, "${it.parameterName}=$eventName,")
+            }
+
+            DependenciesType.CONTRACT -> {
                 addStatement(4, "${it.value}=%M(", it.memberName)
                 addStatement(5, "controller=uiController,")
                 addStatement(5, "state=state,")
@@ -145,13 +152,7 @@ fun buildScreen(
                 addStatement(4, "),")
             }
 
-            "event" -> {
-                addComment(3,"Event listener")
-                addStatement(
-                    4,
-                    "${it.parameterName}=$eventName,"
-                )
-            }
+            DependenciesType.OTHER -> Unit
         }
     }
     addStatement(3, ")")
