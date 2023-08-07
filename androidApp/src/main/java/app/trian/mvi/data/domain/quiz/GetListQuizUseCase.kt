@@ -8,7 +8,7 @@
 
 package app.trian.mvi.data.domain.quiz
 
-import app.trian.mvi.ui.ResultStateData
+import app.trian.mvi.data.model.ResultStateData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

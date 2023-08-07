@@ -1,6 +1,7 @@
 package app.trian.mvi.feature.quiz.listQuiz
 
 import app.trian.mvi.data.domain.quiz.GetListQuizUseCase
+import app.trian.mvi.feature.quiz.detailQuiz.DetailQuiz
 import app.trian.mvi.ui.viewModel.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -30,7 +31,8 @@ class ListQuizViewModel @Inject constructor(
             }
 
             ListQuizAction.Navigate -> {
-                commit { copy(effect = ListQuizEffect.DetailQuiz("sasas")) }
+                navigate(DetailQuiz.routeName,"sasas")
+                    //  commit { copy(effect = ListQuizEffect.DetailQuiz("sasas")) }
             }
         }
     }

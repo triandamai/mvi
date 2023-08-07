@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 abstract class MviViewModel<State : MviState<*>, Action>(
     private val initialState: State,
-) : ViewModel(), NavigationListener,ToastListener {
+) : ViewModel(), NavigationListener {
 
     private var navigationListener: NavigationListener? = null
     private var toastListener: ToastListener? = null
@@ -25,13 +25,14 @@ abstract class MviViewModel<State : MviState<*>, Action>(
     private val _uiState: MutableStateFlow<State> = MutableStateFlow(initialState)
     val uiState get() = _uiState.asStateFlow()
     protected abstract fun onAction(action: Action)
+
     //toast
-    fun addOnToastListener(toastListener: ToastListener){
+    fun addOnToastListener(toastListener: ToastListener) {
         this.toastListener = toastListener
     }
 
-    override fun show(message: String, length: Int) {
-        this.toastListener?.show(message,length)
+    protected fun showToast(message: String, length: Int) {
+        this.toastListener?.show(message, length)
     }
     //
 
@@ -40,9 +41,13 @@ abstract class MviViewModel<State : MviState<*>, Action>(
         this.navigationListener = navigationListener
     }
 
-    override fun navigateUp() { this.navigationListener?.navigateUp()}
+    override fun navigateUp() {
+        this.navigationListener?.navigateUp()
+    }
 
-    override fun navigateBack() {this.navigationListener?.navigateBack()}
+    override fun navigateBack() {
+        this.navigationListener?.navigateBack()
+    }
 
     override fun navigate(routeName: String, vararg params: String) {
         this.navigationListener?.navigate(routeName, *params)

@@ -2,7 +2,7 @@ package app.trian.mvi.feature.quiz.detailQuiz
 
 import androidx.lifecycle.SavedStateHandle
 import app.trian.mvi.data.domain.quiz.GetDetailQuizUseCase
-import app.trian.mvi.ui.ResultState
+import app.trian.mvi.data.model.ResultState
 import app.trian.mvi.ui.viewModel.MviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
