@@ -4,9 +4,11 @@
 
 package app.trian.mvi.ui
 
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDeepLink
@@ -14,6 +16,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import app.trian.mvi.ui.internal.UIController
 import app.trian.mvi.ui.internal.listener.NavigationListener
+import app.trian.mvi.ui.internal.listener.ToastListener
 import app.trian.mvi.ui.viewModel.MviViewModel
 
 
@@ -30,6 +33,7 @@ inline fun <reified ViewModel : MviViewModel<*, *>> NavGraphBuilder.pageWrapper(
         arguments = arguments,
         deepLinks = deepLinks
     ) {
+        val ctx = LocalContext.current
         val viewModel: ViewModel = (if (parent.isNullOrEmpty()) {
             hiltViewModel()
         } else {
@@ -41,6 +45,16 @@ inline fun <reified ViewModel : MviViewModel<*, *>> NavGraphBuilder.pageWrapper(
             hiltViewModel(parentEntry)
         })
         LaunchedEffect(key1 = viewModel, block = {
+            viewModel.addOnToastListener(object : ToastListener {
+                override fun show(message: String) {
+                    Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun show(message: Int, vararg params: Any) {
+                    Toast.makeText(ctx, ctx.getString(message, *params), Toast.LENGTH_SHORT).show()
+                }
+
+            })
             viewModel.addOnNavigationListener(object : NavigationListener {
                 override fun navigateUp() {
                     controller.navigator.navigateUp()
@@ -74,7 +88,6 @@ inline fun <reified ViewModel : MviViewModel<*, *>> NavGraphBuilder.pageWrapper(
 
             })
         })
-
         content(viewModel)
     }
 }

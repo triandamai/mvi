@@ -31,8 +31,12 @@ abstract class MviViewModel<State : MviState<*>, Action>(
         this.toastListener = toastListener
     }
 
-    protected fun showToast(message: String, length: Int) {
-        this.toastListener?.show(message, length)
+    protected fun showToast(message: String) {
+        this.toastListener?.show(message)
+    }
+
+    protected fun showToast(message: Int, vararg params: Any) {
+        this.toastListener?.show(message, *params)
     }
     //
 

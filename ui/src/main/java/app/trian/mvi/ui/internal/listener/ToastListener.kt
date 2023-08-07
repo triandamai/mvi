@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 
 interface ToastListener {
-    fun show(message:String,length:Int = Toast.LENGTH_SHORT)
+    fun show(message: String)
+    fun show(message: Int, vararg params: Any)
 }
 
