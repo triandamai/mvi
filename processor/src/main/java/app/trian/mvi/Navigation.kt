@@ -6,6 +6,9 @@ package app.trian.mvi;
 
 import kotlin.reflect.KClass
 
+
+class DefaultViewModel
+
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
 annotation class Navigation(
@@ -13,6 +16,14 @@ annotation class Navigation(
     val parentRoute: String = "",
     val group: String = "",
     val viewModel: KClass<*>
+)
+
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class NavigationStatic(
+    val route: String,
+    val parentRoute: String = "",
+    val group: String = ""
 )
 
 @Target(AnnotationTarget.CLASS)

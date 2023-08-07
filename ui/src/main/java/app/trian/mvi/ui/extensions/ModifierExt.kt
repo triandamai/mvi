@@ -41,9 +41,8 @@ import kotlin.math.sqrt
 
 /**
  * `Extension for colored shadow in card`
- * Author PT Cexup Telemedicine
+ * Author trian.app
  * Created by Trian Damai
- * 04/09/2021
  */
 @SuppressLint("UnnecessaryComposedModifier")
 fun Modifier.coloredShadow(

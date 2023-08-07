@@ -6,7 +6,7 @@
  *
  */
 
-package app.trian.mvi.ui.utils
+package app.trian.mvi.ui.extensions
 
 import android.content.ContentResolver
 import android.graphics.Bitmap
@@ -16,15 +16,12 @@ import android.net.Uri
 fun Uri.getBitmap(c: ContentResolver): Bitmap?{
     return try {
         val input =  c.openInputStream(this)
-        val btmp = BitmapFactory.decodeStream(input)
-
         Bitmap.createScaledBitmap(
-            btmp,
+            BitmapFactory.decodeStream(input),
             120,
             120,
             false
         )
-
     }catch (e:Exception){
         null
     }

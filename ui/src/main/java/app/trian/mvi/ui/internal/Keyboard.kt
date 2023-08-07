@@ -8,5 +8,4 @@ class Keyboard(
    private val context: Context
 ):KeyboardListener {
     override fun hide()  = context.hideKeyboard()
-
 }

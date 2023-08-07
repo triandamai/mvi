@@ -10,7 +10,7 @@ import java.util.Locale
 val String.Companion.Empty
     inline get() = ""
 
-fun String.slugify(replacement: String = "-") = Normalizer
+fun String.toSlug(replacement: String = "-") = Normalizer
     .normalize(this, Normalizer.Form.NFD)
     .replace("[^\\p{ASCII}]".toRegex(), "")
     .replace("[^a-zA-Z0-9\\s]+".toRegex(), "").trim()

@@ -8,7 +8,8 @@
 
 package app.trian.mvi.data.domain.quiz
 
-import app.trian.mvi.ui.ResultState
+import app.trian.mvi.R
+import app.trian.mvi.data.model.ResultState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -24,7 +25,7 @@ class GetDetailQuizUseCase @Inject constructor(
 
             emit(ResultState.Result(""))
         } catch (e: Exception) {
-            emit(ResultState.Error(e.message.orEmpty()))
+            emit(ResultState.Error(e.message.orEmpty(), R.string.alert_email_empty))
         }
     }.flowOn(Dispatchers.IO)
 }

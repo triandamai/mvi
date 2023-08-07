@@ -34,9 +34,8 @@ internal fun ListQuizScreen(
     uiContract: UIContract<ListQuizState, ListQuizAction>
 ) = UIWrapper(uiContract) {
 
-    UseEffect(
-        key = state.effect,
-        onReset = { copy(effect = ListQuizEffect.Nothing) },
+    UseEffect<ListQuizEffect>(
+        commit = { copy(effect = ListQuizEffect.Nothing) },
         onEffect = {
             when (this) {
                 ListQuizEffect.Nothing -> Unit

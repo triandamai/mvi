@@ -17,7 +17,7 @@ fun BigDecimal.formatCurrency(
         val format = NumberFormat.getCurrencyInstance(locale)
         format.maximumFractionDigits = 0
         format.format(this)
-    } else "Rp*********"
+    } else "*********"
 }
 
 fun BigDecimal.formatDecimal(pattern:String="#,###"): String = try {

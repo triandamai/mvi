@@ -5,9 +5,13 @@
 package app.trian.mvi.ui.extensions
 
 fun <T> List<T>.findIndex(key: (IndexedValue<T>) -> Boolean): Int =
-    this.withIndex()
-        .first { value -> key(value) }
-        .index
+    try {
+        this.withIndex()
+            .first { value -> key(value) }
+            .index
+    } catch (e: Exception) {
+        -1
+    }
 
-fun <T> List<T>.add(value:T) =
+fun <T> List<T>.add(value: T) =
     this.toMutableList().plus(value)

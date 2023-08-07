@@ -5,16 +5,14 @@
  * Proprietary and confidential
  */
 
-package app.trian.mvi.ui
+package app.trian.mvi.data.model
 
 import androidx.annotation.StringRes
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.suspendCancellableCoroutine
 
 sealed class ResultState<out R> {
     object Loading : ResultState<Nothing>()
     data class Result<out Out>(val data: Out) : ResultState<Out>()
-    data class Error(val message: String = "", @StringRes val stringId: Int = R.string.app_name) :
+    data class Error(val message: String = "", @StringRes val stringId: Int) :
         ResultState<Nothing>()
 }
 

@@ -39,15 +39,7 @@ class UIController(
     ) {
         scope.launch(context, start) { block() }
     }
-
     //end
-    //region string
-    fun getString(res: Int): String =
-        context.getString(res)
-
-    fun getString(res: Int, vararg params: String): String =
-        context.getString(res, *params)
-    //end region
 }
 
 @Composable

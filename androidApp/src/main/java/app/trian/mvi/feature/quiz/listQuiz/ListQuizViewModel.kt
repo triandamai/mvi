@@ -17,23 +17,20 @@ class ListQuizViewModel @Inject constructor(
 
     private fun getListQuiz() = async {
         getListQuizUseCase()
-            .onEach(
-                loading = {},
-                error = { _, _ -> },
-                success = {},
-                empty = {}
-            )
+            .collect {
+
+            }
     }
 
     override fun onAction(action: ListQuizAction) {
         when (action) {
             ListQuizAction.Nothing -> {
 
-            // sendUiEvent(BaseUIEvent.Navigate(DetailQuiz.routeName,"sasas"))
+                // sendUiEvent(BaseUIEvent.Navigate(DetailQuiz.routeName,"sasas"))
             }
 
             ListQuizAction.Navigate -> {
-                commit { copy(effect=ListQuizEffect.DetailQuiz("sasas")) }
+                commit { copy(effect = ListQuizEffect.DetailQuiz("sasas")) }
             }
         }
     }

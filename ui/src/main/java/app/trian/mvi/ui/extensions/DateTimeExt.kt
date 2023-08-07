@@ -1,10 +1,7 @@
 package app.trian.mvi.ui.extensions
 
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.temporal.WeekFields
-import java.util.Locale
 
 /**
  * Date Utils
@@ -14,12 +11,12 @@ import java.util.Locale
  */
 
 
-fun LocalDate?.toReadableDate(pattern: String = "d MMMM, yyyy"): String {
-    if (this == null) return "Date not valid"
+fun LocalDate?.format(pattern: String = "d MMMM, yyyy", orElse: String = "Date not valid"): String {
+    if (this == null) return orElse
     return this.formatDate(pattern.ifEmpty { "d MMMM, yyyy" })
 }
 
-fun LocalDate.formatDate(pattern: String=String.Empty): String {
+fun LocalDate.formatDate(pattern: String = String.Empty): String {
     if (pattern.isBlank()) {
         return this.format(DateTimeFormatter.BASIC_ISO_DATE)
     }

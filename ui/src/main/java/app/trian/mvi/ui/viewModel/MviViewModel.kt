@@ -4,35 +4,62 @@
 
 package app.trian.mvi.ui.viewModel
 
-import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.trian.mvi.ui.UIEvent
-import app.trian.mvi.ui.ResultState
-import app.trian.mvi.ui.ResultStateData
-import app.trian.mvi.ui.ResultStateWithProgress
 import app.trian.mvi.ui.internal.contract.MviState
+import app.trian.mvi.ui.internal.listener.NavigationListener
+import app.trian.mvi.ui.internal.listener.ToastListener
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 abstract class MviViewModel<State : MviState<*>, Action>(
     private val initialState: State,
-) : ViewModel() {
+) : ViewModel(), NavigationListener,ToastListener {
+
+    private var navigationListener: NavigationListener? = null
+    private var toastListener: ToastListener? = null
 
     private val _uiState: MutableStateFlow<State> = MutableStateFlow(initialState)
     val uiState get() = _uiState.asStateFlow()
-
-    private val _uiEventChannel = Channel<UIEvent>(Channel.BUFFERED)
-    val uiEvent = _uiEventChannel.receiveAsFlow()
-
     protected abstract fun onAction(action: Action)
+    //toast
+    fun addOnToastListener(toastListener: ToastListener){
+        this.toastListener = toastListener
+    }
+
+    override fun show(message: String, length: Int) {
+        this.toastListener?.show(message,length)
+    }
+    //
+
+    // navigation
+    fun addOnNavigationListener(navigationListener: NavigationListener) {
+        this.navigationListener = navigationListener
+    }
+
+    override fun navigateUp() { this.navigationListener?.navigateUp()}
+
+    override fun navigateBack() {this.navigationListener?.navigateBack()}
+
+    override fun navigate(routeName: String, vararg params: String) {
+        this.navigationListener?.navigate(routeName, *params)
+    }
+
+    override fun navigateSingleTop(routeName: String, vararg params: String) {
+        this.navigationListener?.navigateSingleTop(routeName, *params)
+    }
+
+    override fun navigateAndReplace(routeName: String, vararg params: String) {
+        this.navigationListener?.navigateAndReplace(routeName, *params)
+    }
+
+    override fun navigateBackAndClose() {
+        this.navigationListener?.navigateBackAndClose()
+    }
+    //
 
     //end
     protected inline fun async(crossinline block: suspend () -> Unit) = with(viewModelScope) {
@@ -41,57 +68,6 @@ abstract class MviViewModel<State : MviState<*>, Action>(
 
     protected inline fun asyncWithState(crossinline block: suspend State.() -> Unit) =
         async { block(uiState.value) }
-
-    protected inline fun <reified T> Flow<ResultState<T>>.onEach(
-        crossinline loading: () -> Unit = {},
-        crossinline error: (String, stringId: Int) -> Unit = { _, _ -> },
-        crossinline success: (T) -> Unit = {}
-    ) = async {
-        this.catch { error(it.message.orEmpty()) }
-            .collect {
-                when (it) {
-                    is ResultState.Error -> error(it.message, it.stringId)
-
-                    ResultState.Loading -> loading()
-                    is ResultState.Result -> success(it.data)
-                }
-            }
-    }
-
-    protected inline fun <reified T> Flow<ResultStateData<T>>.onEach(
-        crossinline loading: () -> Unit = {},
-        crossinline error: (String, stringId: Int) -> Unit = { _, _ -> },
-        crossinline success: (T) -> Unit = {},
-        crossinline empty: () -> Unit = {}
-    ) = async {
-        this.catch { error(it.message.orEmpty()) }
-            .collect {
-                when (it) {
-                    is ResultStateData.Error -> error(it.message, it.stringId)
-                    ResultStateData.Loading -> loading()
-                    is ResultStateData.Result -> success(it.data)
-                    ResultStateData.Empty -> empty()
-                }
-            }
-    }
-
-    protected inline fun <reified T> Flow<ResultStateWithProgress<T>>.onEach(
-        crossinline loading: () -> Unit = {},
-        crossinline error: (String, stringId: Int) -> Unit = { _, _ -> },
-        crossinline onFinish: (T) -> Unit = {},
-        crossinline onProgress: (progress: Int) -> Unit = {}
-    ) = async {
-        this.catch { error(it.message.orEmpty()) }
-            .collect {
-                when (it) {
-                    is ResultStateWithProgress.Error -> error(it.message, it.stringId)
-                    ResultStateWithProgress.Loading -> loading()
-                    is ResultStateWithProgress.Finish -> onFinish(it.data)
-                    is ResultStateWithProgress.Progress -> onProgress(it.progress)
-                }
-            }
-    }
-
 
     fun commit(state: State) {
         _uiState.tryEmit(state)
@@ -103,18 +79,12 @@ abstract class MviViewModel<State : MviState<*>, Action>(
 
     fun dispatch(action: Action) = onAction(action)
 
-    fun sendUiEvent(event: UIEvent) {
-        _uiEventChannel.trySend(event)
-    }
-
     fun resetState() {
         commit(initialState)
     }
 
     override fun onCleared() {
         super.onCleared()
-
-        _uiEventChannel.trySend(UIEvent.Nothing)
         _uiState.tryEmit(initialState)
         async { currentCoroutineContext().cancel() }
     }

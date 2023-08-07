@@ -12,8 +12,4 @@ class ToastMvi(
         Toast.makeText(context,message,length).show()
     }
 
-    override fun show(@StringRes message: Int, vararg params: String, length: Int) {
-        Toast.makeText(context,context.getString(message,*params),length).show()
-    }
-
 }

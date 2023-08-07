@@ -8,23 +8,37 @@ import kotlinx.coroutines.CoroutineStart
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-open class UIContract<State, Event>(
+open class UIContract<State:MviState<*>, Action>(
     val controller: UIController,
     val state: State,
     private val mutation: (State) -> Unit = {},
-    private val dispatcher: (Event) -> Unit = {},
+    private val dispatcher: (Action) -> Unit = {},
 ) {
     val navigator get() = controller.navigator
     val keyboard get() = controller.keyboard
     val toast get() = controller.toast
-    fun commit(s: State.() -> State) {
-        this.mutation(s(state))
+    /**
+     * direct mutate state.
+     * @param state state
+     * */
+    fun commit(state: State.() -> State) {
+        this.mutation(state(this.state))
     }
 
-    fun dispatch(e: Event) {
-        this.dispatcher(e)
+    /**
+     * emit Action to ViewModel.
+     * @param action
+     * */
+    fun dispatch(action: Action) {
+        this.dispatcher(action)
     }
 
+    /**
+     * Run suspend function from coroutine scope
+     * @param context CoroutineContext
+     * @param start
+     * @param block invoke
+     * */
     fun launch(
         context: CoroutineContext = EmptyCoroutineContext,
         start: CoroutineStart = CoroutineStart.DEFAULT,
@@ -35,24 +49,24 @@ open class UIContract<State, Event>(
     //end region
 
     /**
-     * for collecting side effect from viewModel
-     * and `onDispose` require default effect
-     * when screen destroyed or trigger side effect
+     * Collecting side effect from viewModel.
+     * @param commit for mutate state effect to default
+     * @param onEffect when effect emitted from `viewModel`
      * */
     @Composable
     fun <T> UseEffect(
-        key: T,
-        onReset: State.() -> State,
+        commit: State.() -> State,
         onEffect: suspend T.() -> Unit
     ) {
-        LaunchedEffect(key1 = key, block = {
-            onEffect(key).also {
-                mutation.invoke(onReset(state))
+        LaunchedEffect(key1 = state.effect, block = {
+            onEffect(state.effect as T).also {
+
+                mutation.invoke(commit(state))
             }
         })
-        DisposableEffect(key1 = key, effect = {
+        DisposableEffect(key1 = state.effect, effect = {
             onDispose {
-                mutation.invoke(onReset(state))
+                mutation.invoke(commit(state))
             }
         })
     }
