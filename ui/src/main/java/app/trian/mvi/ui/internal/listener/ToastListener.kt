@@ -6,6 +6,7 @@ package app.trian.mvi.ui.internal.listener
 
 import android.widget.Toast
 import androidx.annotation.StringRes
+import java.util.Objects
 
 interface ToastListener {
     fun show(message: String)
